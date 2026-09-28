@@ -1,12 +1,18 @@
-export function stepFinance(state, decisions, industry, config, customers, structureConfig, locationConfig) {
+export function stepFinance(state, decisions, industry, config, customers, structureConfig, locationConfig, hrStep) {
   const revenue = customers.orders * decisions.price;
   const variableCosts = customers.orders * industry.baseVariableCostPerOrder;
   const fixedCosts = industry.baseFixedCostPerWeek * locationConfig.fixedCostMultiplier + structureConfig.weeklyAdminCost;
   const discretionaryCosts = decisions.marketingSpend + decisions.qualitySpend;
-  const operatingProfit = revenue - variableCosts - fixedCosts - discretionaryCosts;
+  const payrollCosts = hrStep?.payrollCost || 0;
+  // Interview/training/severance cash was paid when the action happened.
+  // We recognize it in this week's P&L without subtracting the cash twice.
+  const hrOneTimeExpenses = state.hr?.pendingExpenseRecognition || 0;
+
+  const cashOperatingProfit = revenue - variableCosts - fixedCosts - discretionaryCosts - payrollCosts;
+  const operatingProfit = cashOperatingProfit - hrOneTimeExpenses;
   const taxableProfit = Math.max(0, operatingProfit);
   const taxAccrued = taxableProfit * structureConfig.taxRate;
-  const cashBeforeTaxPayment = state.finance.cash + operatingProfit;
+  const cashBeforeTaxPayment = state.finance.cash + cashOperatingProfit;
 
   const shouldPayTax = (state.week + 1) % config.finance.taxPaymentIntervalWeeks === 0;
   const priorTaxPayable = state.finance.taxPayable;
@@ -26,6 +32,8 @@ export function stepFinance(state, decisions, industry, config, customers, struc
     variableCosts,
     fixedCosts,
     discretionaryCosts,
+    payrollCosts,
+    hrOneTimeExpenses,
     grossProfit,
     grossMargin,
     operatingProfit,

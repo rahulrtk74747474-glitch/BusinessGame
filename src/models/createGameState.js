@@ -1,6 +1,7 @@
 import { scoreBusinessPlan } from '../engine/businessPlan.js';
+import { generateCandidatePool } from '../engine/hiring.js';
 
-export function createGameState(setup, config, industry, seed = 42) {
+export function createGameState(setup, config, industry, rolesData, seed = 42) {
   const structure = config.structures[setup.structure];
   const location = config.locations[setup.location];
   const planResult = scoreBusinessPlan(setup.plan, industry);
@@ -44,6 +45,8 @@ export function createGameState(setup, config, industry, seed = 42) {
       variableCosts: 0,
       fixedCosts: industry.baseFixedCostPerWeek * location.fixedCostMultiplier + structure.weeklyAdminCost,
       discretionaryCosts: 0,
+      payrollCosts: 0,
+      hrOneTimeExpenses: 0,
       grossProfit: 0,
       grossMargin: 0,
       operatingProfit: 0,
@@ -55,6 +58,23 @@ export function createGameState(setup, config, industry, seed = 42) {
       cumulativeProfit: 0,
       runwayWeeks: Infinity,
       valuation: Number(setup.startingCapital)
+    },
+    hr: {
+      employees: [],
+      candidates: generateCandidatePool(seed, rolesData, 0),
+      trials: [],
+      benefitsPerEmployee: 0,
+      refreshCount: 0,
+      nextEmployeeId: 1,
+      pendingExpenseRecognition: 0,
+      managerQuality: rolesData.baseFounderManagerQuality,
+      averageProductivity: 0,
+      averageMorale: 0,
+      averageBurnout: 0,
+      legalRisk: 0,
+      transactions: [],
+      events: [],
+      lastRipple: null
     },
     history: [],
     reports: []

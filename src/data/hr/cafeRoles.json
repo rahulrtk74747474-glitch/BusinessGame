@@ -1,0 +1,93 @@
+{
+  "id": "cafe-hr",
+  "candidatePoolSize": 8,
+  "interviewCost": 60,
+  "referenceCheckCost": 80,
+  "trialAdminCost": 90,
+  "trialLengthWeeks": 2,
+  "refreshPoolCost": 140,
+  "hireAdminCost": 120,
+  "trainingCost": 300,
+  "trainingBoost": 0.08,
+  "trainingCap": 0.28,
+  "raisePercent": 0.08,
+  "benefitOptions": [0, 25, 50, 80],
+  "fireSeveranceWeeks": 0.5,
+  "layoffSeveranceWeeks": 1.5,
+  "fireMoralePenalty": 0.08,
+  "layoffMoralePenalty": 0.05,
+  "unreviewedFireLegalRisk": 0.12,
+  "baseFounderManagerQuality": 0.88,
+  "managerQualityMin": 0.72,
+  "managerQualityMax": 1.18,
+  "ramp": {
+    "weeks1to4": 0.5,
+    "weeks5to8": 0.75,
+    "weeks9to12": 0.9,
+    "after12": 1
+  },
+  "candidateNames": [
+    "Avery Morgan",
+    "Jordan Lee",
+    "Maya Patel",
+    "Noah Williams",
+    "Sofia Garcia",
+    "Ethan Brown",
+    "Priya Shah",
+    "Liam Wilson",
+    "Emma Davis",
+    "Arjun Mehta",
+    "Olivia Martin",
+    "Daniel Kim",
+    "Nora Singh",
+    "Lucas Taylor",
+    "Zara Khan",
+    "Mateo Rivera"
+  ],
+  "roles": {
+    "barista": {
+      "label": "Barista",
+      "baseWeeklySalary": 680,
+      "capacityAdd": 115,
+      "serviceAdd": 0.045,
+      "marketingEfficiencyAdd": 0,
+      "awarenessAdd": 0,
+      "managerQualityAdd": 0,
+      "remoteEligible": false,
+      "promotionTo": "shift_manager"
+    },
+    "shift_manager": {
+      "label": "Shift Manager",
+      "baseWeeklySalary": 1050,
+      "capacityAdd": 85,
+      "serviceAdd": 0.075,
+      "marketingEfficiencyAdd": 0,
+      "awarenessAdd": 0,
+      "managerQualityAdd": 0.18,
+      "remoteEligible": false,
+      "promotionTo": null
+    },
+    "marketing_specialist": {
+      "label": "Marketing Specialist",
+      "baseWeeklySalary": 920,
+      "capacityAdd": 0,
+      "serviceAdd": 0,
+      "marketingEfficiencyAdd": 0.2,
+      "awarenessAdd": 0.02,
+      "managerQualityAdd": 0,
+      "remoteEligible": true,
+      "promotionTo": null
+    },
+    "operations_assistant": {
+      "label": "Operations Assistant",
+      "baseWeeklySalary": 780,
+      "capacityAdd": 90,
+      "serviceAdd": 0.03,
+      "marketingEfficiencyAdd": 0,
+      "awarenessAdd": 0,
+      "managerQualityAdd": 0,
+      "remoteEligible": false,
+      "promotionTo": "shift_manager"
+    }
+  }
+}

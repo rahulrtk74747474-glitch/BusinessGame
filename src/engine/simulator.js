@@ -1,6 +1,7 @@
 import { createRng } from './random.js';
 import { stepMarket } from './market.js';
 import { stepCustomers } from './customers.js';
+import { stepEmployees } from './employees.js';
 import { stepFinance, estimateValuation } from './finance.js';
 import { createMonthlyReport } from './report.js';
 
@@ -14,7 +15,7 @@ function reachedGoal(state) {
   }
 }
 
-export function advanceWeek(state, decisions, config, industry) {
+export function advanceWeek(state, decisions, config, industry, rolesData) {
   if (state.status !== 'running') return state;
   const rng = createRng(state.seed + state.week * config.simulation.randomSeedStride);
   const modeConfig = config.modes[state.mode];
@@ -27,9 +28,12 @@ export function advanceWeek(state, decisions, config, industry) {
     qualitySpend: Math.max(0, Number(decisions.qualitySpend))
   };
 
+  // HR is stepped before customer operations so employee productivity affects
+  // this week's service capacity, quality and marketing execution.
+  const hrStep = stepEmployees(state, config, rolesData, rng);
   const market = stepMarket(state, safeDecisions, industry, config, rng, modeConfig);
-  const customers = stepCustomers(state, safeDecisions, industry, config, market, rng, locationConfig);
-  const financeWithoutValuation = stepFinance(state, safeDecisions, industry, config, customers, structureConfig, locationConfig);
+  const customers = stepCustomers(state, safeDecisions, industry, config, market, rng, locationConfig, hrStep);
+  const financeWithoutValuation = stepFinance(state, safeDecisions, industry, config, customers, structureConfig, locationConfig, hrStep);
 
   const weekRow = {
     week: state.week + 1,
@@ -47,17 +51,44 @@ export function advanceWeek(state, decisions, config, industry) {
     ltv: customers.estimatedLtv,
     marketShare: customers.marketShare,
     lostOrders: customers.lostOrders,
+    capacity: customers.capacity,
     economicIndex: market.economicIndex,
     trendIndex: market.trendIndex,
     seasonality: market.seasonality,
     price: safeDecisions.price,
     marketingSpend: safeDecisions.marketingSpend,
-    qualitySpend: safeDecisions.qualitySpend
+    qualitySpend: safeDecisions.qualitySpend,
+    payrollCosts: financeWithoutValuation.payrollCosts,
+    hrOneTimeExpenses: financeWithoutValuation.hrOneTimeExpenses,
+    headcount: hrStep.employees.length,
+    teamProductivity: hrStep.averageProductivity,
+    teamMorale: hrStep.averageMorale,
+    teamBurnout: hrStep.averageBurnout,
+    managerQuality: hrStep.managerQuality
   };
 
   const history = [...state.history, weekRow];
   const valuation = estimateValuation(history, financeWithoutValuation, customers, config);
   const finance = { ...financeWithoutValuation, valuation };
+  const latestHrEvent = hrStep.events.at(-1);
+  const hr = {
+    ...state.hr,
+    employees: hrStep.employees,
+    candidates: hrStep.candidates,
+    trials: hrStep.trials,
+    pendingExpenseRecognition: 0,
+    managerQuality: hrStep.managerQuality,
+    averageProductivity: hrStep.averageProductivity,
+    averageMorale: hrStep.averageMorale,
+    averageBurnout: hrStep.averageBurnout,
+    events: [...state.hr.events, ...hrStep.events],
+    lastRipple: latestHrEvent?.type === 'quit'
+      ? {
+          title: latestHrEvent.message,
+          nodes: ['HR: headcount falls', 'Finance: payroll falls', 'Operations: capacity/productivity may fall', 'Leadership: retention problem exposed']
+        }
+      : state.hr.lastRipple
+  };
 
   let next = {
     ...state,
@@ -66,6 +97,7 @@ export function advanceWeek(state, decisions, config, industry) {
     market,
     customers,
     finance,
+    hr,
     history
   };
 
@@ -76,7 +108,7 @@ export function advanceWeek(state, decisions, config, industry) {
 
   if (finance.cash <= config.finance.minCash && !config.finance.financingEnabledInPhase1) {
     next.status = 'lost';
-    next.resultReason = 'Bankruptcy: cash fell to zero and Phase 1 has no financing module.';
+    next.resultReason = 'Bankruptcy: cash fell to zero and the funding module is not unlocked yet.';
   } else if (reachedGoal(next)) {
     next.status = 'won';
     next.resultReason = 'Goal reached.';

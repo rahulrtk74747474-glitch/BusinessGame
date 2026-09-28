@@ -1,15 +1,16 @@
 {
-  "name": "founder-lab-phase1",
+  "name": "founder-lab",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "test:balance": "node scripts/balance-test.mjs",
-    "test": "npm run test:smoke && npm run test:balance",
-    "test:smoke": "node scripts/smoke-test.mjs"
+    "test:hr": "node scripts/hr-test.mjs",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "test": "npm run test:smoke && npm run test:hr && npm run test:balance"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
@@ -18,5 +19,5 @@
     "react-dom": "latest"
   },
   "devDependencies": {},
-  "description": "Phase 1 of Founder Lab, a data-driven business simulation game."
+  "description": "Founder Lab, a data-driven business simulation game."
 }

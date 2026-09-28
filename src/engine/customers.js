@@ -1,6 +1,6 @@
 import { clamp } from './random.js';
 
-export function stepCustomers(state, decisions, industry, config, market, rng, locationConfig) {
+export function stepCustomers(state, decisions, industry, config, market, rng, locationConfig, teamEffects = {}) {
   const cCfg = config.customer;
   const satisfaction = state.customers.satisfaction;
 
@@ -15,9 +15,11 @@ export function stepCustomers(state, decisions, industry, config, market, rng, l
     cCfg.qualityFactorMax
   );
   const adEfficiency = clamp(
-    cCfg.adEfficiencyBase + cCfg.adEfficiencySatisfactionWeight * satisfaction,
+    cCfg.adEfficiencyBase +
+      cCfg.adEfficiencySatisfactionWeight * satisfaction +
+      (teamEffects.marketingEfficiencyAdd || 0),
     cCfg.adEfficiencyMin,
-    industry.marketingEfficiencyCeiling
+    industry.marketingEfficiencyCeiling + 0.35
   );
   const effectiveCAC = industry.basePaidCAC / adEfficiency;
   const paidAcquired = decisions.marketingSpend <= 0 ? 0 : decisions.marketingSpend / Math.max(cCfg.minEffectiveCAC, effectiveCAC);
@@ -25,7 +27,10 @@ export function stepCustomers(state, decisions, industry, config, market, rng, l
   const marketingAwarenessGain = cCfg.marketingAwarenessGain * Math.log1p(decisions.marketingSpend / cCfg.marketingAwarenessSpendScale);
   const reputationAwarenessGain = Math.max(0, satisfaction - cCfg.reputationAwarenessThreshold) * cCfg.reputationAwarenessGain;
   const awareness = clamp(
-    state.customers.awareness * (1 - cCfg.awarenessDecay) + marketingAwarenessGain + reputationAwarenessGain,
+    state.customers.awareness * (1 - cCfg.awarenessDecay) +
+      marketingAwarenessGain +
+      reputationAwarenessGain +
+      (teamEffects.awarenessAdd || 0),
     cCfg.awarenessMin,
     cCfg.awarenessMax
   );
@@ -56,13 +61,16 @@ export function stepCustomers(state, decisions, industry, config, market, rng, l
     cCfg.shareMax
   );
   const demandAvailable = market.marketDemand * shareCeiling;
-  const capacity = industry.capacityOrdersPerWeek * locationConfig.capacityMultiplier;
+  const capacity = industry.capacityOrdersPerWeek * locationConfig.capacityMultiplier + (teamEffects.capacityAdd || 0);
   const orders = Math.max(0, Math.min(potentialOrdersFromCustomers, demandAvailable, capacity));
   const lostOrders = Math.max(0, Math.min(potentialOrdersFromCustomers, demandAvailable) - capacity);
   const capacityPressure = capacity > 0 ? lostOrders / capacity : 0;
 
   const qualitySignal = clamp(
-    industry.serviceBaseline * qualityFactor * priceValue - capacityPressure * cCfg.capacityPressureSatisfactionPenalty + rng.normal(0, cCfg.qualitySignalNoiseStd),
+    industry.serviceBaseline * qualityFactor * priceValue +
+      (teamEffects.serviceAdd || 0) -
+      capacityPressure * cCfg.capacityPressureSatisfactionPenalty +
+      rng.normal(0, cCfg.qualitySignalNoiseStd),
     cCfg.minSatisfaction,
     cCfg.maxSatisfaction
   );

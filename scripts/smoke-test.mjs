@@ -1,5 +1,6 @@
 import config from '../src/config/gameConfig.json' with { type: 'json' };
 import industry from '../src/data/industries/cafe.json' with { type: 'json' };
+import rolesData from '../src/data/hr/cafeRoles.json' with { type: 'json' };
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
 
@@ -26,9 +27,9 @@ for (const mode of Object.keys(config.modes)) {
             variableCostEstimate: industry.baseVariableCostPerOrder
           }
         };
-        let state = createGameState(setup, config, industry, 4242 + cases);
+        let state = createGameState(setup, config, industry, rolesData, 4242 + cases);
         for (let i = 0; i < 8 && state.status === 'running'; i += 1) {
-          state = advanceWeek(state, state.decisions, config, industry);
+          state = advanceWeek(state, state.decisions, config, industry, rolesData);
         }
 
         const values = [
@@ -40,11 +41,16 @@ for (const mode of Object.keys(config.modes)) {
           state.customers.satisfaction,
           state.customers.awareness,
           state.market.economicIndex,
-          state.market.trendIndex
+          state.market.trendIndex,
+          state.hr.managerQuality,
+          state.hr.legalRisk
         ];
-        if (!values.every(finite)) throw new Error(`Non-finite state in case ${cases}`);
+        if (!values.every(finite)) throw new Error('Non-finite state in case ' + cases);
         if (state.customers.satisfaction < config.customer.minSatisfaction || state.customers.satisfaction > config.customer.maxSatisfaction) {
-          throw new Error(`Satisfaction out of bounds in case ${cases}`);
+          throw new Error('Satisfaction out of bounds in case ' + cases);
+        }
+        if (state.hr.candidates.length !== rolesData.candidatePoolSize) {
+          throw new Error('Candidate pool size incorrect in case ' + cases);
         }
         cases += 1;
       }
@@ -52,4 +58,4 @@ for (const mode of Object.keys(config.modes)) {
   }
 }
 
-console.log(`Smoke test passed: ${cases} mode/capital/structure/location combinations.`);
+console.log('Smoke test passed: ' + cases + ' mode/capital/structure/location combinations.');

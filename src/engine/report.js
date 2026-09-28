@@ -30,8 +30,20 @@ export function createMonthlyReport(state, config) {
   if (Math.abs(satisfactionDelta) > rCfg.satisfactionChangeExplainThreshold) explanations.push(`Customer satisfaction ${satisfactionDelta > 0 ? 'improved' : 'weakened'} from ${pct(first.satisfaction)} to ${pct(last.satisfaction)}, affecting churn, referrals, and ad efficiency.`);
   if (avg(recent, 'lostOrders') > rCfg.lostOrdersExplainThreshold) explanations.push(`Capacity constraints caused about ${avg(recent, 'lostOrders').toFixed(0)} lost orders per week, so some demand could not become revenue.`);
   if (avg(recent, 'grossMargin') < rCfg.lowGrossMarginThreshold) explanations.push(`Gross margin averaged ${pct(avg(recent, 'grossMargin'))}; price versus variable cost is limiting how much each sale contributes to fixed costs.`);
-  if (currentProfit < 0) explanations.push(`The business lost ${money(Math.abs(currentProfit))} this report period because gross profit did not cover fixed, marketing, quality, and tax costs.`);
-  else explanations.push(`The business earned ${money(currentProfit)} after tax accrual this report period; positive unit economics and sufficient order volume covered operating costs.`);
+
+  const payroll = sum(recent, 'payrollCosts');
+  if (payroll > 0) {
+    const headcount = avg(recent, 'headcount');
+    const productivity = avg(recent, 'teamProductivity');
+    explanations.push(`Payroll cost ${money(payroll)} over four weeks. Average headcount was ${headcount.toFixed(1)} and team productivity averaged ${pct(productivity)}; new hires ramp gradually rather than paying back immediately.`);
+  }
+
+  if (avg(recent, 'teamBurnout') > 0.55) {
+    explanations.push(`Average burnout reached ${pct(avg(recent, 'teamBurnout'))}, increasing retention risk and weakening morale/productivity.`);
+  }
+
+  if (currentProfit < 0) explanations.push(`The business lost ${money(Math.abs(currentProfit))} this report period because gross profit did not cover fixed, marketing, quality, payroll, HR, and tax costs.`);
+  else explanations.push(`The business earned ${money(currentProfit)} after tax accrual this report period; operating volume and margins covered the current cost base.`);
 
   return {
     week: state.week,
@@ -41,6 +53,9 @@ export function createMonthlyReport(state, config) {
     averageOrders: avg(recent, 'orders'),
     averageCAC: avg(recent, 'effectiveCAC'),
     averageSatisfaction: avg(recent, 'satisfaction'),
+    payroll,
+    averageHeadcount: avg(recent, 'headcount'),
+    averageTeamProductivity: avg(recent, 'teamProductivity'),
     explanations: explanations.slice(0, rCfg.maxExplanations)
   };
 }

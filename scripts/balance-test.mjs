@@ -1,5 +1,6 @@
 import config from '../src/config/gameConfig.json' with { type: 'json' };
 import industry from '../src/data/industries/cafe.json' with { type: 'json' };
+import rolesData from '../src/data/hr/cafeRoles.json' with { type: 'json' };
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
 
@@ -33,8 +34,6 @@ function policy(name, state) {
     };
   }
 
-  // A competent but imperfect policy: it protects gross margin, invests in growth
-  // when cash permits, and cuts acquisition spend if LTV/CAC becomes unattractive.
   const cash = state.finance.cash;
   const satisfaction = state.customers.satisfaction;
   const active = state.customers.active;
@@ -54,9 +53,9 @@ function policy(name, state) {
 }
 
 function runOne(name, seed) {
-  let state = createGameState(baseSetup, config, industry, seed);
+  let state = createGameState(baseSetup, config, industry, rolesData, seed);
   while (state.status === 'running') {
-    state = advanceWeek(state, policy(name, state), config, industry);
+    state = advanceWeek(state, policy(name, state), config, industry, rolesData);
   }
   return {
     name,
@@ -107,7 +106,7 @@ const checks = [
 
 for (const [passed, message] of checks) {
   if (!passed) {
-    console.error(`BALANCE ASSERTION FAILED: ${message}`);
+    console.error('BALANCE ASSERTION FAILED: ' + message);
     process.exitCode = 1;
   }
 }

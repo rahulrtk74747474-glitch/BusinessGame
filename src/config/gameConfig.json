@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "turn": {
+    "unit": "week",
+    "reportEveryWeeks": 4
+  },
+  "durations": [
+    52,
+    104,
+    260
+  ],
+  "startingCapital": [
+    10000,
+    50000,
+    100000
+  ],
+  "difficultyMultiplierByCapital": {
+    "10000": 1.5,
+    "50000": 1.2,
+    "100000": 1.0
+  },
+  "modes": {
+    "tutorial": {
+      "label": "Tutorial",
+      "economyVolatility": 0.55,
+      "hints": true
+    },
+    "standard": {
+      "label": "Standard",
+      "economyVolatility": 1.0,
+      "hints": true
+    },
+    "hard": {
+      "label": "Hard",
+      "economyVolatility": 1.35,
+      "hints": false
+    },
+    "sandbox": {
+      "label": "Sandbox",
+      "economyVolatility": 0.8,
+      "hints": true
+    },
+    "career": {
+      "label": "Career",
+      "economyVolatility": 1.0,
+      "hints": true
+    },
+    "challenge": {
+      "label": "Challenge",
+      "economyVolatility": 1.15,
+      "hints": false
+    }
+  },
+  "goals": {
+    "profit": {
+      "label": "Cumulative profit",
+      "defaultTarget": 65000
+    },
+    "valuation": {
+      "label": "Company valuation",
+      "defaultTarget": 250000
+    },
+    "customers": {
+      "label": "Active customers",
+      "defaultTarget": 350
+    },
+    "marketShare": {
+      "label": "Weekly market share",
+      "defaultTarget": 0.35
+    }
+  },
+  "structures": {
+    "sole": {
+      "label": "Sole proprietor",
+      "liability": "Unlimited personal liability",
+      "taxModel": "Pass-through; simplified 18% effective tax used by the simulation",
+      "taxRate": 0.18,
+      "weeklyAdminCost": 10
+    },
+    "llc": {
+      "label": "LLC",
+      "liability": "Limited liability when formalities are maintained",
+      "taxModel": "Pass-through by default; simplified 20% effective tax used by the simulation",
+      "taxRate": 0.2,
+      "weeklyAdminCost": 30
+    },
+    "corporation": {
+      "label": "Corporation",
+      "liability": "Limited shareholder liability",
+      "taxModel": "Entity-level tax; 21% model rate",
+      "taxRate": 0.21,
+      "weeklyAdminCost": 65
+    }
+  },
+  "locations": {
+    "home": {
+      "label": "Home-based",
+      "fixedCostMultiplier": 0.45,
+      "capacityMultiplier": 0.45,
+      "awarenessModifier": 0.75
+    },
+    "coworking": {
+      "label": "Coworking/shared kitchen",
+      "fixedCostMultiplier": 0.7,
+      "capacityMultiplier": 0.7,
+      "awarenessModifier": 0.9
+    },
+    "rented": {
+      "label": "Rented shop",
+      "fixedCostMultiplier": 1.0,
+      "capacityMultiplier": 1.0,
+      "awarenessModifier": 1.08
+    },
+    "online": {
+      "label": "Online only",
+      "fixedCostMultiplier": 0.35,
+      "capacityMultiplier": 0.55,
+      "awarenessModifier": 0.7
+    }
+  },
+  "finance": {
+    "taxPaymentIntervalWeeks": 13,
+    "cashWarningWeeks": 8,
+    "minCash": 0,
+    "financingEnabledInPhase1": false
+  },
+  "market": {
+    "economicMeanReversion": 0.08,
+    "trendMeanReversion": 0.04,
+    "economicShockStd": 0.018,
+    "trendShockStd": 0.012,
+    "minIndex": 0.7,
+    "maxIndex": 1.35,
+    "minPriceRatio": 0.25,
+    "weeklyDemandNoiseStd": 0.045,
+    "weeklyDemandNoiseMin": 0.82,
+    "weeklyDemandNoiseMax": 1.18,
+    "signalStrongThreshold": 1.03,
+    "signalWeakThreshold": 0.97
+  },
+  "customer": {
+    "awarenessDecay": 0.018,
+    "satisfactionMemory": 0.82,
+    "minSatisfaction": 0.2,
+    "maxSatisfaction": 0.98,
+    "reviewImpact": 0.12,
+    "priceValueMin": 0.65,
+    "priceValueMax": 1.25,
+    "qualityFactorMin": 0.82,
+    "qualityFactorMax": 1.18,
+    "adEfficiencyBase": 0.78,
+    "adEfficiencySatisfactionWeight": 0.34,
+    "adEfficiencyMin": 0.72,
+    "marketingAwarenessGain": 0.025,
+    "marketingAwarenessSpendScale": 80,
+    "reputationAwarenessThreshold": 0.65,
+    "reputationAwarenessGain": 0.018,
+    "awarenessMin": 0.04,
+    "awarenessMax": 0.95,
+    "referralSatisfactionThreshold": 0.45,
+    "referralSatisfactionMultiplier": 1.6,
+    "acquisitionNoiseStd": 0.06,
+    "acquisitionNoiseMin": 0.82,
+    "acquisitionNoiseMax": 1.18,
+    "premiumPriceThreshold": 1.18,
+    "premiumChurnPenalty": 1.15,
+    "churnMin": 0.015,
+    "churnMax": 0.16,
+    "purchaseBase": 0.78,
+    "purchaseSatisfactionWeight": 0.32,
+    "shareBase": 0.18,
+    "shareAwarenessWeight": 0.72,
+    "shareMin": 0.18,
+    "shareMax": 0.88,
+    "capacityPressureSatisfactionPenalty": 0.22,
+    "qualitySignalNoiseStd": 0.025,
+    "churnSatisfactionIntercept": 1.35,
+    "minEffectiveCAC": 1
+  },
+  "valuation": {
+    "revenueMultiple": 0.45,
+    "profitMultiple": 3.0,
+    "customerMultiple": 45
+  },
+  "simulation": {
+    "minDecisionPrice": 0.5,
+    "randomSeedStride": 7919
+  },
+  "reports": {
+    "revenueChangeExplainThreshold": 0.05,
+    "awarenessChangeExplainThreshold": 0.015,
+    "satisfactionChangeExplainThreshold": 0.015,
+    "lostOrdersExplainThreshold": 5,
+    "lowGrossMarginThreshold": 0.55,
+    "maxExplanations": 5
+  },
+  "jurisdictionNote": "Phase 1 uses simplified educational tax rates to demonstrate entity trade-offs. Real tax filings depend on country, state, deductions, elections, and owner circumstances.",
+  "initialDecisions": {
+    "priceUsesIndustryReference": true,
+    "marketingSpend": 220,
+    "qualitySpend": 150
+  },
+  "decisions": {
+    "price": {
+      "min": 4,
+      "max": 18,
+      "step": 0.25
+    },
+    "marketingSpend": {
+      "min": 0,
+      "max": 2500,
+      "step": 25
+    },
+    "qualitySpend": {
+      "min": 0,
+      "max": 900,
+      "step": 10
+    }
+  }
+}

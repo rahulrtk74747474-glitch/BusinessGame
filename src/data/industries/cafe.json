@@ -1,0 +1,60 @@
+{
+  "id": "cafe",
+  "name": "Neighborhood Cafe",
+  "category": "Food and beverage",
+  "description": "A local cafe serving drinks and light food. Success depends on repeat customers, pricing, reputation, and disciplined cash management.",
+  "referencePrice": 9.5,
+  "priceElasticity": 1.55,
+  "baseMarketDemand": 620,
+  "weeklyNewCustomerPool": 260,
+  "organicConversionRate": 0.22,
+  "basePaidCAC": 10.5,
+  "baseVariableCostPerOrder": 3.35,
+  "baseFixedCostPerWeek": 1500,
+  "capacityOrdersPerWeek": 470,
+  "initialCustomers": 95,
+  "initialAwareness": 0.22,
+  "initialSatisfaction": 0.7,
+  "purchaseFrequency": 0.78,
+  "baseWeeklyChurn": 0.055,
+  "referralRate": 0.045,
+  "qualitySpendReference": 180,
+  "qualitySpendEffect": 0.12,
+  "serviceBaseline": 0.72,
+  "marketingEfficiencyCeiling": 1.22,
+  "seasonalityMonthly": [
+    0.92,
+    0.94,
+    1.0,
+    1.03,
+    1.06,
+    1.01,
+    0.96,
+    0.98,
+    1.04,
+    1.1,
+    1.15,
+    1.18
+  ],
+  "regulations": [
+    "Food business registration/license",
+    "Food hygiene and safety rules",
+    "Local premises/fire permissions",
+    "Sales tax/VAT/GST rules depend on jurisdiction"
+  ],
+  "typicalFailureModes": [
+    "Underpricing while food costs rise",
+    "Rent too high for weekly customer traffic",
+    "Weak repeat-customer experience",
+    "Overspending on marketing before unit economics work",
+    "Running out of cash despite accounting profit"
+  ],
+  "kpis": [
+    "gross margin",
+    "orders/week",
+    "CAC",
+    "active customers",
+    "satisfaction",
+    "runway"
+  ]
+}

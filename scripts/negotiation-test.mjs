@@ -134,11 +134,12 @@ state = applyNegotiationAction(
   rolesData
 );
 if (state.negotiation.active.status === 'active') {
-  // Offering their current position is guaranteed to be within the acceptable zone.
+  // For a higher-is-better-for-player negotiation, moving well below the
+  // counterparty's current valuation is unquestionably favorable to them.
   view = negotiationPublicView(state, negotiationConfig);
   state = applyNegotiationAction(
     state,
-    { type: 'tactic', tactic: 'anchor', proposal: view.counterOffer },
+    { type: 'tactic', tactic: 'anchor', proposal: Math.max(1, Math.round(view.counterOffer * 0.8)) },
     negotiationConfig,
     rolesData
   );

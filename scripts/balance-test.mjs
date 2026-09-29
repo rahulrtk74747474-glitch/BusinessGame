@@ -261,7 +261,7 @@ function manageSensiblePhase5(state) {
   // prove itself. The franchise pilot has a build delay and ongoing costs, so
   // it improves the odds of success without removing market/economic variance.
   if (
-    state.week >= 70 &&
+    state.week >= 85 &&
     !state.expansion.completed.includes('franchise_pilot') &&
     !state.expansion.projects.some((project) => project.projectId === 'franchise_pilot')
   ) {

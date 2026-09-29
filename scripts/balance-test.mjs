@@ -17,6 +17,7 @@ import { applyMarketingAction } from '../src/engine/marketing.js';
 import { applySalesAction } from '../src/engine/sales.js';
 import { applyOperationsAction } from '../src/engine/operations.js';
 import { applyLegalAction } from '../src/engine/legal.js';
+import { applyExpansionAction, expansionEligibility } from '../src/engine/expansion.js';
 import { applyNegotiationAction, negotiationPublicView } from '../src/engine/negotiation.js';
 
 const phase4Data = {
@@ -241,6 +242,27 @@ function manageSensibleContracts(state) {
   return state;
 }
 
+function manageSensiblePhase5(state) {
+  // A disciplined founder expands only after the core business has had time to
+  // prove itself. The franchise pilot has a build delay and ongoing costs, so
+  // it improves the odds of success without removing market/economic variance.
+  if (
+    state.week >= 70 &&
+    !state.expansion.completed.includes('franchise_pilot') &&
+    !state.expansion.projects.some((project) => project.projectId === 'franchise_pilot')
+  ) {
+    const eligibility = expansionEligibility(state, 'franchise_pilot', expansionData);
+    if (eligibility.eligible) {
+      state = applyExpansionAction(
+        state,
+        { type: 'startExpansion', projectId: 'franchise_pilot' },
+        expansionData
+      );
+    }
+  }
+  return state;
+}
+
 function runOne(name, seed) {
   let state = createGameState(
     baseSetup,
@@ -252,7 +274,10 @@ function runOne(name, seed) {
   state = configureStrategy(name, state);
 
   while (state.status === 'running') {
-    if (name === 'sensible') state = manageSensibleContracts(state);
+    if (name === 'sensible') {
+      state = manageSensibleContracts(state);
+      state = manageSensiblePhase5(state);
+    }
     state = advanceWeek(
       state,
       policy(name, state),

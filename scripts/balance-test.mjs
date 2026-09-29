@@ -245,7 +245,16 @@ function manageSensibleContracts(state) {
 function manageSensibleCompliance(state) {
   for (const itemId of ['food_license', 'fire_safety', 'privacy_policy']) {
     const current = state.legal.items[itemId];
-    if (current && ['missing', 'expired'].includes(current.status)) {
+    const intentionallyDelayedRenewal =
+      itemId === 'food_license' &&
+      current?.status === 'expired' &&
+      state.week < 75;
+
+    if (
+      current &&
+      ['missing', 'expired'].includes(current.status) &&
+      !intentionallyDelayedRenewal
+    ) {
       state = applyLegalAction(
         state,
         { type: 'startCompliance', itemId },

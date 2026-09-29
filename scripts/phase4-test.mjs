@@ -81,7 +81,7 @@ assert(state.sales.settings.pricingModel === 'subscription', 'Sales pricing mode
 
 state = applyOperationsAction(
   state,
-  { type: 'setOperationsSetting', key: 'reorderPoint', value: 220 },
+  { type: 'setOperationsSetting', key: 'reorderPoint', value: 500 },
   operationsData
 );
 state = applyOperationsAction(
@@ -89,7 +89,7 @@ state = applyOperationsAction(
   { type: 'setOperationsSetting', key: 'qualityControlSpend', value: 160 },
   operationsData
 );
-assert(state.operations.settings.reorderPoint === 220, 'Operations reorder point failed.');
+assert(state.operations.settings.reorderPoint === 500, 'Operations reorder point failed.');
 assert(state.operations.settings.qualityControlSpend === 160, 'Operations QC setting failed.');
 
 // Public competitor intelligence must not expose internal archetype/threshold fields.

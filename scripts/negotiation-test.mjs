@@ -84,6 +84,19 @@ assert(
 assert(view.preparation > prepBefore, 'Research did not improve preparation.');
 assert(view.revealed.personality, 'Research did not reveal any counterparty intelligence.');
 
+// Regression: after personality is already revealed, asking for more information
+// must reveal the walk-away band without throwing and blanking the React app.
+state = applyNegotiationAction(
+  state,
+  { type: 'tactic', tactic: 'ask_info' },
+  negotiationConfig,
+  rolesData
+);
+view = negotiationPublicView(state, negotiationConfig);
+assert(view.revealed.walkAwayBand, 'Ask-for-info did not reveal the walk-away band.');
+assert(Number.isFinite(view.revealed.walkAwayBand.low), 'Walk-away band low bound is invalid.');
+assert(Number.isFinite(view.revealed.walkAwayBand.high), 'Walk-away band high bound is invalid.');
+
 const supplierAsk = view.counterOffer;
 state = applyNegotiationAction(
   state,

@@ -324,7 +324,7 @@ function shouldLeave(session, tactic, proposal, negotiationConfig, rng) {
   return rng.uniform() < chance;
 }
 
-function revealNext(session) {
+function revealNext(session, negotiationConfig) {
   if (!session.revealed.personality) {
     return { ...session.revealed, personality: session.hidden.personality };
   }
@@ -572,7 +572,7 @@ export function applyNegotiationAction(state, action, negotiationConfig, rolesDa
         negotiationConfig.preparationMax
       ),
       researchActions: session.researchActions + 1,
-      revealed: revealNext(session),
+      revealed: revealNext(session, negotiationConfig),
       transcript: [
         ...session.transcript,
         { speaker: 'system', text: 'You prepared a research dossier and improved your information position.' }
@@ -621,7 +621,7 @@ export function applyNegotiationAction(state, action, negotiationConfig, rolesDa
         negotiationConfig.preparationMin,
         negotiationConfig.preparationMax
       ),
-      revealed: revealNext(working),
+      revealed: revealNext(working, negotiationConfig),
       transcript: [
         ...working.transcript,
         { speaker: 'you', text: 'I asked for more information before changing the offer.' },

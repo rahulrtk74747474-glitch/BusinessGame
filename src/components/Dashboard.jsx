@@ -18,6 +18,7 @@ import { founderOwnership } from '../engine/logging.js';
 
 const money = (n) => '$' + Math.round(n || 0).toLocaleString();
 const pct = (n) => ((n || 0) * 100).toFixed(1) + '%';
+const formatPrice = (n, reference) => String.fromCharCode(36) + Number(n || 0).toFixed(reference < 5 ? 2 : 0);
 
 export default function Dashboard({
   state,
@@ -167,7 +168,7 @@ export default function Dashboard({
       <section className="content-grid">
         <section className="panel controls">
           <div className="section-head"><div><h2>Weekly decisions</h2><p>Pricing, growth, quality, people, compliance and capital structure now interact in the same weekly model.</p></div></div>
-          <label>Average selling price <b>{'
+          <label>Average selling price <b>{formatPrice(decisionDraft.price, industry.referencePrice)}</b><input type="range" min={priceMin} max={priceMax} step={priceStep} value={decisionDraft.price} onChange={(e) => setDecision('price', e.target.value)} /></label>
           <label>Marketing spend <b>{money(decisionDraft.marketingSpend)}</b><input type="range" min={config.decisions.marketingSpend.min} max={config.decisions.marketingSpend.max} step={config.decisions.marketingSpend.step} value={decisionDraft.marketingSpend} onChange={(e) => setDecision('marketingSpend', e.target.value)} /></label>
           <label>Quality/service spend <b>{money(decisionDraft.qualitySpend)}</b><input type="range" min={config.decisions.qualitySpend.min} max={config.decisions.qualitySpend.max} step={config.decisions.qualitySpend.step} value={decisionDraft.qualitySpend} onChange={(e) => setDecision('qualitySpend', e.target.value)} /></label>
           <button className="primary" disabled={state.status !== 'running'} onClick={() => onAdvance(decisionDraft)}>Advance one week</button>
@@ -181,46 +182,6 @@ export default function Dashboard({
             <span>Churn <b>{pct(state.customers.churnRate)}</b></span>
             <span>Lost orders <b>{state.history.at(-1)?.lostOrders?.toFixed(0) || 0}</b></span>
             <span>Capacity <b>{state.customers.capacity?.toFixed(0) || industry.capacityOrdersPerWeek} {industry.unitLabel || 'units'}/wk</b></span>
-            <span>Economy <b>{state.market.economicIndex > config.market.signalStrongThreshold ? 'Strong' : state.market.economicIndex < config.market.signalWeakThreshold ? 'Weak' : 'Stable'}</b></span>
-            <span>Trend <b>{state.market.trendIndex > config.market.signalStrongThreshold ? 'Favorable' : state.market.trendIndex < config.market.signalWeakThreshold ? 'Unfavorable' : 'Flat'}</b></span>
-            <span>Manager quality <b>{pct(state.hr.managerQuality)}</b></span>
-            <span>Client contract <b>{money(state.finance.clientRevenue || 0)}/wk</b></span>
-            <span>Fulfillment <b>{pct(state.operations.last.fulfillmentRate)}</b></span>
-            <span>Competitor pressure <b>{pct(state.competitors.last.pressureIndex)}</b></span>
-            <span>Marketing ROAS <b>{state.marketing.last.estimatedROAS.toFixed(2)}x</b></span>
-            <span>Emergency reserve <b>{money(state.risk.reserveCash)}</b></span>
-            <span>Legal shutdown <b>{state.legal.shutdownWeeks > 0 ? state.legal.shutdownWeeks + ' wk' : 'No'}</b></span>
-            <span>Expansion projects <b>{state.expansion.projects.length} active / {state.expansion.completed.length} complete</b></span>
-          </div>
-          <div className="industry-notes"><h3>Typical failure modes</h3><ul>{industry.typicalFailureModes.map((x) => <li key={x}>{x}</li>)}</ul></div>
-        </section>
-      </section>
-
-      <RippleMap ripple={state.exit.lastRipple || state.expansion.lastRipple || state.risk.lastRipple || state.legal.lastRipple || state.funding.lastRipple || state.operations.lastRipple || state.sales.lastRipple || state.marketing.lastRipple || state.negotiation.lastRipple || state.hr.lastRipple} />
-
-      <section className="charts-grid">
-        <MiniChart label="Cash" values={state.history.map((x) => x.cash)} />
-        <MiniChart label="Weekly revenue" values={state.history.map((x) => x.revenue)} />
-        <MiniChart label="Active customers" values={state.history.map((x) => x.activeCustomers)} />
-      </section>
-      <MonthlyReport report={latestReport} />
-    </>}
-  </div>;
-}
- + decisionDraft.price.toFixed(industry.referencePrice < 5 ? 2 : 0)}</b><input type="range" min={priceMin} max={priceMax} step={priceStep} value={decisionDraft.price} onChange={(e) => setDecision('price', e.target.value)} /></label>
-          <label>Marketing spend <b>{money(decisionDraft.marketingSpend)}</b><input type="range" min={config.decisions.marketingSpend.min} max={config.decisions.marketingSpend.max} step={config.decisions.marketingSpend.step} value={decisionDraft.marketingSpend} onChange={(e) => setDecision('marketingSpend', e.target.value)} /></label>
-          <label>Quality/service spend <b>{money(decisionDraft.qualitySpend)}</b><input type="range" min={config.decisions.qualitySpend.min} max={config.decisions.qualitySpend.max} step={config.decisions.qualitySpend.step} value={decisionDraft.qualitySpend} onChange={(e) => setDecision('qualitySpend', e.target.value)} /></label>
-          <button className="primary" disabled={state.status !== 'running'} onClick={() => onAdvance(decisionDraft)}>Advance one week</button>
-          <div className="hidden-info"><b>What you can observe:</b> the game logs every player action and the visible information available at that moment. Hidden traits and market variables remain hidden until their systems reveal them.</div>
-        </section>
-
-        <section className="panel">
-          <h2>Company signals</h2>
-          <div className="signal-list">
-            <span>Awareness <b>{pct(state.customers.awareness)}</b></span>
-            <span>Churn <b>{pct(state.customers.churnRate)}</b></span>
-            <span>Lost orders <b>{state.history.at(-1)?.lostOrders?.toFixed(0) || 0}</b></span>
-            <span>Capacity <b>{state.customers.capacity?.toFixed(0) || industry.capacityOrdersPerWeek}</b></span>
             <span>Economy <b>{state.market.economicIndex > config.market.signalStrongThreshold ? 'Strong' : state.market.economicIndex < config.market.signalWeakThreshold ? 'Weak' : 'Stable'}</b></span>
             <span>Trend <b>{state.market.trendIndex > config.market.signalStrongThreshold ? 'Favorable' : state.market.trendIndex < config.market.signalWeakThreshold ? 'Unfavorable' : 'Flat'}</b></span>
             <span>Manager quality <b>{pct(state.hr.managerQuality)}</b></span>

@@ -242,6 +242,20 @@ function manageSensibleContracts(state) {
   return state;
 }
 
+function manageSensibleCompliance(state) {
+  for (const itemId of ['food_license', 'fire_safety', 'privacy_policy']) {
+    const current = state.legal.items[itemId];
+    if (current && ['missing', 'expired'].includes(current.status)) {
+      state = applyLegalAction(
+        state,
+        { type: 'startCompliance', itemId },
+        legalData
+      );
+    }
+  }
+  return state;
+}
+
 function manageSensiblePhase5(state) {
   // A disciplined founder expands only after the core business has had time to
   // prove itself. The franchise pilot has a build delay and ongoing costs, so
@@ -276,6 +290,7 @@ function runOne(name, seed) {
   while (state.status === 'running') {
     if (name === 'sensible') {
       state = manageSensibleContracts(state);
+      state = manageSensibleCompliance(state);
       state = manageSensiblePhase5(state);
     }
     state = advanceWeek(

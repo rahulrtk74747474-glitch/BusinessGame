@@ -1,10 +1,17 @@
 import config from '../src/config/gameConfig.json' with { type: 'json' };
 import industry from '../src/data/industries/cafe.json' with { type: 'json' };
 import rolesData from '../src/data/hr/cafeRoles.json' with { type: 'json' };
+import negotiationConfig from '../src/data/negotiation/negotiationConfig.json' with { type: 'json' };
 import marketingData from '../src/data/marketing/cafeMarketing.json' with { type: 'json' };
 import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
 import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
 import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+import { createGameState } from '../src/models/createGameState.js';
+import { advanceWeek } from '../src/engine/simulator.js';
+import { applyMarketingAction } from '../src/engine/marketing.js';
+import { applySalesAction } from '../src/engine/sales.js';
+import { applyOperationsAction } from '../src/engine/operations.js';
+import { applyNegotiationAction, negotiationPublicView } from '../src/engine/negotiation.js';
 
 const phase4Data = {
   marketing: marketingData,
@@ -12,11 +19,6 @@ const phase4Data = {
   operations: operationsData,
   competitors: competitorData
 };
-import { createGameState } from '../src/models/createGameState.js';
-import { advanceWeek } from '../src/engine/simulator.js';
-import { applyMarketingAction } from '../src/engine/marketing.js';
-import { applySalesAction } from '../src/engine/sales.js';
-import { applyOperationsAction } from '../src/engine/operations.js';
 
 const baseSetup = {
   mode: 'standard',
@@ -28,7 +30,7 @@ const baseSetup = {
   location: 'rented',
   plan: {
     idea: 'Neighborhood cafe focused on repeat customers and consistent quality.',
-    targetCustomer: 'Nearby residents and office workers who buy coffee several times per week.',
+    targetCustomer: 'Nearby residents, office workers and local business buyers.',
     price: industry.referencePrice,
     weeklyFixedCostEstimate: industry.baseFixedCostPerWeek,
     variableCostEstimate: industry.baseVariableCostPerOrder
@@ -37,7 +39,11 @@ const baseSetup = {
 
 function policy(name, state) {
   if (name === 'do-nothing') {
-    return { price: industry.referencePrice, marketingSpend: 0, qualitySpend: 0 };
+    return {
+      price: industry.referencePrice,
+      marketingSpend: 0,
+      qualitySpend: 0
+    };
   }
 
   if (name === 'reckless') {
@@ -48,93 +54,193 @@ function policy(name, state) {
     };
   }
 
-  if (name === 'sensibleLean') {
-    return {
-      price: 9.5,
-      marketingSpend: state.week < 16 ? 700 : state.week < 40 ? 250 : 80,
-      qualitySpend: 140
-    };
-  }
-
-  if (name === 'sensibleGrowth') {
-    return {
-      price: 9.5,
-      marketingSpend: state.week < 12 ? 900 : state.week < 28 ? 450 : 120,
-      qualitySpend: 160
-    };
-  }
-
-  if (name === 'sensiblePremium') {
-    return {
-      price: 10.25,
-      marketingSpend: state.week < 16 ? 600 : state.week < 40 ? 250 : 80,
-      qualitySpend: 180
-    };
-  }
-
-  if (name === 'sensibleSales') {
-    return {
-      price: 9.75,
-      marketingSpend: state.week < 16 ? 500 : state.week < 40 ? 220 : 80,
-      qualitySpend: 140
-    };
-  }
-
-  const cash = state.finance.cash;
-  const satisfaction = state.customers.satisfaction;
-  const active = state.customers.active;
-  const marketShare = state.customers.marketShare;
-
-  let price = satisfaction > 0.73 ? 10.75 : 10.0;
-  if (marketShare < 0.12 && active < 180) price -= 0.5;
-
-  let marketingSpend = cash > 30000 ? 520 : cash > 16000 ? 320 : 120;
-  if (state.customers.estimatedLtv > 0 && state.customers.estimatedLtv < state.customers.effectiveCAC * 2.2) {
-    marketingSpend *= 0.55;
-  }
-  if (active > 330) marketingSpend *= 0.65;
-
-  const qualitySpend = satisfaction < 0.70 ? 260 : satisfaction > 0.80 ? 140 : 190;
-  return { price, marketingSpend, qualitySpend };
+  // Sensible player invests early to build demand, then shifts toward
+  // profitable retention once awareness/customer volume are established.
+  return {
+    price: state.customers.satisfaction > 0.66 ? 10.0 : 9.5,
+    marketingSpend:
+      state.week < 16 ? 620 :
+      state.week < 40 ? 260 :
+      state.customers.awareness < 0.65 ? 150 : 80,
+    qualitySpend:
+      state.customers.satisfaction < 0.58 ? 210 :
+      state.customers.satisfaction > 0.72 ? 120 : 150
+  };
 }
 
 function configureStrategy(name, state) {
-  if (['sensible', 'sensibleLean', 'sensibleGrowth', 'sensiblePremium', 'sensibleSales'].includes(name)) {
-    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'local_search', weight: 40 }, marketingData);
-    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'content_seo', weight: 30 }, marketingData);
-    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'paid_social', weight: 15 }, marketingData);
-    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'email', weight: 10 }, marketingData);
-    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'influencer', weight: 5 }, marketingData);
-    const salesSpend = name === 'sensibleLean' ? 60 : name === 'sensibleGrowth' ? 0 : name === 'sensibleSales' ? 350 : name === 'sensiblePremium' ? 100 : 180;
-    state = applySalesAction(state, { type: 'setSalesSetting', key: 'outboundSpend', value: salesSpend }, salesData);
-    state = applySalesAction(state, { type: 'setSalesSetting', key: 'discountRate', value: 0.04 }, salesData);
-    state = applySalesAction(state, { type: 'setSalesSetting', key: 'pricingModel', value: 'tiered' }, salesData);
-    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'reorderPoint', value: 380 }, operationsData);
-    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'orderQuantity', value: 540 }, operationsData);
-    const qcSpend = name === 'sensibleLean' ? 60 : name === 'sensibleGrowth' ? 80 : name === 'sensibleSales' ? 70 : 100;
-    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'qualityControlSpend', value: qcSpend }, operationsData);
-    if (name === 'sensibleLean') {
-      state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'processMode', value: 'lean' }, operationsData);
+  if (name === 'sensible') {
+    for (const [channelId, weight] of Object.entries({
+      local_search: 40,
+      content_seo: 30,
+      paid_social: 15,
+      email: 10,
+      influencer: 5
+    })) {
+      state = applyMarketingAction(
+        state,
+        { type: 'setChannelWeight', channelId, weight },
+        marketingData
+      );
     }
+
+    state = applySalesAction(
+      state,
+      { type: 'setSalesSetting', key: 'outboundSpend', value: 220 },
+      salesData
+    );
+    state = applySalesAction(
+      state,
+      { type: 'setSalesSetting', key: 'discountRate', value: 0.03 },
+      salesData
+    );
+    state = applySalesAction(
+      state,
+      { type: 'setSalesSetting', key: 'pricingModel', value: 'tiered' },
+      salesData
+    );
+
+    state = applyOperationsAction(
+      state,
+      { type: 'setOperationsSetting', key: 'reorderPoint', value: 700 },
+      operationsData
+    );
+    state = applyOperationsAction(
+      state,
+      { type: 'setOperationsSetting', key: 'orderQuantity', value: 760 },
+      operationsData
+    );
+    state = applyOperationsAction(
+      state,
+      { type: 'setOperationsSetting', key: 'qualityControlSpend', value: 90 },
+      operationsData
+    );
   }
 
   if (name === 'reckless') {
-    state = applySalesAction(state, { type: 'setSalesSetting', key: 'outboundSpend', value: 1500 }, salesData);
-    state = applySalesAction(state, { type: 'setSalesSetting', key: 'discountRate', value: 0.28 }, salesData);
-    state = applySalesAction(state, { type: 'setSalesSetting', key: 'commissionRate', value: 0.18 }, salesData);
-    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'outsourceShare', value: 0.5 }, operationsData);
-    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'orderQuantity', value: 1000 }, operationsData);
-    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'reorderPoint', value: 800 }, operationsData);
+    state = applySalesAction(
+      state,
+      { type: 'setSalesSetting', key: 'outboundSpend', value: 1500 },
+      salesData
+    );
+    state = applySalesAction(
+      state,
+      { type: 'setSalesSetting', key: 'discountRate', value: 0.28 },
+      salesData
+    );
+    state = applySalesAction(
+      state,
+      { type: 'setSalesSetting', key: 'commissionRate', value: 0.18 },
+      salesData
+    );
+    state = applyOperationsAction(
+      state,
+      { type: 'setOperationsSetting', key: 'outsourceShare', value: 0.5 },
+      operationsData
+    );
+    state = applyOperationsAction(
+      state,
+      { type: 'setOperationsSetting', key: 'orderQuantity', value: 1000 },
+      operationsData
+    );
+    state = applyOperationsAction(
+      state,
+      { type: 'setOperationsSetting', key: 'reorderPoint', value: 800 },
+      operationsData
+    );
+  }
+
+  return state;
+}
+
+function negotiateToDeal(state, type, preferredProposal) {
+  if (state.negotiation.active) return state;
+
+  state = applyNegotiationAction(
+    state,
+    { type: 'start', counterpartyType: type },
+    negotiationConfig,
+    rolesData
+  );
+
+  if (!state.negotiation.active) return state;
+
+  state = applyNegotiationAction(
+    state,
+    {
+      type: 'tactic',
+      tactic: 'bundle',
+      proposal: preferredProposal
+    },
+    negotiationConfig,
+    rolesData
+  );
+
+  // If they counter instead of accepting, move to their stated counter.
+  // This models a sensible founder prioritizing a profitable agreement over
+  // squeezing the final dollar out of the counterparty.
+  if (state.negotiation.active?.status === 'active') {
+    const view = negotiationPublicView(state, negotiationConfig);
+    state = applyNegotiationAction(
+      state,
+      {
+        type: 'tactic',
+        tactic: 'anchor',
+        proposal: view.counterOffer
+      },
+      negotiationConfig,
+      rolesData
+    );
+  }
+
+  if (state.negotiation.active?.status !== 'active') {
+    state = applyNegotiationAction(
+      state,
+      { type: 'close' },
+      negotiationConfig,
+      rolesData
+    );
+  }
+
+  return state;
+}
+
+function manageSensibleContracts(state) {
+  if (state.negotiation.contracts.supplierRemainingWeeks <= 0) {
+    state = negotiateToDeal(state, 'supplier', 3.25);
+  }
+  if (state.negotiation.contracts.landlordRemainingWeeks <= 0) {
+    state = negotiateToDeal(state, 'landlord', 850);
+  }
+  if (state.negotiation.contracts.clientRemainingWeeks <= 0) {
+    state = negotiateToDeal(state, 'client', 1500);
   }
   return state;
 }
 
 function runOne(name, seed) {
-  let state = createGameState(baseSetup, config, industry, rolesData, seed, phase4Data);
+  let state = createGameState(
+    baseSetup,
+    config,
+    industry,
+    rolesData,
+    seed,
+    phase4Data
+  );
   state = configureStrategy(name, state);
+
   while (state.status === 'running') {
-    state = advanceWeek(state, policy(name, state), config, industry, rolesData, phase4Data);
+    if (name === 'sensible') state = manageSensibleContracts(state);
+    state = advanceWeek(
+      state,
+      policy(name, state),
+      config,
+      industry,
+      rolesData,
+      phase4Data
+    );
   }
+
   return {
     name,
     seed,
@@ -143,16 +249,11 @@ function runOne(name, seed) {
     cash: state.finance.cash,
     cumulativeProfit: state.finance.cumulativeProfit,
     customers: state.customers.active,
-    valuation: state.finance.valuation,
-    lastWeek: state.history.at(-1),
-    finance: state.finance,
-    sales: state.sales.last,
-    operations: state.operations.last,
-    marketing: state.marketing.last
+    valuation: state.finance.valuation
   };
 }
 
-const names = ['do-nothing', 'reckless', 'sensible', 'sensibleLean', 'sensibleGrowth', 'sensiblePremium', 'sensibleSales'];
+const names = ['do-nothing', 'reckless', 'sensible'];
 const seeds = Array.from({ length: 60 }, (_, i) => 1000 + i * 97);
 const summaries = [];
 
@@ -161,7 +262,8 @@ for (const name of names) {
   const wins = rows.filter((r) => r.status === 'won').length;
   const bankruptcies = rows.filter((r) => r.status === 'lost').length;
   const finishes = rows.filter((r) => r.status === 'finished').length;
-  const avg = (key) => rows.reduce((sum, row) => sum + row[key], 0) / rows.length;
+  const avg = (key) =>
+    rows.reduce((sum, row) => sum + row[key], 0) / rows.length;
 
   const summary = {
     strategy: name,
@@ -179,12 +281,26 @@ for (const name of names) {
   console.log(JSON.stringify(summary, null, 2));
 }
 
-const byName = Object.fromEntries(summaries.map((s) => [s.strategy, s]));
+const byName = Object.fromEntries(
+  summaries.map((s) => [s.strategy, s])
+);
 const checks = [
-  [byName['do-nothing'].winRate === 0, 'Do-nothing policy must not win the 104-week target test.'],
-  [byName['reckless'].bankruptcyRate >= 0.70, 'Reckless policy should usually go bankrupt.'],
-  [byName['sensible'].winRate >= 0.60, 'Sensible policy should usually win.'],
-  [byName['sensible'].winRate < 1.00, 'Sensible policy must not be guaranteed to win.']
+  [
+    byName['do-nothing'].winRate === 0,
+    'Do-nothing policy must not win the 104-week target test.'
+  ],
+  [
+    byName['reckless'].bankruptcyRate >= 0.7,
+    'Reckless policy should usually go bankrupt.'
+  ],
+  [
+    byName['sensible'].winRate >= 0.6,
+    'Sensible policy should usually win.'
+  ],
+  [
+    byName['sensible'].winRate < 1,
+    'Sensible policy must not be guaranteed to win.'
+  ]
 ];
 
 for (const [passed, message] of checks) {

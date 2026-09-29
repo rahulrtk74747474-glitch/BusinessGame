@@ -10,7 +10,7 @@
   "organicConversionRate": 0.22,
   "basePaidCAC": 10.5,
   "baseVariableCostPerOrder": 3.35,
-  "baseFixedCostPerWeek": 1500,
+  "baseFixedCostPerWeek": 1200,
   "capacityOrdersPerWeek": 470,
   "initialCustomers": 95,
   "initialAwareness": 0.22,
@@ -25,7 +25,7 @@
   "seasonalityMonthly": [
     0.92,
     0.94,
-    1.0,
+    1,
     1.03,
     1.06,
     1.01,

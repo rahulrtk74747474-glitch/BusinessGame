@@ -1,6 +1,17 @@
 import config from '../src/config/gameConfig.json' with { type: 'json' };
 import industry from '../src/data/industries/cafe.json' with { type: 'json' };
 import rolesData from '../src/data/hr/cafeRoles.json' with { type: 'json' };
+import marketingData from '../src/data/marketing/cafeMarketing.json' with { type: 'json' };
+import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
+import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
+import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+
+const phase4Data = {
+  marketing: marketingData,
+  sales: salesData,
+  operations: operationsData,
+  competitors: competitorData
+};
 import negotiationConfig from '../src/data/negotiation/negotiationConfig.json' with { type: 'json' };
 import { createGameState } from '../src/models/createGameState.js';
 import { applyNegotiationAction, negotiationPublicView } from '../src/engine/negotiation.js';
@@ -34,7 +45,7 @@ const close = (state) => applyNegotiationAction(
   rolesData
 );
 
-let state = createGameState(setup, config, industry, rolesData, 24680);
+let state = createGameState(setup, config, industry, rolesData, 24680, phase4Data);
 
 // Supplier: hidden fields must stay out of the UI view, research must cost money,
 // and a mutually acceptable offer must create a real operating contract.
@@ -73,7 +84,7 @@ assert(state.negotiation.contracts.supplierUnitCost > 0, 'Supplier unit cost was
 state = close(state);
 
 // Finance integration: the negotiated supplier unit cost must flow into the weekly P&L.
-state = advanceWeek(state, state.decisions, config, industry, rolesData);
+state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
 assert(
   Math.abs(state.finance.effectiveVariableCostPerOrder - state.negotiation.contracts.supplierUnitCost) < 0.0001,
   'Supplier deal did not flow into variable cost.'
@@ -114,7 +125,7 @@ assert(state.negotiation.active.status === 'accepted', 'Client negotiation did n
 const clientRevenue = state.negotiation.contracts.clientWeeklyRevenue;
 assert(clientRevenue > 0, 'Client contract revenue was not stored.');
 state = close(state);
-state = advanceWeek(state, state.decisions, config, industry, rolesData);
+state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
 assert(state.finance.clientRevenue === clientRevenue, 'Client contract revenue did not reach finance.');
 assert(state.finance.clientVariableCosts > 0, 'Client delivery costs were not modeled.');
 

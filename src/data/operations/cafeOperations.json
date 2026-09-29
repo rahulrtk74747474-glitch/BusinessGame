@@ -1,0 +1,64 @@
+{
+  "id": "cafe-operations",
+  "initialInventoryUnits": 190,
+  "initialInventoryFundingIncluded": true,
+  "defaults": {
+    "processMode": "balanced",
+    "qualityControlSpend": 90,
+    "reorderPoint": 150,
+    "orderQuantity": 300,
+    "outsourceShare": 0
+  },
+  "limits": {
+    "qualityControlSpendMax": 600,
+    "reorderPointMax": 900,
+    "orderQuantityMin": 50,
+    "orderQuantityMax": 1200,
+    "outsourceShareMax": 0.5
+  },
+  "supplier": {
+    "baseLeadTimeWeeks": 1,
+    "baseReliability": 0.95,
+    "lateDelayWeeks": 1,
+    "orderAdminCost": 18
+  },
+  "inventory": {
+    "spoilageRatePerWeek": 0.018,
+    "emergencyPurchaseMarkup": 0.35,
+    "forecastDemandWeight": 0.35
+  },
+  "qualityControl": {
+    "baseDefectRate": 0.055,
+    "spendScale": 120,
+    "maxDefectReduction": 0.7,
+    "satisfactionPenaltyPerDefectRate": 0.75
+  },
+  "outsource": {
+    "capacityPerShare": 300,
+    "unitCostMarkup": 0.42,
+    "servicePenaltyPerShare": 0.08
+  },
+  "processModes": {
+    "lean": {
+      "label": "Lean / efficiency",
+      "capacityMultiplier": 1.08,
+      "serviceAdd": -0.025,
+      "wasteMultiplier": 0.72,
+      "weeklyFixedCost": 30
+    },
+    "balanced": {
+      "label": "Balanced",
+      "capacityMultiplier": 1,
+      "serviceAdd": 0,
+      "wasteMultiplier": 1,
+      "weeklyFixedCost": 55
+    },
+    "service": {
+      "label": "Service-first",
+      "capacityMultiplier": 0.92,
+      "serviceAdd": 0.055,
+      "wasteMultiplier": 1.12,
+      "weeklyFixedCost": 110
+    }
+  }
+}

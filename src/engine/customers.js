@@ -1,6 +1,18 @@
 import { clamp } from './random.js';
 
-export function stepCustomers(state, decisions, industry, config, market, rng, locationConfig, teamEffects = {}) {
+export function stepCustomers(
+  state,
+  decisions,
+  industry,
+  config,
+  market,
+  rng,
+  locationConfig,
+  teamEffects = {},
+  marketingEffects = {},
+  operationsEffects = {},
+  competitorEffects = {}
+) {
   const cCfg = config.customer;
   const satisfaction = state.customers.satisfaction;
 
@@ -14,76 +26,134 @@ export function stepCustomers(state, decisions, industry, config, market, rng, l
     cCfg.qualityFactorMin,
     cCfg.qualityFactorMax
   );
-  const adEfficiency = clamp(
-    cCfg.adEfficiencyBase +
-      cCfg.adEfficiencySatisfactionWeight * satisfaction +
-      (teamEffects.marketingEfficiencyAdd || 0),
-    cCfg.adEfficiencyMin,
-    industry.marketingEfficiencyCeiling + 0.35
-  );
-  const effectiveCAC = industry.basePaidCAC / adEfficiency;
-  const paidAcquired = decisions.marketingSpend <= 0 ? 0 : decisions.marketingSpend / Math.max(cCfg.minEffectiveCAC, effectiveCAC);
 
-  const marketingAwarenessGain = cCfg.marketingAwarenessGain * Math.log1p(decisions.marketingSpend / cCfg.marketingAwarenessSpendScale);
-  const reputationAwarenessGain = Math.max(0, satisfaction - cCfg.reputationAwarenessThreshold) * cCfg.reputationAwarenessGain;
+  const paidAcquired = Math.max(0, marketingEffects.totalAcquired || 0);
+  const effectiveCAC = paidAcquired > 0
+    ? marketingEffects.effectiveCAC
+    : industry.basePaidCAC;
+
+  const reputationAwarenessGain =
+    Math.max(0, satisfaction - cCfg.reputationAwarenessThreshold) *
+    cCfg.reputationAwarenessGain;
   const awareness = clamp(
     state.customers.awareness * (1 - cCfg.awarenessDecay) +
-      marketingAwarenessGain +
+      (marketingEffects.awarenessGain || 0) +
       reputationAwarenessGain +
       (teamEffects.awarenessAdd || 0),
     cCfg.awarenessMin,
     cCfg.awarenessMax
   );
 
-  const organicPool = industry.weeklyNewCustomerPool * market.economicIndex * market.trendIndex;
-  const organicAcquired = organicPool * awareness * industry.organicConversionRate * priceValue * locationConfig.awarenessModifier;
-  const referrals = state.customers.active * industry.referralRate * Math.max(0, satisfaction - cCfg.referralSatisfactionThreshold) * cCfg.referralSatisfactionMultiplier;
+  const competitionDemand = competitorEffects.demandModifier || 1;
+  const organicPool =
+    industry.weeklyNewCustomerPool *
+    market.economicIndex *
+    market.trendIndex *
+    competitionDemand;
+  const organicAcquired =
+    organicPool *
+    awareness *
+    industry.organicConversionRate *
+    priceValue *
+    locationConfig.awarenessModifier;
+  const referrals =
+    state.customers.active *
+    industry.referralRate *
+    Math.max(0, satisfaction - cCfg.referralSatisfactionThreshold) *
+    cCfg.referralSatisfactionMultiplier;
   const acquisitionNoise = clamp(
     rng.normal(1, cCfg.acquisitionNoiseStd),
     cCfg.acquisitionNoiseMin,
     cCfg.acquisitionNoiseMax
   );
-  const newCustomers = Math.max(0, (paidAcquired + organicAcquired + referrals) * acquisitionNoise);
+  const newCustomers = Math.max(
+    0,
+    (paidAcquired + organicAcquired + referrals) * acquisitionNoise
+  );
 
-  const premiumPenalty = decisions.price > industry.referencePrice * cCfg.premiumPriceThreshold ? cCfg.premiumChurnPenalty : 1;
+  const premiumPenalty =
+    decisions.price > industry.referencePrice * cCfg.premiumPriceThreshold
+      ? cCfg.premiumChurnPenalty
+      : 1;
   const churnRate = clamp(
-    industry.baseWeeklyChurn * (cCfg.churnSatisfactionIntercept - satisfaction) * premiumPenalty,
+    industry.baseWeeklyChurn *
+      (cCfg.churnSatisfactionIntercept - satisfaction) *
+      premiumPenalty,
     cCfg.churnMin,
     cCfg.churnMax
   );
-  const churned = Math.min(state.customers.active, state.customers.active * churnRate);
-  const activeBeforeOrders = Math.max(0, state.customers.active + newCustomers - churned);
+  const churned = Math.min(
+    state.customers.active,
+    state.customers.active * churnRate
+  );
+  const activeBeforeOrders = Math.max(
+    0,
+    state.customers.active + newCustomers - churned
+  );
 
-  const potentialOrdersFromCustomers = activeBeforeOrders * industry.purchaseFrequency * (cCfg.purchaseBase + cCfg.purchaseSatisfactionWeight * satisfaction);
+  const potentialOrdersFromCustomers =
+    activeBeforeOrders *
+    industry.purchaseFrequency *
+    (cCfg.purchaseBase + cCfg.purchaseSatisfactionWeight * satisfaction);
   const shareCeiling = clamp(
     cCfg.shareBase + awareness * cCfg.shareAwarenessWeight,
     cCfg.shareMin,
     cCfg.shareMax
   );
-  const demandAvailable = market.marketDemand * shareCeiling;
-  const capacity = industry.capacityOrdersPerWeek * locationConfig.capacityMultiplier + (teamEffects.capacityAdd || 0);
-  const orders = Math.max(0, Math.min(potentialOrdersFromCustomers, demandAvailable, capacity));
-  const lostOrders = Math.max(0, Math.min(potentialOrdersFromCustomers, demandAvailable) - capacity);
+  const demandAvailable =
+    market.marketDemand *
+    shareCeiling *
+    competitionDemand;
+
+  const capacity = Number.isFinite(operationsEffects.capacity)
+    ? operationsEffects.capacity
+    : industry.capacityOrdersPerWeek * locationConfig.capacityMultiplier +
+      (teamEffects.capacityAdd || 0);
+
+  const orders = Math.max(
+    0,
+    Math.min(potentialOrdersFromCustomers, demandAvailable, capacity)
+  );
+  const unconstrainedDemand = Math.min(
+    potentialOrdersFromCustomers,
+    demandAvailable
+  );
+  const lostOrders = Math.max(0, unconstrainedDemand - capacity);
   const capacityPressure = capacity > 0 ? lostOrders / capacity : 0;
 
   const qualitySignal = clamp(
     industry.serviceBaseline * qualityFactor * priceValue +
-      (teamEffects.serviceAdd || 0) -
+      (teamEffects.serviceAdd || 0) +
+      (operationsEffects.serviceAdd || 0) -
       capacityPressure * cCfg.capacityPressureSatisfactionPenalty +
       rng.normal(0, cCfg.qualitySignalNoiseStd),
     cCfg.minSatisfaction,
     cCfg.maxSatisfaction
   );
   const nextSatisfaction = clamp(
-    cCfg.satisfactionMemory * satisfaction + (1 - cCfg.satisfactionMemory) * qualitySignal,
+    cCfg.satisfactionMemory * satisfaction +
+      (1 - cCfg.satisfactionMemory) * qualitySignal,
     cCfg.minSatisfaction,
     cCfg.maxSatisfaction
   );
 
-  const marketShare = market.marketDemand > 0 ? orders / market.marketDemand : 0;
-  const revenuePerCustomer = activeBeforeOrders > 0 ? (orders * decisions.price) / activeBeforeOrders : 0;
-  const unitGrossMargin = decisions.price > 0 ? (decisions.price - industry.baseVariableCostPerOrder) / decisions.price : 0;
-  const estimatedLtv = churnRate > 0 ? Math.max(0, (revenuePerCustomer * unitGrossMargin) / churnRate) : 0;
+  const marketShare =
+    market.marketDemand > 0 ? orders / market.marketDemand : 0;
+  const revenuePerCustomer =
+    activeBeforeOrders > 0
+      ? (orders * decisions.price) / activeBeforeOrders
+      : 0;
+  const estimatedUnitCost = Number.isFinite(operationsEffects.estimatedUnitCost)
+    ? operationsEffects.estimatedUnitCost
+    : industry.baseVariableCostPerOrder;
+  const unitGrossMargin =
+    decisions.price > 0
+      ? Math.max(0, decisions.price - estimatedUnitCost) / decisions.price
+      : 0;
+  const estimatedLtv =
+    churnRate > 0
+      ? Math.max(0, (revenuePerCustomer * unitGrossMargin) / churnRate)
+      : 0;
 
   return {
     active: activeBeforeOrders,
@@ -100,6 +170,8 @@ export function stepCustomers(state, decisions, industry, config, market, rng, l
     orders,
     lostOrders,
     marketShare,
-    capacity
+    capacity,
+    potentialOrders: unconstrainedDemand,
+    competitionDemandModifier: competitionDemand
   };
 }

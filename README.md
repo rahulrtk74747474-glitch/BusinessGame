@@ -6,7 +6,7 @@ A data-driven React business simulator that teaches a beginner how company decis
 
 **React + Vite.** The game is dashboard/report/decision heavy, so a web architecture gives fast iteration, mobile-friendly UI, simple GitHub Pages deployment, and clean separation between simulation logic and presentation.
 
-## Current build: Phase 3 complete
+## Current build: Phase 4 complete
 
 ### Phase 1
 - Setup flow: mode, capital, duration, goal, entity structure, location, business plan.
@@ -52,6 +52,27 @@ A data-driven React business simulator that teaches a beginner how company decis
 - Negotiation history, transcript, visible tone, discovered intelligence, contract status and ripple maps are shown in the UI.
 - Negotiation effects flow into finance and monthly cause/effect reporting.
 
+### Phase 4
+- Channel-level marketing portfolio with local search, paid social, content/SEO, email/loyalty and influencers.
+- Each channel has its own CAC, saturation curve, awareness contribution, volatility and compounding channel strength.
+- Marketing reports blended CAC, paid acquisition, estimated contribution ROAS and B2B lead assistance.
+- B2B sales pipeline with delayed lead -> qualified -> proposal -> win progression.
+- Player controls outbound prospecting spend, discounts, commissions and pricing model.
+- One-time, subscription and tiered sales models have different close rates, revenue values and durations.
+- Won sales deals feed actual recurring revenue, delivery costs and commissions into finance.
+- Inventory is now an operating and working-capital system: reorder point, order quantity, lead time, purchase orders, supplier reliability, spoilage and stockouts.
+- Inventory purchases use cash when ordered while COGS is recognized when units are consumed.
+- Operations decisions include lean/balanced/service-first process modes, quality-control spend and outsourcing.
+- Capacity, defects, fulfillment, service quality, supplier terms and inventory jointly affect customers and margins.
+- Three reactive AI competitors: price cutter, premium defender and copycat.
+- Rivals react to player price, quality, marketing intensity and market-share signals.
+- Competitor pressure reduces accessible demand and raises acquisition costs.
+- Rival UI shows observable market intelligence without exposing hidden reaction thresholds.
+- Marketing, sales and operations each create cross-field ripple maps.
+- Monthly reports explain channel economics, pipeline delays, inventory cash usage, defects/fulfillment and competitive pressure.
+- Added a Sales Representative role plus sales/operations productivity effects for relevant employees.
+- Added a dedicated Phase 4 integration test on top of smoke, HR, negotiation and balance tests.
+
 ## Architecture
 
 ```text
@@ -63,6 +84,10 @@ src/
 │   ├── RippleMap.jsx
 │   ├── MonthlyReport.jsx
 │   ├── NegotiationPanel.jsx
+│   ├── MarketingPanel.jsx
+│   ├── SalesPanel.jsx
+│   ├── OperationsPanel.jsx
+│   ├── CompetitorsPanel.jsx
 │   ├── MiniChart.jsx
 │   └── SetupFlow.jsx
 ├── config/
@@ -72,8 +97,16 @@ src/
 │   │   └── cafe.json        # Cafe economics
 │   ├── hr/
 │   │   └── cafeRoles.json
-│   └── negotiation/
-│       └── negotiationConfig.json   # HR roles/tuning
+│   ├── negotiation/
+│   │   └── negotiationConfig.json
+│   ├── marketing/
+│   │   └── cafeMarketing.json
+│   ├── sales/
+│   │   └── cafeSales.json
+│   ├── operations/
+│   │   └── cafeOperations.json
+│   └── competitors/
+│       └── cafeCompetitors.json   # HR roles/tuning
 ├── engine/
 │   ├── businessPlan.js
 │   ├── customers.js
@@ -82,6 +115,10 @@ src/
 │   ├── hiring.js
 │   ├── market.js
 │   ├── negotiation.js
+│   ├── marketing.js
+│   ├── sales.js
+│   ├── operations.js
+│   ├── competitors.js
 │   ├── random.js
 │   ├── report.js
 │   └── simulator.js
@@ -92,6 +129,7 @@ scripts/
 ├── smoke-test.mjs
 ├── hr-test.mjs
 ├── negotiation-test.mjs
+├── phase4-test.mjs
 └── balance-test.mjs
 ```
 
@@ -127,6 +165,7 @@ Individual suites:
 npm run test:smoke
 npm run test:hr
 npm run test:negotiation
+npm run test:phase4
 npm run test:balance
 ```
 
@@ -152,6 +191,6 @@ https://rahulrtk74747474-glitch.github.io/BusinessGame/
 
 ## Phase boundary
 
-**Phase 3 is complete. Phase 4 has not been started.**
+**Phase 4 is complete. Phase 5 has not been started.**
 
-Next phase: marketing, sales, operations and AI competitors.
+Next phase: funding, legal, risk, expansion and exit.

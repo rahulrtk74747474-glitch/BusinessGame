@@ -5,12 +5,16 @@ import HiringPanel from './HiringPanel.jsx';
 import TeamPanel from './TeamPanel.jsx';
 import RippleMap from './RippleMap.jsx';
 import NegotiationPanel from './NegotiationPanel.jsx';
+import MarketingPanel from './MarketingPanel.jsx';
+import SalesPanel from './SalesPanel.jsx';
+import OperationsPanel from './OperationsPanel.jsx';
+import CompetitorsPanel from './CompetitorsPanel.jsx';
 import { goalProgress } from '../engine/simulator.js';
 
 const money = (n) => '$' + Math.round(n).toLocaleString();
 const pct = (n) => (n * 100).toFixed(1) + '%';
 
-export default function Dashboard({ state, config, industry, rolesData, negotiationConfig, onAdvance, onHrAction, onNegotiationAction, onReset }) {
+export default function Dashboard({ state, config, industry, rolesData, negotiationConfig, phase4Data, onAdvance, onHrAction, onNegotiationAction, onMarketingAction, onSalesAction, onOperationsAction, onReset }) {
   const progress = goalProgress(state);
   const latestReport = state.reports.at(-1);
   const goalIsPct = state.goal === 'marketShare';
@@ -31,6 +35,10 @@ export default function Dashboard({ state, config, industry, rolesData, negotiat
       <button className={tab === 'hiring' ? 'active' : ''} onClick={() => setTab('hiring')}>Hiring <span>{state.hr.candidates.filter((c) => c.available).length}</span></button>
       <button className={tab === 'team' ? 'active' : ''} onClick={() => setTab('team')}>Team <span>{state.hr.employees.length}</span></button>
       <button className={tab === 'negotiation' ? 'active' : ''} onClick={() => setTab('negotiation')}>Negotiate <span>{state.negotiation.history.length}</span></button>
+      <button className={tab === 'marketing' ? 'active' : ''} onClick={() => setTab('marketing')}>Marketing</button>
+      <button className={tab === 'sales' ? 'active' : ''} onClick={() => setTab('sales')}>Sales</button>
+      <button className={tab === 'operations' ? 'active' : ''} onClick={() => setTab('operations')}>Operations</button>
+      <button className={tab === 'competitors' ? 'active' : ''} onClick={() => setTab('competitors')}>Competitors</button>
     </nav>
 
     {state.status !== 'running' && <section className={'status-banner ' + state.status}><strong>{state.status === 'won' ? 'Goal reached' : state.status === 'lost' ? 'Company failed' : 'Run complete'}</strong><span>{state.resultReason}</span></section>}
@@ -58,6 +66,25 @@ export default function Dashboard({ state, config, industry, rolesData, negotiat
       <RippleMap ripple={state.negotiation.lastRipple} />
     </>}
 
+    {tab === 'marketing' && <>
+      <MarketingPanel state={state} marketingData={phase4Data.marketing} onAction={onMarketingAction} />
+      <RippleMap ripple={state.marketing.lastRipple} />
+    </>}
+
+    {tab === 'sales' && <>
+      <SalesPanel state={state} salesData={phase4Data.sales} onAction={onSalesAction} />
+      <RippleMap ripple={state.sales.lastRipple} />
+    </>}
+
+    {tab === 'operations' && <>
+      <OperationsPanel state={state} operationsData={phase4Data.operations} onAction={onOperationsAction} />
+      <RippleMap ripple={state.operations.lastRipple} />
+    </>}
+
+    {tab === 'competitors' && <>
+      <CompetitorsPanel state={state} competitorData={phase4Data.competitors} />
+    </>}
+
     {tab === 'dashboard' && <>
       <section className="kpi-grid">
         <div className="kpi"><span>Cash</span><b>{money(state.finance.cash)}</b><small>Runway {runway}</small></div>
@@ -68,6 +95,8 @@ export default function Dashboard({ state, config, industry, rolesData, negotiat
         <div className="kpi"><span>Valuation</span><b>{money(state.finance.valuation)}</b><small>CAC {money(state.customers.effectiveCAC)} - LTV {money(state.customers.estimatedLtv)}</small></div>
         <div className="kpi"><span>Team</span><b>{state.hr.employees.length}</b><small>Payroll {money(state.finance.payrollCosts || 0)}/wk</small></div>
         <div className="kpi"><span>Team morale</span><b>{state.hr.employees.length ? pct(state.hr.averageMorale) : '-'}</b><small>Burnout {state.hr.employees.length ? pct(state.hr.averageBurnout) : '-'}</small></div>
+        <div className="kpi"><span>Inventory</span><b>{state.operations.inventoryUnits.toFixed(0)}</b><small>Asset {money(state.finance.inventoryAsset || 0)}</small></div>
+        <div className="kpi"><span>B2B sales</span><b>{money(state.finance.salesRevenue || 0)}</b><small>Pipeline {money(state.sales.last.pipelineValue || 0)}</small></div>
       </section>
 
       <section className="panel goal-panel">
@@ -97,12 +126,16 @@ export default function Dashboard({ state, config, industry, rolesData, negotiat
             <span>Active trials <b>{state.hr.trials.length}</b></span>
             <span>Client contract <b>{money(state.finance.clientRevenue || 0)}/wk</b></span>
             <span>Lease savings <b>{money(state.finance.landlordSavings || 0)}/wk</b></span>
+            <span>Fulfillment <b>{pct(state.operations.last.fulfillmentRate)}</b></span>
+            <span>Defect rate <b>{pct(state.operations.last.defectRate)}</b></span>
+            <span>Competitor pressure <b>{pct(state.competitors.last.pressureIndex)}</b></span>
+            <span>Marketing ROAS <b>{state.marketing.last.estimatedROAS.toFixed(2)}x</b></span>
           </div>
           <div className="industry-notes"><h3>Typical failure modes</h3><ul>{industry.typicalFailureModes.map((x) => <li key={x}>{x}</li>)}</ul></div>
         </section>
       </section>
 
-      <RippleMap ripple={state.negotiation.lastRipple || state.hr.lastRipple} />
+      <RippleMap ripple={state.operations.lastRipple || state.sales.lastRipple || state.marketing.lastRipple || state.negotiation.lastRipple || state.hr.lastRipple} />
 
       <section className="charts-grid">
         <MiniChart label="Cash" values={state.history.map((x) => x.cash)} />

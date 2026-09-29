@@ -1,0 +1,77 @@
+{
+  "id": "cafe-competitors",
+  "pressure": {
+    "demandBase": 1.12,
+    "demandStrengthWeight": 0.17,
+    "demandMin": 0.68,
+    "demandMax": 1.08,
+    "cacBase": 0.92,
+    "cacMarketingWeight": 0.24,
+    "cacMin": 0.9,
+    "cacMax": 1.4
+  },
+  "reaction": {
+    "priceMoveSpeed": 0.28,
+    "qualityMoveSpeed": 0.16,
+    "marketingMoveSpeed": 0.2,
+    "reputationMoveSpeed": 0.08,
+    "noiseStd": 0.015
+  },
+  "strength": {
+    "priceWeight": 0.34,
+    "qualityWeight": 0.25,
+    "marketingWeight": 0.21,
+    "reputationWeight": 0.2,
+    "qualityReference": 0.72,
+    "marketingReference": 0.6,
+    "reputationReference": 0.68,
+    "min": 0.55,
+    "max": 1.65
+  },
+  "publicIntel": {
+    "priceNoisePct": 0.025
+  },
+  "rivals": [
+    {
+      "id": "bean_budget",
+      "name": "Bean Budget",
+      "archetype": "price_cutter",
+      "publicDescription": "Competes aggressively on price and promotions.",
+      "initialPriceMultiplier": 0.9,
+      "initialQuality": 0.62,
+      "initialMarketing": 0.58,
+      "initialReputation": 0.58,
+      "targetPriceMultiplier": 0.86,
+      "priceWarTriggerShare": 0.18,
+      "priceWarCut": 0.06,
+      "qualityTarget": 0.64,
+      "marketingTarget": 0.68
+    },
+    {
+      "id": "atelier_coffee",
+      "name": "Atelier Coffee",
+      "archetype": "premium",
+      "publicDescription": "Protects a premium position with service, brand and product quality.",
+      "initialPriceMultiplier": 1.24,
+      "initialQuality": 0.84,
+      "initialMarketing": 0.62,
+      "initialReputation": 0.78,
+      "targetPriceMultiplier": 1.22,
+      "qualityTarget": 0.88,
+      "marketingTarget": 0.66
+    },
+    {
+      "id": "corner_cup",
+      "name": "Corner Cup",
+      "archetype": "copycat",
+      "publicDescription": "Follows successful offers, pricing and promotional intensity.",
+      "initialPriceMultiplier": 1.02,
+      "initialQuality": 0.7,
+      "initialMarketing": 0.55,
+      "initialReputation": 0.66,
+      "copyPriceWeight": 0.65,
+      "copyMarketingWeight": 0.5,
+      "qualityTarget": 0.72
+    }
+  ]
+}

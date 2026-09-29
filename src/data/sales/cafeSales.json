@@ -1,0 +1,51 @@
+{
+  "id": "cafe-sales",
+  "defaults": {
+    "outboundSpend": 120,
+    "discountRate": 0.05,
+    "commissionRate": 0.06,
+    "pricingModel": "tiered"
+  },
+  "limits": {
+    "outboundSpendMax": 1800,
+    "discountRateMax": 0.3,
+    "commissionRateMin": 0,
+    "commissionRateMax": 0.18
+  },
+  "leadCost": 32,
+  "qualificationRate": 0.42,
+  "proposalRate": 0.58,
+  "baseCloseRate": 0.24,
+  "averageDealValue": 760,
+  "variableCostRate": 0.44,
+  "marketingB2BLeadWeight": 1,
+  "teamEfficiencyWeight": 0.8,
+  "competitorPressureWeight": 0.22,
+  "discountCloseLift": 1.25,
+  "commissionMotivationWeight": 1.1,
+  "leadNoiseStd": 0.08,
+  "closeNoiseStd": 0.06,
+  "pricingModels": {
+    "one_time": {
+      "label": "One-time catering",
+      "description": "Easier to close, but revenue does not repeat automatically.",
+      "closeMultiplier": 1.15,
+      "weeklyValueMultiplier": 1,
+      "durationWeeks": 1
+    },
+    "subscription": {
+      "label": "Weekly subscription",
+      "description": "Harder sale, but each win produces recurring weekly revenue.",
+      "closeMultiplier": 0.82,
+      "weeklyValueMultiplier": 0.34,
+      "durationWeeks": 8
+    },
+    "tiered": {
+      "label": "Tiered business plan",
+      "description": "Balanced close rate with a medium-duration recurring contract.",
+      "closeMultiplier": 1,
+      "weeklyValueMultiplier": 0.55,
+      "durationWeeks": 4
+    }
+  }
+}

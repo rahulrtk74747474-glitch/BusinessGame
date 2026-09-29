@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 4,
   "turn": {
     "unit": "week",
     "reportEveryWeeks": 4
@@ -17,7 +17,7 @@
   "difficultyMultiplierByCapital": {
     "10000": 1.5,
     "50000": 1.2,
-    "100000": 1.0
+    "100000": 1
   },
   "modes": {
     "tutorial": {
@@ -27,7 +27,7 @@
     },
     "standard": {
       "label": "Standard",
-      "economyVolatility": 1.0,
+      "economyVolatility": 1,
       "hints": true
     },
     "hard": {
@@ -42,7 +42,7 @@
     },
     "career": {
       "label": "Career",
-      "economyVolatility": 1.0,
+      "economyVolatility": 1,
       "hints": true
     },
     "challenge": {
@@ -107,8 +107,8 @@
     },
     "rented": {
       "label": "Rented shop",
-      "fixedCostMultiplier": 1.0,
-      "capacityMultiplier": 1.0,
+      "fixedCostMultiplier": 1,
+      "capacityMultiplier": 1,
       "awarenessModifier": 1.08
     },
     "online": {
@@ -179,7 +179,7 @@
   },
   "valuation": {
     "revenueMultiple": 0.45,
-    "profitMultiple": 3.0,
+    "profitMultiple": 3,
     "customerMultiple": 45
   },
   "simulation": {
@@ -192,7 +192,7 @@
     "satisfactionChangeExplainThreshold": 0.015,
     "lostOrdersExplainThreshold": 5,
     "lowGrossMarginThreshold": 0.55,
-    "maxExplanations": 5
+    "maxExplanations": 9
   },
   "jurisdictionNote": "Phase 1 uses simplified educational tax rates to demonstrate entity trade-offs. Real tax filings depend on country, state, deductions, elections, and owner circumstances.",
   "initialDecisions": {

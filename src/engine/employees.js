@@ -38,6 +38,8 @@ export function stepEmployees(state, config, rolesData, rng) {
   let serviceAdd = 0;
   let marketingEfficiencyAdd = 0;
   let awarenessAdd = 0;
+  let salesEfficiencyAdd = 0;
+  let operationsEfficiencyAdd = 0;
   let productivitySum = 0;
   let moraleSum = 0;
   let burnoutSum = 0;
@@ -114,7 +116,9 @@ export function stepEmployees(state, config, rolesData, rng) {
     capacityAdd += role.capacityAdd * productivity;
     serviceAdd += role.serviceAdd * productivity;
     marketingEfficiencyAdd += role.marketingEfficiencyAdd * productivity;
-    awarenessAdd += role.awarenessAdd * productivity;
+    awarenessAdd += (role.awarenessAdd || 0) * productivity;
+    salesEfficiencyAdd += (role.salesEfficiencyAdd || 0) * productivity;
+    operationsEfficiencyAdd += (role.operationsEfficiencyAdd || 0) * productivity;
     productivitySum += productivity;
     moraleSum += morale;
     burnoutSum += burnout;
@@ -138,7 +142,9 @@ export function stepEmployees(state, config, rolesData, rng) {
     capacityAdd += role.capacityAdd * observed * 0.75;
     serviceAdd += role.serviceAdd * observed * 0.75;
     marketingEfficiencyAdd += role.marketingEfficiencyAdd * observed * 0.75;
-    awarenessAdd += role.awarenessAdd * observed * 0.75;
+    awarenessAdd += (role.awarenessAdd || 0) * observed * 0.75;
+    salesEfficiencyAdd += (role.salesEfficiencyAdd || 0) * observed * 0.75;
+    operationsEfficiencyAdd += (role.operationsEfficiencyAdd || 0) * observed * 0.75;
 
     const remainingWeeks = trial.remainingWeeks - 1;
     const observedScores = [...trial.observedScores, observed];
@@ -163,6 +169,8 @@ export function stepEmployees(state, config, rolesData, rng) {
     serviceAdd,
     marketingEfficiencyAdd,
     awarenessAdd,
+    salesEfficiencyAdd,
+    operationsEfficiencyAdd,
     averageProductivity: continuing.length ? productivitySum / continuing.length : 0,
     averageMorale: continuing.length ? moraleSum / continuing.length : 0,
     averageBurnout: continuing.length ? burnoutSum / continuing.length : 0,

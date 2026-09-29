@@ -11,7 +11,12 @@
   "trainingBoost": 0.08,
   "trainingCap": 0.28,
   "raisePercent": 0.08,
-  "benefitOptions": [0, 25, 50, 80],
+  "benefitOptions": [
+    0,
+    25,
+    50,
+    80
+  ],
   "fireSeveranceWeeks": 0.5,
   "layoffSeveranceWeeks": 1.5,
   "fireMoralePenalty": 0.08,
@@ -54,7 +59,9 @@
       "awarenessAdd": 0,
       "managerQualityAdd": 0,
       "remoteEligible": false,
-      "promotionTo": "shift_manager"
+      "promotionTo": "shift_manager",
+      "salesEfficiencyAdd": 0,
+      "operationsEfficiencyAdd": 0
     },
     "shift_manager": {
       "label": "Shift Manager",
@@ -65,7 +72,9 @@
       "awarenessAdd": 0,
       "managerQualityAdd": 0.18,
       "remoteEligible": false,
-      "promotionTo": null
+      "promotionTo": null,
+      "salesEfficiencyAdd": 0,
+      "operationsEfficiencyAdd": 0.1
     },
     "marketing_specialist": {
       "label": "Marketing Specialist",
@@ -76,7 +85,9 @@
       "awarenessAdd": 0.02,
       "managerQualityAdd": 0,
       "remoteEligible": true,
-      "promotionTo": null
+      "promotionTo": null,
+      "salesEfficiencyAdd": 0.05,
+      "operationsEfficiencyAdd": 0
     },
     "operations_assistant": {
       "label": "Operations Assistant",
@@ -87,7 +98,22 @@
       "awarenessAdd": 0,
       "managerQualityAdd": 0,
       "remoteEligible": false,
-      "promotionTo": "shift_manager"
+      "promotionTo": "shift_manager",
+      "salesEfficiencyAdd": 0,
+      "operationsEfficiencyAdd": 0.18
+    },
+    "sales_rep": {
+      "label": "Sales Representative",
+      "baseWeeklySalary": 960,
+      "capacityAdd": 0,
+      "serviceAdd": 0,
+      "marketingEfficiencyAdd": 0,
+      "awarenessAdd": 0.005,
+      "managerQualityAdd": 0,
+      "salesEfficiencyAdd": 0.22,
+      "operationsEfficiencyAdd": 0,
+      "remoteEligible": true,
+      "promotionTo": null
     }
   }
 }

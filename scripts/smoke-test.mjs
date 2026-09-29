@@ -1,6 +1,17 @@
 import config from '../src/config/gameConfig.json' with { type: 'json' };
 import industry from '../src/data/industries/cafe.json' with { type: 'json' };
 import rolesData from '../src/data/hr/cafeRoles.json' with { type: 'json' };
+import marketingData from '../src/data/marketing/cafeMarketing.json' with { type: 'json' };
+import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
+import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
+import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+
+const phase4Data = {
+  marketing: marketingData,
+  sales: salesData,
+  operations: operationsData,
+  competitors: competitorData
+};
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
 
@@ -27,9 +38,9 @@ for (const mode of Object.keys(config.modes)) {
             variableCostEstimate: industry.baseVariableCostPerOrder
           }
         };
-        let state = createGameState(setup, config, industry, rolesData, 4242 + cases);
+        let state = createGameState(setup, config, industry, rolesData, 4242 + cases, phase4Data);
         for (let i = 0; i < 8 && state.status === 'running'; i += 1) {
-          state = advanceWeek(state, state.decisions, config, industry, rolesData);
+          state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
         }
 
         const values = [

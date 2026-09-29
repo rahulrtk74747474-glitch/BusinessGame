@@ -1,7 +1,22 @@
 import { scoreBusinessPlan } from '../engine/businessPlan.js';
 import { generateCandidatePool } from '../engine/hiring.js';
+import { createMarketingState } from '../engine/marketing.js';
+import { createSalesState } from '../engine/sales.js';
+import { createOperationsState } from '../engine/operations.js';
+import { createCompetitorState } from '../engine/competitors.js';
 
-export function createGameState(setup, config, industry, rolesData, seed = 42) {
+export function createGameState(
+  setup,
+  config,
+  industry,
+  rolesData,
+  seed = 42,
+  phase4Data
+) {
+  if (!phase4Data?.marketing || !phase4Data?.sales || !phase4Data?.operations || !phase4Data?.competitors) {
+    throw new Error('Phase 4 data modules are required to create the game state.');
+  }
+
   const structure = config.structures[setup.structure];
   const location = config.locations[setup.location];
   const planResult = scoreBusinessPlan(setup.plan, industry);
@@ -27,7 +42,12 @@ export function createGameState(setup, config, industry, rolesData, seed = 42) {
       marketingSpend: config.initialDecisions.marketingSpend,
       qualitySpend: config.initialDecisions.qualitySpend
     },
-    market: { economicIndex: 1, trendIndex: 1, seasonality: 1, marketDemand: industry.baseMarketDemand },
+    market: {
+      economicIndex: 1,
+      trendIndex: 1,
+      seasonality: 1,
+      marketDemand: industry.baseMarketDemand
+    },
     customers: {
       active: industry.initialCustomers * location.awarenessModifier,
       awareness: industry.initialAwareness * location.awarenessModifier,
@@ -36,17 +56,28 @@ export function createGameState(setup, config, industry, rolesData, seed = 42) {
       churnRate: industry.baseWeeklyChurn,
       effectiveCAC: industry.basePaidCAC,
       estimatedLtv: 0,
-      orders: 0
+      orders: 0,
+      capacity: industry.capacityOrdersPerWeek * location.capacityMultiplier
     },
     finance: {
       cash: Number(setup.startingCapital),
       startingCapital: Number(setup.startingCapital),
       revenue: 0,
+      coreRevenue: 0,
+      clientRevenue: 0,
+      salesRevenue: 0,
       variableCosts: 0,
-      fixedCosts: industry.baseFixedCostPerWeek * location.fixedCostMultiplier + structure.weeklyAdminCost,
+      fixedCosts:
+        industry.baseFixedCostPerWeek * location.fixedCostMultiplier +
+        structure.weeklyAdminCost,
       discretionaryCosts: 0,
       payrollCosts: 0,
       hrOneTimeExpenses: 0,
+      negotiationOneTimeExpenses: 0,
+      inventoryPurchases: 0,
+      inventoryAsset:
+        phase4Data.operations.initialInventoryUnits *
+        industry.baseVariableCostPerOrder,
       grossProfit: 0,
       grossMargin: 0,
       operatingProfit: 0,
@@ -99,6 +130,10 @@ export function createGameState(setup, config, industry, rolesData, seed = 42) {
       },
       lastRipple: null
     },
+    marketing: createMarketingState(phase4Data.marketing),
+    sales: createSalesState(phase4Data.sales),
+    operations: createOperationsState(industry, phase4Data.operations),
+    competitors: createCompetitorState(industry, phase4Data.competitors),
     history: [],
     reports: []
   };

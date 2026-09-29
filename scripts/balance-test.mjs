@@ -1,6 +1,17 @@
 import config from '../src/config/gameConfig.json' with { type: 'json' };
 import industry from '../src/data/industries/cafe.json' with { type: 'json' };
 import rolesData from '../src/data/hr/cafeRoles.json' with { type: 'json' };
+import marketingData from '../src/data/marketing/cafeMarketing.json' with { type: 'json' };
+import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
+import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
+import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+
+const phase4Data = {
+  marketing: marketingData,
+  sales: salesData,
+  operations: operationsData,
+  competitors: competitorData
+};
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
 
@@ -53,9 +64,9 @@ function policy(name, state) {
 }
 
 function runOne(name, seed) {
-  let state = createGameState(baseSetup, config, industry, rolesData, seed);
+  let state = createGameState(baseSetup, config, industry, rolesData, seed, phase4Data);
   while (state.status === 'running') {
-    state = advanceWeek(state, policy(name, state), config, industry, rolesData);
+    state = advanceWeek(state, policy(name, state), config, industry, rolesData, phase4Data);
   }
   return {
     name,

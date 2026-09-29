@@ -1,0 +1,85 @@
+{
+  "id": "cafe-marketing",
+  "defaultWeights": {
+    "local_search": 30,
+    "paid_social": 25,
+    "content_seo": 20,
+    "email": 15,
+    "influencer": 10
+  },
+  "efficiency": {
+    "base": 0.72,
+    "satisfactionWeight": 0.34,
+    "teamWeight": 1,
+    "min": 0.55,
+    "max": 1.55
+  },
+  "strength": {
+    "min": 0.72,
+    "max": 1.45
+  },
+  "roasContributionWeeks": 4,
+  "channels": {
+    "local_search": {
+      "label": "Local search",
+      "description": "High-intent customers searching nearby. Efficient until local demand saturates.",
+      "baseCAC": 9.5,
+      "saturationSpend": 480,
+      "saturationSlope": 0.55,
+      "awarenessPer100": 0.006,
+      "noiseStd": 0.05,
+      "strengthDecay": 0.99,
+      "strengthGrowthPer100": 0.004,
+      "b2bLeadsPer100": 0.025
+    },
+    "paid_social": {
+      "label": "Paid social",
+      "description": "Fast reach and testing, but CAC rises quickly when spend is pushed too hard.",
+      "baseCAC": 12.5,
+      "saturationSpend": 620,
+      "saturationSlope": 0.75,
+      "awarenessPer100": 0.01,
+      "noiseStd": 0.1,
+      "strengthDecay": 0.97,
+      "strengthGrowthPer100": 0.002,
+      "b2bLeadsPer100": 0.015
+    },
+    "content_seo": {
+      "label": "Content & SEO",
+      "description": "Slower acquisition now, but repeated spend compounds future organic efficiency.",
+      "baseCAC": 16,
+      "saturationSpend": 420,
+      "saturationSlope": 0.35,
+      "awarenessPer100": 0.012,
+      "noiseStd": 0.035,
+      "strengthDecay": 0.995,
+      "strengthGrowthPer100": 0.02,
+      "b2bLeadsPer100": 0.02
+    },
+    "email": {
+      "label": "Email / loyalty",
+      "description": "Cheap reactivation and repeat business, but limited by the size of your customer base.",
+      "baseCAC": 5.5,
+      "saturationSpend": 220,
+      "saturationSlope": 1,
+      "awarenessPer100": 0.003,
+      "noiseStd": 0.035,
+      "strengthDecay": 0.99,
+      "strengthGrowthPer100": 0.006,
+      "audienceCapRate": 0.055,
+      "b2bLeadsPer100": 0.01
+    },
+    "influencer": {
+      "label": "Influencers / creators",
+      "description": "Can create strong bursts of awareness, but results are volatile and easy to overpay for.",
+      "baseCAC": 14.5,
+      "saturationSpend": 540,
+      "saturationSlope": 0.6,
+      "awarenessPer100": 0.016,
+      "noiseStd": 0.22,
+      "strengthDecay": 0.94,
+      "strengthGrowthPer100": 0.003,
+      "b2bLeadsPer100": 0.008
+    }
+  }
+}

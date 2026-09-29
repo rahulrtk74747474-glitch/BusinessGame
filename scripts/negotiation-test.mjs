@@ -203,6 +203,49 @@ const hired = state.hr.employees.find((e) => e.name === candidate.name);
 assert(hired.perksWeekly > 0, 'Bundled candidate deal did not include configured perks.');
 assert(hired.equityBps > 0, 'Bundled candidate deal did not include configured equity.');
 
+
+// Regression: if the player meets or improves on the counterparty's current
+// position, the deal must close immediately instead of allowing an irrational
+// counter-offer in the opposite direction.
+let overlapState = createGameState(setup, config, industry, rolesData, 97531, phase4Data, phase5Data);
+const overlapCandidate = overlapState.hr.candidates.find((c) => c.available);
+overlapState = applyNegotiationAction(
+  overlapState,
+  { type: 'start', counterpartyType: 'candidate', candidateId: overlapCandidate.id },
+  negotiationConfig,
+  rolesData
+);
+let overlapView = negotiationPublicView(overlapState, negotiationConfig);
+const aboveCandidateAsk = overlapView.counterOffer + 1;
+overlapState = applyNegotiationAction(
+  overlapState,
+  { type: 'tactic', tactic: 'anchor', proposal: aboveCandidateAsk },
+  negotiationConfig,
+  rolesData
+);
+assert(overlapState.negotiation.active.status === 'accepted', 'Candidate did not accept an offer above their current ask.');
+assert(
+  overlapState.negotiation.active.outcome.value === aboveCandidateAsk,
+  'Candidate deal did not settle at the player offer that beat the current ask.'
+);
+
+overlapState = applyNegotiationAction(overlapState, { type: 'close' }, negotiationConfig, rolesData);
+overlapState = applyNegotiationAction(
+  overlapState,
+  { type: 'start', counterpartyType: 'client' },
+  negotiationConfig,
+  rolesData
+);
+overlapView = negotiationPublicView(overlapState, negotiationConfig);
+const belowClientOffer = Math.max(1, overlapView.counterOffer - 1);
+overlapState = applyNegotiationAction(
+  overlapState,
+  { type: 'tactic', tactic: 'anchor', proposal: belowClientOffer },
+  negotiationConfig,
+  rolesData
+);
+assert(overlapState.negotiation.active.status === 'accepted', 'Client did not accept a price below their current offer.');
+
 assert(state.negotiation.history.length >= 5, 'Negotiation history did not record completed sessions.');
 
 console.log('Negotiation integration test passed: hidden information, research, supplier settlement, walk-away, client contract, investor preview, candidate hire, and finance effects.');

@@ -119,6 +119,7 @@ assert(state.finance.clientRevenue === clientRevenue, 'Client contract revenue d
 assert(state.finance.clientVariableCosts > 0, 'Client delivery costs were not modeled.');
 
 // Investor: Phase 3 may agree an indicative valuation but must not inject funding.
+console.log('FINANCE_BEFORE_INVESTOR', JSON.stringify(state.finance));
 const cashBeforeInvestor = state.finance.cash;
 state = applyNegotiationAction(
   state,

@@ -52,6 +52,7 @@ export function stepFinance(state, decisions, industry, config, customers, struc
   const grossMargin = revenue > 0 ? grossProfit / revenue : 0;
 
   return {
+    startingCapital: state.finance.startingCapital,
     cash,
     revenue,
     coreRevenue,

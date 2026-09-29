@@ -119,7 +119,8 @@ assert(state.finance.clientRevenue === clientRevenue, 'Client contract revenue d
 assert(state.finance.clientVariableCosts > 0, 'Client delivery costs were not modeled.');
 
 // Investor: Phase 3 may agree an indicative valuation but must not inject funding.
-console.log('FINANCE_BEFORE_INVESTOR', JSON.stringify(state.finance));
+assert(Number.isFinite(state.finance.startingCapital), 'Starting capital was lost from finance state.');
+assert(Number.isFinite(state.finance.valuation), 'Valuation became non-finite before investor negotiation.');
 const cashBeforeInvestor = state.finance.cash;
 state = applyNegotiationAction(
   state,
@@ -135,16 +136,6 @@ state = applyNegotiationAction(
   negotiationConfig,
   rolesData
 );
-console.log('INVESTOR_DEBUG', JSON.stringify({
-  gameStatus: state.status,
-  activeStatus: state.negotiation.active?.status,
-  direction: state.negotiation.active?.direction,
-  playerOffer: state.negotiation.active?.playerOffer,
-  counterOffer: state.negotiation.active?.counterOffer,
-  initialCounter: state.negotiation.active?.initialCounter,
-  walkAway: state.negotiation.active?.hidden?.walkAway,
-  outcome: state.negotiation.active?.outcome
-}));
 assert(state.negotiation.active.status === 'accepted', 'Investor opening valuation should settle when the player accepts it.');
 assert(state.negotiation.contracts.investorIndicativeValuation > 0, 'Indicative investor valuation was not recorded.');
 assert(state.finance.cash === cashBeforeInvestor, 'Phase 3 investor negotiation incorrectly injected funding cash.');

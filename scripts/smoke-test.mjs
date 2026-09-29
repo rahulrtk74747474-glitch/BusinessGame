@@ -34,6 +34,7 @@ for (const mode of Object.keys(config.modes)) {
 
         const values = [
           state.finance.cash,
+          state.finance.startingCapital,
           state.finance.revenue,
           state.finance.netProfit,
           state.finance.valuation,

@@ -64,6 +64,40 @@ export default function SetupFlow({ config, industryOptions, catalog, onStart })
 
   const chooseIndustry = (id) => setIndustryId(id);
 
+  const chooseGuidedTemplate = (templateId) => {
+    const template = catalog.guidedTemplates?.find((item) => item.id === templateId);
+    if (!template) return;
+    const nextDraft = {
+      ...customDefaults(template.archetype),
+      archetype: template.archetype,
+      businessName: template.name,
+      category: template.category,
+      price: template.price,
+      variableCost: template.variableCost,
+      fixedCost: template.fixedCost,
+      capacity: template.capacity,
+      marketDemand: template.marketDemand,
+      initialCustomers: template.initialCustomers,
+      unitLabel: template.unitLabel,
+      targetCustomer: 'A clearly defined customer segment for ' + template.name + '.'
+    };
+    const nextIndustry = buildCustomIndustry(nextDraft);
+    setIndustryId('custom');
+    setCustomDraft(nextDraft);
+    setSetup((current) => ({
+      ...current,
+      location: nextIndustry.allowedLocations.includes(current.location) ? current.location : nextIndustry.allowedLocations[0],
+      plan: industryPlanDefaults(nextIndustry)
+    }));
+  };
+
+  const updateCustomEconomic = (draftKey, value, planKey = null) => {
+    setCustomDraft((current) => ({ ...current, [draftKey]: value }));
+    if (planKey) {
+      setSetup((current) => ({ ...current, plan: { ...current.plan, [planKey]: value } }));
+    }
+  };
+
   const start = () => {
     const simulationProfileId =
       industryId === 'custom'
@@ -130,13 +164,20 @@ export default function SetupFlow({ config, industryOptions, catalog, onStart })
         </button>)}
       </div>
 
+      <label className="guided-template">Quick generated template
+        <select defaultValue="" onChange={(e) => e.target.value && chooseGuidedTemplate(e.target.value)}>
+          <option value="">Choose another business type…</option>
+          {(catalog.guidedTemplates || []).map((item) => <option key={item.id} value={item.id}>{item.name} — {item.category}</option>)}
+        </select>
+      </label>
+
       <div className="plan-grid custom-economics">
         <label>Business name<input value={customDraft.businessName} onChange={(e) => setCustomDraft((d) => ({ ...d, businessName: e.target.value }))} /></label>
         <label>Industry/category<input value={customDraft.category} onChange={(e) => setCustomDraft((d) => ({ ...d, category: e.target.value }))} /></label>
         <label>Unit sold<input value={customDraft.unitLabel} onChange={(e) => setCustomDraft((d) => ({ ...d, unitLabel: e.target.value }))} /></label>
-        <label>Selling price<input type="number" step="0.01" value={customDraft.price} onChange={(e) => setCustomDraft((d) => ({ ...d, price: Number(e.target.value) }))} /></label>
-        <label>Variable cost / unit<input type="number" step="0.01" value={customDraft.variableCost} onChange={(e) => setCustomDraft((d) => ({ ...d, variableCost: Number(e.target.value) }))} /></label>
-        <label>Weekly fixed cost<input type="number" value={customDraft.fixedCost} onChange={(e) => setCustomDraft((d) => ({ ...d, fixedCost: Number(e.target.value) }))} /></label>
+        <label>Selling price<input type="number" step="0.01" value={customDraft.price} onChange={(e) => updateCustomEconomic('price', Number(e.target.value), 'price')} /></label>
+        <label>Variable cost / unit<input type="number" step="0.01" value={customDraft.variableCost} onChange={(e) => updateCustomEconomic('variableCost', Number(e.target.value), 'variableCostEstimate')} /></label>
+        <label>Weekly fixed cost<input type="number" value={customDraft.fixedCost} onChange={(e) => updateCustomEconomic('fixedCost', Number(e.target.value), 'weeklyFixedCostEstimate')} /></label>
         <label>Weekly capacity<input type="number" value={customDraft.capacity} onChange={(e) => setCustomDraft((d) => ({ ...d, capacity: Number(e.target.value) }))} /></label>
         <label>Weekly market demand<input type="number" value={customDraft.marketDemand} onChange={(e) => setCustomDraft((d) => ({ ...d, marketDemand: Number(e.target.value) }))} /></label>
         <label>Initial customers<input type="number" value={customDraft.initialCustomers} onChange={(e) => setCustomDraft((d) => ({ ...d, initialCustomers: Number(e.target.value) }))} /></label>

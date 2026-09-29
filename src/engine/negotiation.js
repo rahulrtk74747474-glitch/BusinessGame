@@ -210,6 +210,18 @@ function proposalWithinWalkAway(session, proposal) {
     : proposal <= session.hidden.walkAway;
 }
 
+function meetsOrBeatsCounterpartyPosition(session, proposal) {
+  // "lower" means the player wants a lower number (salary/cost/rent).
+  // The counterparty therefore prefers a higher number. If the player offers
+  // at least the counterparty's current ask, there is nothing left to bargain.
+  if (session.direction === 'lower') return proposal >= session.counterOffer;
+
+  // "higher" means the player wants a higher number (client price/valuation).
+  // The counterparty prefers a lower number. Asking no more than their current
+  // position should therefore close the deal immediately.
+  return proposal <= session.counterOffer;
+}
+
 function dealFit(session, proposal) {
   const best = session.initialCounter;
   const walk = session.hidden.walkAway;
@@ -668,6 +680,10 @@ export function applyNegotiationAction(state, action, negotiationConfig, rolesDa
       }
     ]
   };
+
+  if (meetsOrBeatsCounterpartyPosition(working, proposal)) {
+    return settleDeal(state, working, proposal, negotiationConfig, rolesData);
+  }
 
   if (shouldLeave(working, tactic, proposal, negotiationConfig, rng)) {
     return endNoDeal(

@@ -1,12 +1,12 @@
 {
   "id": "cafe-operations",
-  "initialInventoryUnits": 190,
+  "initialInventoryUnits": 520,
   "initialInventoryFundingIncluded": true,
   "defaults": {
     "processMode": "balanced",
     "qualityControlSpend": 90,
-    "reorderPoint": 150,
-    "orderQuantity": 300,
+    "reorderPoint": 360,
+    "orderQuantity": 520,
     "outsourceShare": 0
   },
   "limits": {

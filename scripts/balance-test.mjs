@@ -14,6 +14,9 @@ const phase4Data = {
 };
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
+import { applyMarketingAction } from '../src/engine/marketing.js';
+import { applySalesAction } from '../src/engine/sales.js';
+import { applyOperationsAction } from '../src/engine/operations.js';
 
 const baseSetup = {
   mode: 'standard',
@@ -63,8 +66,35 @@ function policy(name, state) {
   return { price, marketingSpend, qualitySpend };
 }
 
+function configureStrategy(name, state) {
+  if (name === 'sensible') {
+    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'local_search', weight: 40 }, marketingData);
+    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'content_seo', weight: 30 }, marketingData);
+    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'paid_social', weight: 15 }, marketingData);
+    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'email', weight: 10 }, marketingData);
+    state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'influencer', weight: 5 }, marketingData);
+    state = applySalesAction(state, { type: 'setSalesSetting', key: 'outboundSpend', value: 180 }, salesData);
+    state = applySalesAction(state, { type: 'setSalesSetting', key: 'discountRate', value: 0.04 }, salesData);
+    state = applySalesAction(state, { type: 'setSalesSetting', key: 'pricingModel', value: 'tiered' }, salesData);
+    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'reorderPoint', value: 380 }, operationsData);
+    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'orderQuantity', value: 540 }, operationsData);
+    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'qualityControlSpend', value: 100 }, operationsData);
+  }
+
+  if (name === 'reckless') {
+    state = applySalesAction(state, { type: 'setSalesSetting', key: 'outboundSpend', value: 1500 }, salesData);
+    state = applySalesAction(state, { type: 'setSalesSetting', key: 'discountRate', value: 0.28 }, salesData);
+    state = applySalesAction(state, { type: 'setSalesSetting', key: 'commissionRate', value: 0.18 }, salesData);
+    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'outsourceShare', value: 0.5 }, operationsData);
+    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'orderQuantity', value: 1000 }, operationsData);
+    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'reorderPoint', value: 800 }, operationsData);
+  }
+  return state;
+}
+
 function runOne(name, seed) {
   let state = createGameState(baseSetup, config, industry, rolesData, seed, phase4Data);
+  state = configureStrategy(name, state);
   while (state.status === 'running') {
     state = advanceWeek(state, policy(name, state), config, industry, rolesData, phase4Data);
   }

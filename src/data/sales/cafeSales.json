@@ -1,7 +1,7 @@
 {
   "id": "cafe-sales",
   "defaults": {
-    "outboundSpend": 120,
+    "outboundSpend": 0,
     "discountRate": 0.05,
     "commissionRate": 0.06,
     "pricingModel": "tiered"

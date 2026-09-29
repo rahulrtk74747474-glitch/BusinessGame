@@ -1,126 +1,113 @@
-# Founder Lab - Business Simulation Game
+# Founder Lab — Business Simulation Game
 
-A data-driven React business simulator that teaches a beginner how company decisions interact across finance, customers, operations, and people.
+Founder Lab is a seeded, data-driven React business simulator for learning how company decisions interact across customers, people, operations, finance, negotiation, funding, compliance, risk, growth and exit.
 
 ## Stack
 
-**React + Vite.** The game is dashboard/report/decision heavy, so a web architecture gives fast iteration, mobile-friendly UI, simple GitHub Pages deployment, and clean separation between simulation logic and presentation.
+**React + Vite.** The game is primarily dashboards, decisions, reports and simulation state, so React provides a clean mobile-friendly UI while the engine remains framework-independent.
+**Why this stack:** Vite gives a fast build and simple GitHub Pages deployment; all business logic stays in engine/config modules rather than React components.
 
-## Current build: Phase 4 complete
+## Current build: Phase 5 complete
 
-### Phase 1
-- Setup flow: mode, capital, duration, goal, entity structure, location, business plan.
-- One playable industry: Neighborhood Cafe.
-- Hidden market demand, seasonality, economic cycle, trends and price elasticity.
-- Customer acquisition, CAC, churn, referrals, satisfaction, LTV and market share.
-- P&L, cash, tax accrual/payment, runway, valuation and bankruptcy.
+### Phase 1 — Core simulation
+- Setup flow, capital tiers, modes, durations, goals, legal structure, location and business-plan scoring.
+- Neighborhood Cafe as the first complete industry module.
+- Seeded market, demand, seasonality, economic cycle, trends and price elasticity.
+- Customer acquisition, churn, referrals, satisfaction, LTV, CAC and market share.
+- P&L, cash, taxes, runway, valuation and bankruptcy.
 - Four-week cause/effect management reports.
-- Automated smoke and balance tests.
 
-### Phase 2
-- Data-driven HR role module in `src/data/hr/cafeRoles.json`.
-- Candidate pool with visible skill, experience and salary ask.
-- Hidden reliability, ambition, culture fit and work preference.
-- Interviews and reference checks reveal signals rather than exact hidden values.
-- Two-week paid trial periods provide direct performance evidence.
-- One-shot salary/perks/equity offers can be accepted, countered or declined.
-- Employee ramp-up: new hires take roughly 2-3 months to reach full contribution.
-- Productivity uses skill x morale x training x manager quality x ramp-up x reliability/work-mode fit.
-- Weekly payroll and benefits flow into finance.
-- Roles affect operational capacity, service quality, awareness and marketing efficiency.
-- Morale, burnout, loyalty and quit risk evolve each week.
-- Training, performance reviews, raises and promotions.
-- On-site/hybrid/remote handling for eligible roles.
-- Firing and layoffs with severance, team-morale effects and documentation/legal-risk signals.
-- Decision ripple map shows cross-field effects.
-- Hiring and Team screens added to the mobile-friendly UI.
-- Monthly reports now explain payroll, headcount, team productivity and burnout.
+### Phase 2 — Hiring and team management
+- Visible candidate skills/experience/salary asks plus hidden reliability, ambition, culture fit and work preferences.
+- Interviews, reference checks, paid trials, offers, onboarding and ramp-up.
+- Productivity, morale, burnout, loyalty, training, reviews, raises, promotions, work modes, layoffs and firing.
+- Payroll and employee performance feed the operating model.
 
-### Phase 3
-- Reusable negotiation engine for suppliers, landlords, clients, investors and job candidates.
-- Hidden walk-away points, mood and personality (aggressive, friendly or analytical).
-- Preparation, leverage and relationship history materially affect outcomes.
-- Research dossiers cost money, improve preparation and progressively reveal intelligence.
-- Tactics: aggressive anchor, split the difference, bundle terms, set a deadline, ask for more information, and walk away.
-- Counterparties can accept, counter, continue, leave, or let talks expire after the round limit.
-- Tactic/personality fit matters: the same move can help with one person and damage another relationship.
-- Supplier agreements change variable cost per order for a fixed contract period.
-- Landlord agreements reduce weekly fixed costs for a lease period.
-- Client agreements add recurring contract revenue and delivery costs.
-- Investor negotiations produce an indicative valuation only; funding, dilution and capital settlement remain Phase 5.
-- Candidate compensation now uses the full negotiation engine and can settle salary plus bundled perks/equity.
-- Negotiation history, transcript, visible tone, discovered intelligence, contract status and ripple maps are shown in the UI.
-- Negotiation effects flow into finance and monthly cause/effect reporting.
+### Phase 3 — Negotiation
+- Reusable engine for suppliers, landlords, clients, investors and candidates.
+- Hidden walk-away point, mood, personality, preparation, leverage and relationship history.
+- Anchor, split, bundle, deadline, information and walk-away tactics.
+- Supplier, lease, client and candidate deals have actual downstream financial effects.
 
-### Phase 4
-- Channel-level marketing portfolio with local search, paid social, content/SEO, email/loyalty and influencers.
-- Each channel has its own CAC, saturation curve, awareness contribution, volatility and compounding channel strength.
-- Marketing reports blended CAC, paid acquisition, estimated contribution ROAS and B2B lead assistance.
-- B2B sales pipeline with delayed lead -> qualified -> proposal -> win progression.
-- Player controls outbound prospecting spend, discounts, commissions and pricing model.
-- One-time, subscription and tiered sales models have different close rates, revenue values and durations.
-- Won sales deals feed actual recurring revenue, delivery costs and commissions into finance.
-- Inventory is now an operating and working-capital system: reorder point, order quantity, lead time, purchase orders, supplier reliability, spoilage and stockouts.
-- Inventory purchases use cash when ordered while COGS is recognized when units are consumed.
-- Operations decisions include lean/balanced/service-first process modes, quality-control spend and outsourcing.
-- Capacity, defects, fulfillment, service quality, supplier terms and inventory jointly affect customers and margins.
-- Three reactive AI competitors: price cutter, premium defender and copycat.
-- Rivals react to player price, quality, marketing intensity and market-share signals.
-- Competitor pressure reduces accessible demand and raises acquisition costs.
-- Rival UI shows observable market intelligence without exposing hidden reaction thresholds.
-- Marketing, sales and operations each create cross-field ripple maps.
-- Monthly reports explain channel economics, pipeline delays, inventory cash usage, defects/fulfillment and competitive pressure.
-- Added a Sales Representative role plus sales/operations productivity effects for relevant employees.
-- Added a dedicated Phase 4 integration test on top of smoke, HR, negotiation and balance tests.
+### Phase 4 — Marketing, sales, operations and competitors
+- Channel-level marketing with saturation, CAC, awareness and ROAS.
+- Delayed B2B lead → qualification → proposal → win pipeline.
+- Inventory, working capital, supplier lead times, spoilage, stockouts, quality control and outsourcing.
+- Three reactive competitors: price cutter, premium defender and copycat.
+
+### Phase 5 — Funding, legal, risk, expansion and exit
+- Funding sources: founder capital, business loan, grants, crowdfunding, angels and VC.
+- Pitch focus, application delays, approvals/rejections and expiring term sheets.
+- Debt amortization, interest, debt service, leverage and origination fees.
+- Cap table, dilution, founder ownership and configurable ESOP pool.
+- Equity rounds carry investor expectations.
+- Basic balance sheet: cash, reserve, inventory/expansion assets, liabilities and book equity.
+- Required licenses/policies with processing time, renewal, fines and possible shutdown.
+- Insurance, preventive controls and protected emergency reserve.
+- Expansion projects: second location, nearby-city entry, export channel and franchise pilot.
+- Expansion consumes cash first and adds demand/capacity/revenue only after a build delay.
+- Exit readiness uses age, revenue/profit, compliance, risk and succession readiness.
+- Brokered company-sale review, buyer offer, transaction fees and founder proceeds after dilution.
+- Bankruptcy now recognizes remaining financing/reserve options and a limited liquidity-distress grace period.
+- Decision/event audit foundation logs player choices, alternatives, visible state before/after and system events for the later post-mortem/replay engine.
 
 ## Architecture
 
 ```text
 src/
-├── components/              # UI only
+├── App.jsx
+├── components/
 │   ├── Dashboard.jsx
 │   ├── HiringPanel.jsx
 │   ├── TeamPanel.jsx
-│   ├── RippleMap.jsx
-│   ├── MonthlyReport.jsx
 │   ├── NegotiationPanel.jsx
 │   ├── MarketingPanel.jsx
 │   ├── SalesPanel.jsx
 │   ├── OperationsPanel.jsx
 │   ├── CompetitorsPanel.jsx
+│   ├── FundingPanel.jsx
+│   ├── LegalPanel.jsx
+│   ├── RiskPanel.jsx
+│   ├── GrowthExitPanel.jsx
+│   ├── MonthlyReport.jsx
+│   ├── RippleMap.jsx
 │   ├── MiniChart.jsx
 │   └── SetupFlow.jsx
 ├── config/
-│   └── gameConfig.json      # Global tuning
+│   └── gameConfig.json
 ├── data/
-│   ├── industries/
-│   │   └── cafe.json        # Cafe economics
-│   ├── hr/
-│   │   └── cafeRoles.json
-│   ├── negotiation/
-│   │   └── negotiationConfig.json
-│   ├── marketing/
-│   │   └── cafeMarketing.json
-│   ├── sales/
-│   │   └── cafeSales.json
-│   ├── operations/
-│   │   └── cafeOperations.json
-│   └── competitors/
-│       └── cafeCompetitors.json   # HR roles/tuning
+│   ├── industries/cafe.json
+│   ├── hr/cafeRoles.json
+│   ├── negotiation/negotiationConfig.json
+│   ├── marketing/cafeMarketing.json
+│   ├── sales/cafeSales.json
+│   ├── operations/cafeOperations.json
+│   ├── competitors/cafeCompetitors.json
+│   ├── funding/cafeFunding.json
+│   ├── legal/cafeLegal.json
+│   ├── risk/cafeRisk.json
+│   ├── expansion/cafeExpansion.json
+│   └── exit/cafeExit.json
 ├── engine/
 │   ├── businessPlan.js
+│   ├── market.js
 │   ├── customers.js
 │   ├── employees.js
-│   ├── finance.js
 │   ├── hiring.js
-│   ├── market.js
 │   ├── negotiation.js
 │   ├── marketing.js
 │   ├── sales.js
 │   ├── operations.js
 │   ├── competitors.js
-│   ├── random.js
+│   ├── funding.js
+│   ├── legal.js
+│   ├── risk.js
+│   ├── expansion.js
+│   ├── exit.js
+│   ├── finance.js
+│   ├── logging.js
 │   ├── report.js
+│   ├── random.js
 │   └── simulator.js
 └── models/
     └── createGameState.js
@@ -130,10 +117,11 @@ scripts/
 ├── hr-test.mjs
 ├── negotiation-test.mjs
 ├── phase4-test.mjs
+├── phase5-test.mjs
 └── balance-test.mjs
 ```
 
-Business logic belongs in the engine and JSON modules, not React components.
+Business logic belongs in the engine and JSON modules. UI components dispatch actions and render state; they do not contain simulation formulas.
 
 ## Run locally
 
@@ -151,46 +139,52 @@ npm run build
 npm run preview
 ```
 
-## Tests
-
-Run everything:
+## Automated tests
 
 ```bash
 npm test
 ```
 
-Individual suites:
+Or:
 
 ```bash
 npm run test:smoke
 npm run test:hr
 npm run test:negotiation
 npm run test:phase4
+npm run test:phase5
 npm run test:balance
 ```
 
-The HR integration test covers hidden-trait safety, due diligence, trials, payroll, ramp-up, training, raises, reviews, ripple maps and termination. The negotiation integration test covers hidden counterparty information, research/preparation, supplier settlement, walk-away, client contracts, investor previews, candidate hiring and financial effects.
+The Phase 5 integration test verifies funding/dilution/debt, legal enforcement that causes real financial damage, insurance/reserves, delayed expansion, brokered exit and decision logging.
 
-The balance test still simulates 60 deterministic 104-week games for each policy: do-nothing, reckless and sensible. Its assertions require do-nothing to fail, reckless to usually fail, sensible to usually win, and sensible to remain non-guaranteed.
+The 104-week balance benchmark uses 60 deterministic seeds per policy. Current results:
 
-## GitHub Actions / GitHub Pages
+| Policy | Win | Bankruptcy | Horizon without win |
+|---|---:|---:|---:|
+| Do nothing | 0% | 100% | 0% |
+| Reckless | 0% | 100% | 0% |
+| Sensible | 95% | 0% | 5% |
 
-`.github/workflows/founder-lab.yml` automatically runs tests, builds the production game and deploys GitHub Pages on every push to `main`.
+The test fails if sensible play becomes guaranteed.
+
+## GitHub Actions / Pages
+
+Every push to `main` automatically runs all tests, builds the production app and deploys GitHub Pages.
 
 Manual run:
-
 1. Open **Actions**.
 2. Choose **Founder Lab - Test, Build & Deploy**.
-3. Tap **Run workflow**.
-4. Select `main`.
-5. Tap **Run workflow**.
+3. Choose **Run workflow** on `main`.
 
-Live site:
+Live game:
 
 https://rahulrtk74747474-glitch.github.io/BusinessGame/
 
 ## Phase boundary
 
-**Phase 4 is complete. Phase 5 has not been started.**
+**Phase 5 is complete. Phase 5B has not been started.**
 
-Next phase: funding, legal, risk, expansion and exit.
+Next: **Phase 5B — acquisition mode**: procedural business listings, internally reconciled financials, hidden flaws, paid/time-delayed due diligence, valuation tools, seller negotiation, deal structuring, integration and portfolio management.
+
+The requested hidden-flaw distribution test (about 40% flawed / 20% genuinely good) and the test proving missed flaws cause later damage belong to Phase 5B because the flaw/listing generator does not exist before that phase.

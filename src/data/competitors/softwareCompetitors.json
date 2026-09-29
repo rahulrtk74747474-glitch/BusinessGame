@@ -1,0 +1,12 @@
+{
+  "id":"software-competitors",
+  "pressure":{"demandBase":1.14,"demandStrengthWeight":0.18,"demandMin":0.65,"demandMax":1.08,"cacBase":0.94,"cacMarketingWeight":0.3,"cacMin":0.92,"cacMax":1.5},
+  "reaction":{"priceMoveSpeed":0.22,"qualityMoveSpeed":0.2,"marketingMoveSpeed":0.22,"reputationMoveSpeed":0.1,"noiseStd":0.02},
+  "strength":{"priceWeight":0.28,"qualityWeight":0.3,"marketingWeight":0.2,"reputationWeight":0.22,"qualityReference":0.74,"marketingReference":0.62,"reputationReference":0.7,"min":0.55,"max":1.7},
+  "publicIntel":{"priceNoisePct":0.035},
+  "rivals":[
+    {"id":"budgetstack","name":"BudgetStack","archetype":"price_cutter","publicDescription":"Freemium competitor that cuts price and bundles basic features.","initialPriceMultiplier":0.78,"initialQuality":0.63,"initialMarketing":0.7,"initialReputation":0.6,"targetPriceMultiplier":0.75,"priceWarTriggerShare":0.16,"priceWarCut":0.08,"qualityTarget":0.66,"marketingTarget":0.76},
+    {"id":"enterprisepro","name":"EnterprisePro","archetype":"premium","publicDescription":"Enterprise-focused rival defending reliability, integrations and support.","initialPriceMultiplier":1.45,"initialQuality":0.88,"initialMarketing":0.65,"initialReputation":0.82,"targetPriceMultiplier":1.42,"qualityTarget":0.91,"marketingTarget":0.7},
+    {"id":"copycloud","name":"CopyCloud","archetype":"copycat","publicDescription":"Fast follower that copies successful pricing, features and campaigns.","initialPriceMultiplier":1.02,"initialQuality":0.7,"initialMarketing":0.6,"initialReputation":0.65,"copyPriceWeight":0.62,"copyMarketingWeight":0.52,"qualityTarget":0.73}
+  ]
+}

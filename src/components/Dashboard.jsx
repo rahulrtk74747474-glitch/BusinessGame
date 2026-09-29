@@ -48,6 +48,10 @@ export default function Dashboard({
   React.useEffect(() => setDecisionDraft(state.decisions), [state.week]);
   const setDecision = (key, value) => setDecisionDraft((d) => ({ ...d, [key]: Number(value) }));
   const runway = Number.isFinite(state.finance.runwayWeeks) ? state.finance.runwayWeeks.toFixed(1) + ' w' : 'Profitable';
+  const priceMin = industry.priceDecisionMin ?? Math.max(0.01, industry.referencePrice * 0.45);
+  const priceMax = industry.priceDecisionMax ?? industry.referencePrice * 2.2;
+  const priceStep = industry.priceDecisionStep ?? (industry.referencePrice < 2 ? 0.01 : industry.referencePrice < 20 ? 0.25 : 1);
+  const operationsMode = phase4Data.operations.inventoryMode || 'physical';
 
   return <div className="app-shell">
     <header className="topbar">
@@ -107,7 +111,7 @@ export default function Dashboard({
     </>}
 
     {tab === 'operations' && <>
-      <OperationsPanel state={state} operationsData={phase4Data.operations} onAction={onOperationsAction} />
+      <OperationsPanel state={state} industry={industry} operationsData={phase4Data.operations} onAction={onOperationsAction} />
       <RippleMap ripple={state.operations.lastRipple} />
     </>}
 
@@ -149,7 +153,7 @@ export default function Dashboard({
         <div className="kpi"><span>Valuation</span><b>{money(state.finance.valuation)}</b><small>Founder owns {pct(founderOwnership(state))}</small></div>
         <div className="kpi"><span>Team</span><b>{state.hr.employees.length}</b><small>Payroll {money(state.finance.payrollCosts || 0)}/wk</small></div>
         <div className="kpi"><span>Team morale</span><b>{state.hr.employees.length ? pct(state.hr.averageMorale) : '-'}</b><small>Burnout {state.hr.employees.length ? pct(state.hr.averageBurnout) : '-'}</small></div>
-        <div className="kpi"><span>Inventory</span><b>{state.operations.inventoryUnits.toFixed(0)}</b><small>Asset {money(state.finance.inventoryAsset || 0)}</small></div>
+        <div className="kpi"><span>{operationsMode === 'virtual' ? 'Delivery capacity' : (industry.inventoryLabel || 'Inventory')}</span><b>{operationsMode === 'virtual' ? state.operations.last.capacity.toFixed(0) : state.operations.inventoryUnits.toFixed(0)}</b><small>{operationsMode === 'virtual' ? (industry.unitLabel || 'units') + '/week' : 'Asset ' + money(state.finance.inventoryAsset || 0)}</small></div>
         <div className="kpi"><span>B2B sales</span><b>{money(state.finance.salesRevenue || 0)}</b><small>Pipeline {money(state.sales.last.pipelineValue || 0)}</small></div>
         <div className="kpi"><span>Debt</span><b>{money(state.finance.debtBalance)}</b><small>Service {money(state.finance.debtService)}/wk</small></div>
         <div className="kpi"><span>Compliance</span><b>{pct(state.legal.complianceScore)}</b><small>Risk {pct(state.risk.last.riskScore)}</small></div>
@@ -163,7 +167,47 @@ export default function Dashboard({
       <section className="content-grid">
         <section className="panel controls">
           <div className="section-head"><div><h2>Weekly decisions</h2><p>Pricing, growth, quality, people, compliance and capital structure now interact in the same weekly model.</p></div></div>
-          <label>Average selling price <b>{'$' + decisionDraft.price.toFixed(2)}</b><input type="range" min={config.decisions.price.min} max={config.decisions.price.max} step={config.decisions.price.step} value={decisionDraft.price} onChange={(e) => setDecision('price', e.target.value)} /></label>
+          <label>Average selling price <b>{'
+          <label>Marketing spend <b>{money(decisionDraft.marketingSpend)}</b><input type="range" min={config.decisions.marketingSpend.min} max={config.decisions.marketingSpend.max} step={config.decisions.marketingSpend.step} value={decisionDraft.marketingSpend} onChange={(e) => setDecision('marketingSpend', e.target.value)} /></label>
+          <label>Quality/service spend <b>{money(decisionDraft.qualitySpend)}</b><input type="range" min={config.decisions.qualitySpend.min} max={config.decisions.qualitySpend.max} step={config.decisions.qualitySpend.step} value={decisionDraft.qualitySpend} onChange={(e) => setDecision('qualitySpend', e.target.value)} /></label>
+          <button className="primary" disabled={state.status !== 'running'} onClick={() => onAdvance(decisionDraft)}>Advance one week</button>
+          <div className="hidden-info"><b>What you can observe:</b> the game logs every player action and the visible information available at that moment. Hidden traits and market variables remain hidden until their systems reveal them.</div>
+        </section>
+
+        <section className="panel">
+          <h2>Company signals</h2>
+          <div className="signal-list">
+            <span>Awareness <b>{pct(state.customers.awareness)}</b></span>
+            <span>Churn <b>{pct(state.customers.churnRate)}</b></span>
+            <span>Lost orders <b>{state.history.at(-1)?.lostOrders?.toFixed(0) || 0}</b></span>
+            <span>Capacity <b>{state.customers.capacity?.toFixed(0) || industry.capacityOrdersPerWeek} {industry.unitLabel || 'units'}/wk</b></span>
+            <span>Economy <b>{state.market.economicIndex > config.market.signalStrongThreshold ? 'Strong' : state.market.economicIndex < config.market.signalWeakThreshold ? 'Weak' : 'Stable'}</b></span>
+            <span>Trend <b>{state.market.trendIndex > config.market.signalStrongThreshold ? 'Favorable' : state.market.trendIndex < config.market.signalWeakThreshold ? 'Unfavorable' : 'Flat'}</b></span>
+            <span>Manager quality <b>{pct(state.hr.managerQuality)}</b></span>
+            <span>Client contract <b>{money(state.finance.clientRevenue || 0)}/wk</b></span>
+            <span>Fulfillment <b>{pct(state.operations.last.fulfillmentRate)}</b></span>
+            <span>Competitor pressure <b>{pct(state.competitors.last.pressureIndex)}</b></span>
+            <span>Marketing ROAS <b>{state.marketing.last.estimatedROAS.toFixed(2)}x</b></span>
+            <span>Emergency reserve <b>{money(state.risk.reserveCash)}</b></span>
+            <span>Legal shutdown <b>{state.legal.shutdownWeeks > 0 ? state.legal.shutdownWeeks + ' wk' : 'No'}</b></span>
+            <span>Expansion projects <b>{state.expansion.projects.length} active / {state.expansion.completed.length} complete</b></span>
+          </div>
+          <div className="industry-notes"><h3>Typical failure modes</h3><ul>{industry.typicalFailureModes.map((x) => <li key={x}>{x}</li>)}</ul></div>
+        </section>
+      </section>
+
+      <RippleMap ripple={state.exit.lastRipple || state.expansion.lastRipple || state.risk.lastRipple || state.legal.lastRipple || state.funding.lastRipple || state.operations.lastRipple || state.sales.lastRipple || state.marketing.lastRipple || state.negotiation.lastRipple || state.hr.lastRipple} />
+
+      <section className="charts-grid">
+        <MiniChart label="Cash" values={state.history.map((x) => x.cash)} />
+        <MiniChart label="Weekly revenue" values={state.history.map((x) => x.revenue)} />
+        <MiniChart label="Active customers" values={state.history.map((x) => x.activeCustomers)} />
+      </section>
+      <MonthlyReport report={latestReport} />
+    </>}
+  </div>;
+}
+ + decisionDraft.price.toFixed(industry.referencePrice < 5 ? 2 : 0)}</b><input type="range" min={priceMin} max={priceMax} step={priceStep} value={decisionDraft.price} onChange={(e) => setDecision('price', e.target.value)} /></label>
           <label>Marketing spend <b>{money(decisionDraft.marketingSpend)}</b><input type="range" min={config.decisions.marketingSpend.min} max={config.decisions.marketingSpend.max} step={config.decisions.marketingSpend.step} value={decisionDraft.marketingSpend} onChange={(e) => setDecision('marketingSpend', e.target.value)} /></label>
           <label>Quality/service spend <b>{money(decisionDraft.qualitySpend)}</b><input type="range" min={config.decisions.qualitySpend.min} max={config.decisions.qualitySpend.max} step={config.decisions.qualitySpend.step} value={decisionDraft.qualitySpend} onChange={(e) => setDecision('qualitySpend', e.target.value)} /></label>
           <button className="primary" disabled={state.status !== 'running'} onClick={() => onAdvance(decisionDraft)}>Advance one week</button>

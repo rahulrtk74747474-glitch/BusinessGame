@@ -1,17 +1,24 @@
 import { clamp } from './random.js';
 
+function modeOf(operationsData) {
+  return operationsData.inventoryMode || 'physical';
+}
+
 export function createOperationsState(industry, operationsData) {
+  const mode = modeOf(operationsData);
   return {
     settings: { ...operationsData.defaults },
-    inventoryUnits: operationsData.initialInventoryUnits,
+    inventoryUnits: mode === 'virtual' ? 0 : operationsData.initialInventoryUnits,
     inventoryUnitCost: industry.baseVariableCostPerOrder,
     purchaseOrders: [],
     nextPurchaseOrderId: 1,
     last: {
+      inventoryMode: mode,
       receivedUnits: 0,
+      producedUnits: 0,
       purchaseUnits: 0,
       purchaseCash: 0,
-      endingInventory: operationsData.initialInventoryUnits,
+      endingInventory: mode === 'virtual' ? 0 : operationsData.initialInventoryUnits,
       spoilageUnits: 0,
       outsourcedOrders: 0,
       internalOrders: 0,
@@ -22,7 +29,8 @@ export function createOperationsState(industry, operationsData) {
       defectRate: operationsData.qualityControl.baseDefectRate,
       fulfillmentRate: 1,
       reliabilitySignal: 1,
-      weeklyFixedCost: operationsData.processModes[operationsData.defaults.processMode].weeklyFixedCost
+      weeklyFixedCost: operationsData.processModes[operationsData.defaults.processMode].weeklyFixedCost,
+      estimatedUnitCost: industry.baseVariableCostPerOrder
     },
     lastRipple: null
   };
@@ -37,9 +45,9 @@ export function applyOperationsAction(state, action, operationsData) {
     settings.processMode = action.value;
   } else if (action.key === 'qualityControlSpend') {
     settings.qualityControlSpend = clamp(Number(action.value) || 0, 0, operationsData.limits.qualityControlSpendMax);
-  } else if (action.key === 'reorderPoint') {
+  } else if (action.key === 'reorderPoint' && modeOf(operationsData) === 'physical') {
     settings.reorderPoint = clamp(Number(action.value) || 0, 0, operationsData.limits.reorderPointMax);
-  } else if (action.key === 'orderQuantity') {
+  } else if (action.key === 'orderQuantity' && modeOf(operationsData) === 'physical') {
     settings.orderQuantity = clamp(
       Number(action.value) || operationsData.limits.orderQuantityMin,
       operationsData.limits.orderQuantityMin,
@@ -59,7 +67,7 @@ export function applyOperationsAction(state, action, operationsData) {
       lastRipple: {
         title: 'Operations policy changed',
         nodes: [
-          'Operations: capacity, inventory or quality changes',
+          'Operations: capacity, inventory/production or quality changes',
           'Finance: working capital and cost structure change',
           'Customers: fulfillment and service quality change',
           'Sales: delivery reliability changes'
@@ -70,43 +78,16 @@ export function applyOperationsAction(state, action, operationsData) {
 }
 
 export function stepOperationsPre(state, industry, operationsData, locationConfig, teamEffects, rng, expansionEffects = {}) {
+  const mode = modeOf(operationsData);
   const currentWeek = state.week + 1;
   const settings = state.operations.settings;
   const process = operationsData.processModes[settings.processMode];
-  let inventoryUnits = state.operations.inventoryUnits;
+  let inventoryUnits = mode === 'virtual' ? 0 : state.operations.inventoryUnits;
   let inventoryUnitCost = state.operations.inventoryUnitCost;
   const pending = [];
   let receivedUnits = 0;
+  let producedUnits = 0;
   let lateOrders = 0;
-
-  for (const po of state.operations.purchaseOrders) {
-    if (po.arrivalWeek > currentWeek) {
-      pending.push(po);
-      continue;
-    }
-
-    if (rng.uniform() <= operationsData.supplier.baseReliability) {
-      const totalExistingCost = inventoryUnits * inventoryUnitCost;
-      const receivedCost = po.quantity * po.unitCost;
-      inventoryUnits += po.quantity;
-      inventoryUnitCost = inventoryUnits > 0
-        ? (totalExistingCost + receivedCost) / inventoryUnits
-        : po.unitCost;
-      receivedUnits += po.quantity;
-    } else {
-      lateOrders += 1;
-      pending.push({
-        ...po,
-        arrivalWeek: currentWeek + operationsData.supplier.lateDelayWeeks
-      });
-    }
-  }
-
-  const spoilageUnits = Math.min(
-    inventoryUnits,
-    inventoryUnits * operationsData.inventory.spoilageRatePerWeek * process.wasteMultiplier
-  );
-  inventoryUnits = Math.max(0, inventoryUnits - spoilageUnits);
 
   const contracts = state.negotiation?.contracts || {};
   const supplierContractActive =
@@ -116,29 +97,29 @@ export function stepOperationsPre(state, industry, operationsData, locationConfi
     ? contracts.supplierUnitCost
     : industry.baseVariableCostPerOrder;
 
-  const lastOrders = state.history.at(-1)?.orders || industry.initialCustomers * industry.purchaseFrequency;
-  const forecastDemand =
-    lastOrders * operationsData.inventory.forecastDemandWeight +
-    industry.initialCustomers * industry.purchaseFrequency * (1 - operationsData.inventory.forecastDemandWeight);
-  const projectedInventory = inventoryUnits - forecastDemand;
-  const onOrderUnits = pending.reduce((sum, po) => sum + po.quantity, 0);
+  if (mode === 'physical') {
+    for (const po of state.operations.purchaseOrders) {
+      if (po.arrivalWeek > currentWeek) {
+        pending.push(po);
+        continue;
+      }
 
-  let purchaseUnits = 0;
-  let purchaseCash = 0;
-  let nextPurchaseOrderId = state.operations.nextPurchaseOrderId;
-
-  if (projectedInventory + onOrderUnits <= settings.reorderPoint) {
-    purchaseUnits = settings.orderQuantity;
-    purchaseCash =
-      purchaseUnits * supplierUnitCost +
-      operationsData.supplier.orderAdminCost;
-    pending.push({
-      id: nextPurchaseOrderId,
-      quantity: purchaseUnits,
-      unitCost: supplierUnitCost,
-      arrivalWeek: currentWeek + operationsData.supplier.baseLeadTimeWeeks
-    });
-    nextPurchaseOrderId += 1;
+      if (rng.uniform() <= operationsData.supplier.baseReliability) {
+        const totalExistingCost = inventoryUnits * inventoryUnitCost;
+        const receivedCost = po.quantity * po.unitCost;
+        inventoryUnits += po.quantity;
+        inventoryUnitCost = inventoryUnits > 0
+          ? (totalExistingCost + receivedCost) / inventoryUnits
+          : po.unitCost;
+        receivedUnits += po.quantity;
+      } else {
+        lateOrders += 1;
+        pending.push({
+          ...po,
+          arrivalWeek: currentWeek + operationsData.supplier.lateDelayWeeks
+        });
+      }
+    }
   }
 
   const operationsEfficiency = 1 + (teamEffects.operationsEfficiencyAdd || 0);
@@ -149,10 +130,76 @@ export function stepOperationsPre(state, industry, operationsData, locationConfi
     process.capacityMultiplier *
     operationsEfficiency;
 
-  const outsourceCapacity =
-    settings.outsourceShare * operationsData.outsource.capacityPerShare;
-  const inventorySupportedCapacity = inventoryUnits + outsourceCapacity;
-  const capacity = Math.max(0, Math.min(processCapacity + outsourceCapacity, inventorySupportedCapacity));
+  let purchaseUnits = 0;
+  let purchaseCash = 0;
+  let nextPurchaseOrderId = state.operations.nextPurchaseOrderId;
+  let spoilageUnits = 0;
+
+  if (mode === 'production') {
+    const productionCfg = operationsData.production;
+    const productionNoise = clamp(rng.normal(1, productionCfg.variabilityStd || 0), 0.78, 1.2);
+    producedUnits = Math.max(
+      0,
+      Math.min(
+        processCapacity,
+        productionCfg.weeklyUnits * process.capacityMultiplier * operationsEfficiency * productionNoise
+      )
+    );
+    const totalExistingCost = inventoryUnits * inventoryUnitCost;
+    const productionUnitCost = supplierContractActive
+      ? supplierUnitCost
+      : (productionCfg.cashCostPerUnit || industry.baseVariableCostPerOrder);
+    const producedCost = producedUnits * productionUnitCost;
+    inventoryUnits += producedUnits;
+    inventoryUnitCost = inventoryUnits > 0
+      ? (totalExistingCost + producedCost) / inventoryUnits
+      : productionUnitCost;
+    purchaseUnits = producedUnits;
+    purchaseCash = producedCost;
+  }
+
+  if (mode !== 'virtual') {
+    spoilageUnits = Math.min(
+      inventoryUnits,
+      inventoryUnits * operationsData.inventory.spoilageRatePerWeek * process.wasteMultiplier
+    );
+    inventoryUnits = Math.max(0, inventoryUnits - spoilageUnits);
+  }
+
+  if (mode === 'physical') {
+    const lastOrders = state.history.at(-1)?.orders || industry.initialCustomers * industry.purchaseFrequency;
+    const forecastDemand =
+      lastOrders * operationsData.inventory.forecastDemandWeight +
+      industry.initialCustomers * industry.purchaseFrequency * (1 - operationsData.inventory.forecastDemandWeight);
+    const projectedInventory = inventoryUnits - forecastDemand;
+    const onOrderUnits = pending.reduce((sum, po) => sum + po.quantity, 0);
+
+    if (projectedInventory + onOrderUnits <= settings.reorderPoint) {
+      purchaseUnits = settings.orderQuantity;
+      purchaseCash =
+        purchaseUnits * supplierUnitCost +
+        operationsData.supplier.orderAdminCost;
+      pending.push({
+        id: nextPurchaseOrderId,
+        quantity: purchaseUnits,
+        unitCost: supplierUnitCost,
+        arrivalWeek: currentWeek + operationsData.supplier.baseLeadTimeWeeks
+      });
+      nextPurchaseOrderId += 1;
+    }
+  }
+
+  const outsourceCapacity = settings.outsourceShare * operationsData.outsource.capacityPerShare;
+  const inventorySupportedCapacity =
+    mode === 'virtual'
+      ? processCapacity + outsourceCapacity
+      : inventoryUnits + outsourceCapacity;
+  const capacity = Math.max(
+    0,
+    mode === 'virtual'
+      ? processCapacity + outsourceCapacity
+      : Math.min(processCapacity + outsourceCapacity, inventorySupportedCapacity)
+  );
 
   const qcReduction = Math.min(
     operationsData.qualityControl.maxDefectReduction,
@@ -172,7 +219,7 @@ export function stepOperationsPre(state, industry, operationsData, locationConfi
     defectRate * operationsData.qualityControl.satisfactionPenaltyPerDefectRate;
 
   const estimatedUnitCost =
-    inventoryUnitCost * (1 - settings.outsourceShare) +
+    (mode === 'virtual' ? supplierUnitCost : inventoryUnitCost) * (1 - settings.outsourceShare) +
     supplierUnitCost *
       (1 + operationsData.outsource.unitCostMarkup) *
       settings.outsourceShare;
@@ -180,17 +227,19 @@ export function stepOperationsPre(state, industry, operationsData, locationConfi
   const reliabilitySignal = clamp(
     operationsData.supplier.baseReliability -
       lateOrders * 0.1 -
-      (projectedInventory < 0 ? 0.08 : 0),
+      (mode !== 'virtual' && inventorySupportedCapacity < processCapacity ? 0.08 : 0),
     0.55,
     1.05
   );
 
   return {
+    inventoryMode: mode,
     inventoryUnits,
     inventoryUnitCost,
     purchaseOrders: pending,
     nextPurchaseOrderId,
     receivedUnits,
+    producedUnits,
     spoilageUnits,
     purchaseUnits,
     purchaseCash,
@@ -204,7 +253,7 @@ export function stepOperationsPre(state, industry, operationsData, locationConfi
     estimatedUnitCost,
     reliabilitySignal,
     weeklyFixedCost: process.weeklyFixedCost + settings.qualityControlSpend,
-    stockoutConstrained: inventorySupportedCapacity < processCapacity
+    stockoutConstrained: mode === 'virtual' ? false : inventorySupportedCapacity < processCapacity
   };
 }
 
@@ -213,9 +262,15 @@ export function stepOperationsPost(state, customers, operationsData, pre) {
   const maxOutsourced = pre.outsourceCapacity;
   const outsourcedOrders = Math.min(customers.orders * outsourceShare, maxOutsourced);
   const internalOrders = Math.max(0, customers.orders - outsourcedOrders);
-  const endingInventory = Math.max(0, pre.inventoryUnits - internalOrders);
 
-  const internalCogs = internalOrders * pre.inventoryUnitCost;
+  const endingInventory = pre.inventoryMode === 'virtual'
+    ? 0
+    : Math.max(0, pre.inventoryUnits - internalOrders);
+
+  const internalUnitCost = pre.inventoryMode === 'virtual'
+    ? pre.supplierUnitCost
+    : pre.inventoryUnitCost;
+  const internalCogs = internalOrders * internalUnitCost;
   const outsourcedCogs =
     outsourcedOrders *
     pre.supplierUnitCost *
@@ -229,11 +284,13 @@ export function stepOperationsPost(state, customers, operationsData, pre) {
   return {
     ...state.operations,
     inventoryUnits: endingInventory,
-    inventoryUnitCost: pre.inventoryUnitCost,
+    inventoryUnitCost: internalUnitCost,
     purchaseOrders: pre.purchaseOrders,
     nextPurchaseOrderId: pre.nextPurchaseOrderId,
     last: {
+      inventoryMode: pre.inventoryMode,
       receivedUnits: pre.receivedUnits,
+      producedUnits: pre.producedUnits,
       purchaseUnits: pre.purchaseUnits,
       purchaseCash: pre.purchaseCash,
       endingInventory,

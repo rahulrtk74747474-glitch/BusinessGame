@@ -1,0 +1,14 @@
+{
+  "id":"dairy-marketing",
+  "defaultWeights":{"local_delivery":30,"retail_partners":25,"social_whatsapp":20,"sampling":15,"email":10},
+  "efficiency":{"base":0.74,"satisfactionWeight":0.34,"teamWeight":1,"min":0.56,"max":1.45},
+  "strength":{"min":0.72,"max":1.42},
+  "roasContributionWeeks":5,
+  "channels":{
+    "local_delivery":{"label":"Local delivery acquisition","description":"Doorstep/customer-route acquisition with strong local intent.","baseCAC":15,"saturationSpend":500,"saturationSlope":0.55,"awarenessPer100":0.007,"noiseStd":0.05,"strengthDecay":0.99,"strengthGrowthPer100":0.005,"b2bLeadsPer100":0.02},
+    "retail_partners":{"label":"Retail / tea-shop partners","description":"Builds local distribution and repeat wholesale demand.","baseCAC":21,"saturationSpend":650,"saturationSlope":0.45,"awarenessPer100":0.006,"noiseStd":0.06,"strengthDecay":0.992,"strengthGrowthPer100":0.008,"b2bLeadsPer100":0.08},
+    "social_whatsapp":{"label":"Social & WhatsApp","description":"Low-cost local awareness, reviews and direct-order acquisition.","baseCAC":12,"saturationSpend":420,"saturationSlope":0.7,"awarenessPer100":0.009,"noiseStd":0.1,"strengthDecay":0.98,"strengthGrowthPer100":0.004,"b2bLeadsPer100":0.025},
+    "sampling":{"label":"Sampling & local events","description":"Physical sampling improves trust but is labor-intensive and volatile.","baseCAC":19,"saturationSpend":500,"saturationSlope":0.55,"awarenessPer100":0.012,"noiseStd":0.14,"strengthDecay":0.95,"strengthGrowthPer100":0.004,"b2bLeadsPer100":0.025},
+    "email":{"label":"Repeat-order messaging","description":"Cheap retention and reactivation for existing customers.","baseCAC":7,"saturationSpend":220,"saturationSlope":1,"awarenessPer100":0.002,"noiseStd":0.03,"strengthDecay":0.995,"strengthGrowthPer100":0.005,"audienceCapRate":0.07,"b2bLeadsPer100":0.01}
+  }
+}

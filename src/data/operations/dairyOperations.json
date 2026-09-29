@@ -1,0 +1,18 @@
+{
+  "id":"dairy-operations",
+  "inventoryMode":"production",
+  "initialInventoryUnits":650,
+  "initialInventoryFundingIncluded":true,
+  "production":{"weeklyUnits":4800,"variabilityStd":0.055,"cashCostPerUnit":0.52},
+  "defaults":{"processMode":"balanced","qualityControlSpend":140,"reorderPoint":0,"orderQuantity":0,"outsourceShare":0.05},
+  "limits":{"qualityControlSpendMax":900,"reorderPointMax":0,"orderQuantityMin":0,"orderQuantityMax":0,"outsourceShareMax":0.35},
+  "supplier":{"baseLeadTimeWeeks":1,"baseReliability":0.94,"lateDelayWeeks":1,"orderAdminCost":0},
+  "inventory":{"spoilageRatePerWeek":0.035,"emergencyPurchaseMarkup":0.25,"forecastDemandWeight":0.4},
+  "qualityControl":{"baseDefectRate":0.045,"spendScale":220,"maxDefectReduction":0.7,"satisfactionPenaltyPerDefectRate":0.85},
+  "outsource":{"capacityPerShare":2200,"unitCostMarkup":0.3,"servicePenaltyPerShare":0.035},
+  "processModes":{
+    "lean":{"label":"Feed & labor efficiency","capacityMultiplier":1.04,"serviceAdd":-0.018,"wasteMultiplier":0.86,"weeklyFixedCost":85},
+    "balanced":{"label":"Balanced herd operations","capacityMultiplier":1,"serviceAdd":0,"wasteMultiplier":1,"weeklyFixedCost":120},
+    "quality":{"label":"Animal health / milk quality first","capacityMultiplier":0.94,"serviceAdd":0.055,"wasteMultiplier":0.92,"weeklyFixedCost":230}
+  }
+}

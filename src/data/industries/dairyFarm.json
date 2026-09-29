@@ -1,0 +1,84 @@
+{
+  "id": "dairy_farm",
+  "name": "Dairy Farm",
+  "category": "Agriculture",
+  "description": "A commercial dairy operation producing and selling milk. Profitability depends on yield, feed/animal-health cost, spoilage, distribution, pricing and capacity utilization.",
+  "unitLabel": "litres of milk",
+  "customerLabel": "households & buyers",
+  "operationsLabel": "Farm production & cold chain",
+  "inventoryLabel": "Chilled milk inventory",
+  "referencePrice": 0.92,
+  "priceElasticity": 0.72,
+  "baseMarketDemand": 6200,
+  "weeklyNewCustomerPool": 380,
+  "organicConversionRate": 0.2,
+  "basePaidCAC": 17,
+  "baseVariableCostPerOrder": 0.52,
+  "baseFixedCostPerWeek": 1520,
+  "capacityOrdersPerWeek": 5600,
+  "initialCustomers": 280,
+  "initialAwareness": 0.2,
+  "initialSatisfaction": 0.72,
+  "purchaseFrequency": 13,
+  "baseWeeklyChurn": 0.028,
+  "referralRate": 0.035,
+  "qualitySpendReference": 260,
+  "qualitySpendEffect": 0.13,
+  "serviceBaseline": 0.75,
+  "marketingEfficiencyCeiling": 1.25,
+  "seasonalityMonthly": [1.03,1.02,1.0,0.98,0.96,0.95,0.97,1.0,1.03,1.05,1.08,1.08],
+  "allowedLocations": ["home","coworking","rented"],
+  "locationLabels": {
+    "home": "Small owned/home farm",
+    "coworking": "Shared dairy facility",
+    "rented": "Leased commercial farm"
+  },
+  "starterPlan": {
+    "idea": "Local dairy farm selling fresh milk through direct delivery plus selected wholesale buyers.",
+    "targetCustomer": "Nearby households, tea shops, retailers and institutions that value reliable fresh-milk supply.",
+    "weeklyFixedCostEstimate": 1520,
+    "variableCostEstimate": 0.52
+  },
+  "negotiation": {
+    "supplier": {
+      "label": "Feed & veterinary supplier",
+      "unit": "$/order",
+      "initialCounter": 0.52,
+      "playerOpening": 0.43,
+      "walkAwayMin": 0.45,
+      "walkAwayMax": 0.49,
+      "bundleLabel": "Volume feed contract + faster payment"
+    },
+    "landlord": {
+      "label": "Farm landlord",
+      "initialCounter": 950,
+      "playerOpening": 760,
+      "walkAwayMin": 805,
+      "walkAwayMax": 900,
+      "bundleLabel": "Longer lease + maintenance responsibility"
+    },
+    "client": {
+      "label": "Milk distributor",
+      "initialCounter": 1450,
+      "playerOpening": 2050,
+      "walkAwayMin": 1660,
+      "walkAwayMax": 1920,
+      "bundleLabel": "Guaranteed weekly volume + delivery windows",
+      "clientVariableCostRate": 0.58
+    }
+  },
+  "regulations": [
+    "Dairy/food-business registration and hygiene rules",
+    "Animal health and veterinary compliance",
+    "Milk quality/testing and cold-chain requirements",
+    "Environmental/manure and local premises requirements"
+  ],
+  "typicalFailureModes": [
+    "Feed and veterinary cost rising faster than milk prices",
+    "Low milk yield because herd health or nutrition is neglected",
+    "Spoilage or cold-chain failures",
+    "Expanding the herd before distribution demand exists",
+    "Debt-funded equipment creating cash-flow pressure"
+  ],
+  "kpis": ["litres/week","yield capacity","feed/production cost per litre","spoilage","gross margin","buyer retention","runway"]
+}

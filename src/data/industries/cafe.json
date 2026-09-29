@@ -56,5 +56,55 @@
     "active customers",
     "satisfaction",
     "runway"
-  ]
+  ],
+  "unitLabel": "orders",
+  "customerLabel": "customers",
+  "operationsLabel": "Cafe operations & inventory",
+  "inventoryLabel": "Food & beverage inventory",
+  "allowedLocations": [
+    "home",
+    "coworking",
+    "rented",
+    "online"
+  ],
+  "locationLabels": {
+    "home": "Home-based kitchen",
+    "coworking": "Shared kitchen / food hall",
+    "rented": "Rented cafe",
+    "online": "Cloud kitchen / online only"
+  },
+  "starterPlan": {
+    "idea": "Friendly neighborhood cafe with fast service and reliable quality.",
+    "targetCustomer": "Nearby workers and residents who buy coffee or a light meal several times per week.",
+    "weeklyFixedCostEstimate": 1350,
+    "variableCostEstimate": 3.35
+  },
+  "negotiation": {
+    "supplier": {
+      "label": "Coffee & food supplier",
+      "unit": "$/order",
+      "initialCounter": 3.35,
+      "playerOpening": 2.9,
+      "walkAwayMin": 2.92,
+      "walkAwayMax": 3.15,
+      "bundleLabel": "Commit to 26 weeks + faster payment"
+    },
+    "landlord": {
+      "label": "Shop landlord",
+      "initialCounter": 900,
+      "playerOpening": 700,
+      "walkAwayMin": 750,
+      "walkAwayMax": 850,
+      "bundleLabel": "Longer lease + maintenance responsibility"
+    },
+    "client": {
+      "label": "Corporate catering client",
+      "initialCounter": 1350,
+      "playerOpening": 1900,
+      "walkAwayMin": 1580,
+      "walkAwayMax": 1810,
+      "bundleLabel": "Priority service + quarterly review",
+      "clientVariableCostRate": 0.46
+    }
+  }
 }

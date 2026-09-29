@@ -1,0 +1,32 @@
+{
+  "id":"software-hr",
+  "candidatePoolSize":8,
+  "interviewCost":90,
+  "referenceCheckCost":120,
+  "trialAdminCost":160,
+  "trialLengthWeeks":2,
+  "refreshPoolCost":220,
+  "hireAdminCost":180,
+  "trainingCost":550,
+  "trainingBoost":0.08,
+  "trainingCap":0.3,
+  "raisePercent":0.08,
+  "benefitOptions":[0,50,100,160],
+  "fireSeveranceWeeks":1,
+  "layoffSeveranceWeeks":2,
+  "fireMoralePenalty":0.09,
+  "layoffMoralePenalty":0.06,
+  "unreviewedFireLegalRisk":0.14,
+  "baseFounderManagerQuality":0.86,
+  "managerQualityMin":0.7,
+  "managerQualityMax":1.2,
+  "ramp":{"weeks1to4":0.42,"weeks5to8":0.68,"weeks9to12":0.88,"after12":1},
+  "candidateNames":["Avery Morgan","Jordan Lee","Maya Patel","Noah Williams","Sofia Garcia","Ethan Brown","Priya Shah","Liam Wilson","Emma Davis","Arjun Mehta","Olivia Martin","Daniel Kim","Nora Singh","Lucas Taylor","Zara Khan","Mateo Rivera"],
+  "roles":{
+    "software_engineer":{"label":"Software Engineer","baseWeeklySalary":1750,"capacityAdd":34,"serviceAdd":0.035,"marketingEfficiencyAdd":0,"awarenessAdd":0,"managerQualityAdd":0,"remoteEligible":true,"promotionTo":"engineering_manager","salesEfficiencyAdd":0,"operationsEfficiencyAdd":0.22},
+    "engineering_manager":{"label":"Engineering Manager","baseWeeklySalary":2450,"capacityAdd":28,"serviceAdd":0.05,"marketingEfficiencyAdd":0,"awarenessAdd":0,"managerQualityAdd":0.22,"remoteEligible":true,"promotionTo":null,"salesEfficiencyAdd":0,"operationsEfficiencyAdd":0.2},
+    "customer_success":{"label":"Customer Success Specialist","baseWeeklySalary":1250,"capacityAdd":18,"serviceAdd":0.08,"marketingEfficiencyAdd":0.04,"awarenessAdd":0.006,"managerQualityAdd":0,"remoteEligible":true,"promotionTo":null,"salesEfficiencyAdd":0.08,"operationsEfficiencyAdd":0.04},
+    "marketing_specialist":{"label":"Growth Marketer","baseWeeklySalary":1450,"capacityAdd":0,"serviceAdd":0,"marketingEfficiencyAdd":0.24,"awarenessAdd":0.018,"managerQualityAdd":0,"remoteEligible":true,"promotionTo":null,"salesEfficiencyAdd":0.06,"operationsEfficiencyAdd":0},
+    "sales_rep":{"label":"B2B Account Executive","baseWeeklySalary":1550,"capacityAdd":0,"serviceAdd":0,"marketingEfficiencyAdd":0.02,"awarenessAdd":0.004,"managerQualityAdd":0,"salesEfficiencyAdd":0.28,"operationsEfficiencyAdd":0,"remoteEligible":true,"promotionTo":null}
+  }
+}

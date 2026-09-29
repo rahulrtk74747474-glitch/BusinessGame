@@ -1,0 +1,23 @@
+{
+  "id":"software-sales",
+  "defaults":{"outboundSpend":200,"discountRate":0.05,"commissionRate":0.08,"pricingModel":"subscription"},
+  "limits":{"outboundSpendMax":3200,"discountRateMax":0.3,"commissionRateMin":0,"commissionRateMax":0.2},
+  "leadCost":105,
+  "qualificationRate":0.38,
+  "proposalRate":0.56,
+  "baseCloseRate":0.2,
+  "averageDealValue":2500,
+  "variableCostRate":0.18,
+  "marketingB2BLeadWeight":1,
+  "teamEfficiencyWeight":0.9,
+  "competitorPressureWeight":0.25,
+  "discountCloseLift":1.15,
+  "commissionMotivationWeight":1.15,
+  "leadNoiseStd":0.08,
+  "closeNoiseStd":0.06,
+  "pricingModels":{
+    "implementation":{"label":"Implementation project","description":"Large one-time setup project with no automatic renewal.","closeMultiplier":1.05,"weeklyValueMultiplier":1,"durationWeeks":1},
+    "subscription":{"label":"Annual SaaS subscription","description":"Harder to close, but recurring weekly-equivalent revenue compounds.","closeMultiplier":0.86,"weeklyValueMultiplier":0.08,"durationWeeks":52},
+    "tiered":{"label":"Tiered SaaS contract","description":"Mid-market recurring contract with moderate implementation scope.","closeMultiplier":1,"weeklyValueMultiplier":0.13,"durationWeeks":26}
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "initialRegistrationComplete":true,
+  "hrLegalRiskWeight":0.32,
+  "enforcementBaseChance":0.01,
+  "enforcementRiskWeight":0.08,
+  "shutdownCustomerPenalty":0.03,
+  "items":{
+    "privacy_security":{"label":"Privacy & data-protection program","required":true,"trigger":"always","dueWeek":8,"cost":650,"processingWeeks":2,"renewalWeeks":52,"weight":1.35,"fine":5500,"shutdownWeeks":1},
+    "ip_assignment":{"label":"Employee/contractor IP assignment","required":true,"trigger":"employees","dueWeek":3,"cost":500,"processingWeeks":1,"renewalWeeks":104,"weight":1.2,"fine":3500,"shutdownWeeks":0},
+    "terms_contracts":{"label":"Terms of service & customer contracts","required":true,"trigger":"always","dueWeek":10,"cost":450,"processingWeeks":1,"renewalWeeks":104,"weight":1,"fine":2400,"shutdownWeeks":0},
+    "security_policy":{"label":"Security & incident-response policy","required":true,"trigger":"always","dueWeek":14,"cost":800,"processingWeeks":3,"renewalWeeks":52,"weight":1.15,"fine":5000,"shutdownWeeks":1},
+    "trademark":{"label":"Trademark registration","required":false,"trigger":"always","dueWeek":0,"cost":700,"processingWeeks":6,"renewalWeeks":260,"weight":0.25,"fine":0,"shutdownWeeks":0},
+    "contract_review":{"label":"Enterprise contract review","required":false,"trigger":"always","dueWeek":0,"cost":650,"processingWeeks":1,"renewalWeeks":52,"weight":0.35,"fine":0,"shutdownWeeks":0}
+  }
+}

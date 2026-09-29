@@ -1,0 +1,85 @@
+{
+  "id": "software_saas",
+  "name": "B2B Software / SaaS",
+  "category": "Technology",
+  "description": "A subscription software company. Success depends on product quality, customer retention, developer productivity, cloud economics and a repeatable sales engine.",
+  "unitLabel": "subscriptions",
+  "customerLabel": "accounts",
+  "operationsLabel": "Product delivery & infrastructure",
+  "inventoryLabel": "No physical inventory",
+  "referencePrice": 55,
+  "priceElasticity": 1.15,
+  "baseMarketDemand": 190,
+  "weeklyNewCustomerPool": 70,
+  "organicConversionRate": 0.14,
+  "basePaidCAC": 82,
+  "baseVariableCostPerOrder": 8.5,
+  "baseFixedCostPerWeek": 1450,
+  "capacityOrdersPerWeek": 180,
+  "initialCustomers": 24,
+  "initialAwareness": 0.1,
+  "initialSatisfaction": 0.68,
+  "purchaseFrequency": 1,
+  "baseWeeklyChurn": 0.035,
+  "referralRate": 0.025,
+  "qualitySpendReference": 520,
+  "qualitySpendEffect": 0.17,
+  "serviceBaseline": 0.72,
+  "marketingEfficiencyCeiling": 1.38,
+  "seasonalityMonthly": [0.96,0.98,1.02,1.04,1.03,1.0,0.96,0.95,1.04,1.08,1.05,0.91],
+  "allowedLocations": ["home","coworking","rented","online"],
+  "locationLabels": {
+    "home": "Home office",
+    "coworking": "Coworking office",
+    "rented": "Leased office",
+    "online": "Remote-first / online only"
+  },
+  "starterPlan": {
+    "idea": "B2B SaaS that solves one expensive workflow problem with a simple subscription.",
+    "targetCustomer": "Small and mid-sized businesses with a recurring operational problem and budget to pay monthly.",
+    "weeklyFixedCostEstimate": 1450,
+    "variableCostEstimate": 8.5
+  },
+  "negotiation": {
+    "supplier": {
+      "label": "Cloud infrastructure provider",
+      "unit": "$/order",
+      "initialCounter": 8.5,
+      "playerOpening": 6.8,
+      "walkAwayMin": 7.1,
+      "walkAwayMax": 8.0,
+      "bundleLabel": "Annual commit + reserved capacity"
+    },
+    "landlord": {
+      "label": "Office landlord",
+      "initialCounter": 780,
+      "playerOpening": 600,
+      "walkAwayMin": 650,
+      "walkAwayMax": 735,
+      "bundleLabel": "Longer lease + smaller fit-out contribution"
+    },
+    "client": {
+      "label": "Enterprise software client",
+      "initialCounter": 1800,
+      "playerOpening": 2800,
+      "walkAwayMin": 2150,
+      "walkAwayMax": 2550,
+      "bundleLabel": "Priority support + annual commitment",
+      "clientVariableCostRate": 0.18
+    }
+  },
+  "regulations": [
+    "Business/entity registration and tax obligations",
+    "Customer privacy/data protection",
+    "Software/IP ownership and employment IP assignment",
+    "Consumer/contract rules and security obligations"
+  ],
+  "typicalFailureModes": [
+    "Building too many features before proving customer demand",
+    "High CAC with weak retention and low LTV",
+    "Hiring developers faster than revenue can support",
+    "Ignoring security, privacy or IP ownership",
+    "Technical debt slowing releases and support"
+  ],
+  "kpis": ["MRR-equivalent revenue","active subscriptions","CAC","churn","LTV","product quality","runway"]
+}

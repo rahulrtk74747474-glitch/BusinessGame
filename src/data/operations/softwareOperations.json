@@ -1,0 +1,17 @@
+{
+  "id":"software-operations",
+  "inventoryMode":"virtual",
+  "initialInventoryUnits":0,
+  "initialInventoryFundingIncluded":true,
+  "defaults":{"processMode":"balanced","qualityControlSpend":360,"reorderPoint":0,"orderQuantity":0,"outsourceShare":0.1},
+  "limits":{"qualityControlSpendMax":1800,"reorderPointMax":0,"orderQuantityMin":0,"orderQuantityMax":0,"outsourceShareMax":0.6},
+  "supplier":{"baseLeadTimeWeeks":0,"baseReliability":0.995,"lateDelayWeeks":0,"orderAdminCost":0},
+  "inventory":{"spoilageRatePerWeek":0,"emergencyPurchaseMarkup":0,"forecastDemandWeight":0},
+  "qualityControl":{"baseDefectRate":0.08,"spendScale":520,"maxDefectReduction":0.75,"satisfactionPenaltyPerDefectRate":0.9},
+  "outsource":{"capacityPerShare":120,"unitCostMarkup":0.7,"servicePenaltyPerShare":0.045},
+  "processModes":{
+    "lean":{"label":"Lean engineering","capacityMultiplier":1.08,"serviceAdd":-0.03,"wasteMultiplier":1,"weeklyFixedCost":140},
+    "balanced":{"label":"Balanced product delivery","capacityMultiplier":1,"serviceAdd":0,"wasteMultiplier":1,"weeklyFixedCost":250},
+    "quality":{"label":"Reliability / quality first","capacityMultiplier":0.88,"serviceAdd":0.07,"wasteMultiplier":1,"weeklyFixedCost":480}
+  }
+}

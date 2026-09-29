@@ -1,0 +1,45 @@
+{
+  "presets": [
+    {
+      "id": "cafe",
+      "name": "Neighborhood Cafe",
+      "category": "Food & Beverage",
+      "icon": "☕",
+      "description": "Local drinks and light food with repeat customers, physical inventory and service operations."
+    },
+    {
+      "id": "software_saas",
+      "name": "B2B Software / SaaS",
+      "category": "Technology",
+      "icon": "💻",
+      "description": "Build subscription software, hire developers, manage churn, cloud costs, product quality and recurring sales."
+    },
+    {
+      "id": "dairy_farm",
+      "name": "Dairy Farm",
+      "category": "Agriculture",
+      "icon": "🥛",
+      "description": "Produce and sell milk while managing farm capacity, spoilage, herd operations, distribution and compliance."
+    }
+  ],
+  "customArchetypes": [
+    {
+      "id": "service",
+      "label": "Service / software / agency",
+      "description": "No physical inventory; capacity comes mainly from people and systems.",
+      "simulationProfileId": "software_saas"
+    },
+    {
+      "id": "product",
+      "label": "Physical product / retail / manufacturing",
+      "description": "Inventory, suppliers, working capital and fulfillment matter.",
+      "simulationProfileId": "cafe"
+    },
+    {
+      "id": "agriculture",
+      "label": "Agriculture / farm / production",
+      "description": "Production creates sellable output each week; spoilage and capacity matter.",
+      "simulationProfileId": "dairy_farm"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id":"software-marketing",
+  "defaultWeights":{"paid_search":25,"content_seo":30,"linkedin":20,"community":15,"email":10},
+  "efficiency":{"base":0.68,"satisfactionWeight":0.32,"teamWeight":1,"min":0.5,"max":1.6},
+  "strength":{"min":0.68,"max":1.55},
+  "roasContributionWeeks":10,
+  "channels":{
+    "paid_search":{"label":"Paid search","description":"High-intent software buyers; expensive and competitive.","baseCAC":95,"saturationSpend":1100,"saturationSlope":0.75,"awarenessPer100":0.004,"noiseStd":0.08,"strengthDecay":0.98,"strengthGrowthPer100":0.003,"b2bLeadsPer100":0.07},
+    "content_seo":{"label":"Content & SEO","description":"Slow compounding demand from useful technical/business content.","baseCAC":125,"saturationSpend":800,"saturationSlope":0.35,"awarenessPer100":0.008,"noiseStd":0.04,"strengthDecay":0.997,"strengthGrowthPer100":0.018,"b2bLeadsPer100":0.06},
+    "linkedin":{"label":"LinkedIn / B2B social","description":"Targeted decision-maker reach with moderate CAC.","baseCAC":110,"saturationSpend":900,"saturationSlope":0.6,"awarenessPer100":0.006,"noiseStd":0.09,"strengthDecay":0.985,"strengthGrowthPer100":0.004,"b2bLeadsPer100":0.09},
+    "community":{"label":"Communities & launches","description":"Product launches, communities and partnerships can create bursts of qualified interest.","baseCAC":85,"saturationSpend":600,"saturationSlope":0.45,"awarenessPer100":0.01,"noiseStd":0.15,"strengthDecay":0.97,"strengthGrowthPer100":0.006,"b2bLeadsPer100":0.05},
+    "email":{"label":"Email / lifecycle","description":"Low-cost activation and retention limited by audience size.","baseCAC":35,"saturationSpend":350,"saturationSlope":1,"awarenessPer100":0.002,"noiseStd":0.035,"strengthDecay":0.995,"strengthGrowthPer100":0.006,"audienceCapRate":0.08,"b2bLeadsPer100":0.025}
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id":"dairy-hr",
+  "candidatePoolSize":8,
+  "interviewCost":55,
+  "referenceCheckCost":75,
+  "trialAdminCost":80,
+  "trialLengthWeeks":2,
+  "refreshPoolCost":130,
+  "hireAdminCost":110,
+  "trainingCost":260,
+  "trainingBoost":0.08,
+  "trainingCap":0.26,
+  "raisePercent":0.08,
+  "benefitOptions":[0,20,40,65],
+  "fireSeveranceWeeks":0.5,
+  "layoffSeveranceWeeks":1.5,
+  "fireMoralePenalty":0.08,
+  "layoffMoralePenalty":0.05,
+  "unreviewedFireLegalRisk":0.12,
+  "baseFounderManagerQuality":0.86,
+  "managerQualityMin":0.7,
+  "managerQualityMax":1.16,
+  "ramp":{"weeks1to4":0.55,"weeks5to8":0.78,"weeks9to12":0.92,"after12":1},
+  "candidateNames":["Avery Morgan","Jordan Lee","Maya Patel","Noah Williams","Sofia Garcia","Ethan Brown","Priya Shah","Liam Wilson","Emma Davis","Arjun Mehta","Olivia Martin","Daniel Kim","Nora Singh","Lucas Taylor","Zara Khan","Mateo Rivera"],
+  "roles":{
+    "farm_worker":{"label":"Dairy Farm Worker","baseWeeklySalary":620,"capacityAdd":650,"serviceAdd":0.018,"marketingEfficiencyAdd":0,"awarenessAdd":0,"managerQualityAdd":0,"remoteEligible":false,"promotionTo":"herd_manager","salesEfficiencyAdd":0,"operationsEfficiencyAdd":0.16},
+    "herd_manager":{"label":"Herd / Farm Manager","baseWeeklySalary":980,"capacityAdd":420,"serviceAdd":0.045,"marketingEfficiencyAdd":0,"awarenessAdd":0,"managerQualityAdd":0.2,"remoteEligible":false,"promotionTo":null,"salesEfficiencyAdd":0,"operationsEfficiencyAdd":0.2},
+    "animal_health":{"label":"Animal Health Technician","baseWeeklySalary":1050,"capacityAdd":260,"serviceAdd":0.055,"marketingEfficiencyAdd":0,"awarenessAdd":0,"managerQualityAdd":0,"remoteEligible":false,"promotionTo":null,"salesEfficiencyAdd":0,"operationsEfficiencyAdd":0.18},
+    "distribution_rep":{"label":"Distribution / Sales Representative","baseWeeklySalary":820,"capacityAdd":120,"serviceAdd":0.02,"marketingEfficiencyAdd":0.05,"awarenessAdd":0.006,"managerQualityAdd":0,"remoteEligible":false,"promotionTo":null,"salesEfficiencyAdd":0.22,"operationsEfficiencyAdd":0.06},
+    "marketing_specialist":{"label":"Local Marketing Specialist","baseWeeklySalary":760,"capacityAdd":0,"serviceAdd":0,"marketingEfficiencyAdd":0.2,"awarenessAdd":0.014,"managerQualityAdd":0,"remoteEligible":true,"promotionTo":null,"salesEfficiencyAdd":0.06,"operationsEfficiencyAdd":0}
+  }
+}

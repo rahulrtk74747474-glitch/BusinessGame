@@ -1,0 +1,8 @@
+{
+  "projects":{
+    "enterprise_sales":{"label":"Build enterprise sales motion","minimumWeek":22,"upfrontCost":18000,"buildWeeks":6,"minimumCompliance":0.7,"maximumRisk":0.6,"minimumCumulativeProfit":3000,"marketDemandMultiplier":1.13,"capacityAdd":20,"weeklyFixedCost":420,"weeklyRevenue":0},
+    "new_product":{"label":"Launch second software module","minimumWeek":30,"upfrontCost":28000,"buildWeeks":9,"minimumCompliance":0.72,"maximumRisk":0.58,"minimumCumulativeProfit":6000,"marketDemandMultiplier":1.2,"capacityAdd":45,"weeklyFixedCost":650,"weeklyRevenue":0},
+    "international":{"label":"International market launch","minimumWeek":36,"upfrontCost":22000,"buildWeeks":7,"minimumCompliance":0.8,"maximumRisk":0.52,"minimumCumulativeProfit":9000,"marketDemandMultiplier":1.17,"capacityAdd":20,"weeklyFixedCost":380,"weeklyRevenue":320},
+    "partner_channel":{"label":"Channel-partner program","minimumWeek":28,"upfrontCost":11000,"buildWeeks":5,"minimumCompliance":0.68,"maximumRisk":0.62,"minimumCumulativeProfit":4000,"marketDemandMultiplier":1.08,"capacityAdd":10,"weeklyFixedCost":180,"weeklyRevenue":220}
+  }
+}

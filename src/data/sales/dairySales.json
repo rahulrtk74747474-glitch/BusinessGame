@@ -1,0 +1,23 @@
+{
+  "id":"dairy-sales",
+  "defaults":{"outboundSpend":80,"discountRate":0.04,"commissionRate":0.05,"pricingModel":"wholesale"},
+  "limits":{"outboundSpendMax":1600,"discountRateMax":0.2,"commissionRateMin":0,"commissionRateMax":0.15},
+  "leadCost":38,
+  "qualificationRate":0.48,
+  "proposalRate":0.64,
+  "baseCloseRate":0.27,
+  "averageDealValue":1150,
+  "variableCostRate":0.58,
+  "marketingB2BLeadWeight":1,
+  "teamEfficiencyWeight":0.8,
+  "competitorPressureWeight":0.2,
+  "discountCloseLift":1.1,
+  "commissionMotivationWeight":1,
+  "leadNoiseStd":0.07,
+  "closeNoiseStd":0.055,
+  "pricingModels":{
+    "spot":{"label":"Spot wholesale order","description":"Easy to close but non-recurring and price-sensitive.","closeMultiplier":1.15,"weeklyValueMultiplier":1,"durationWeeks":1},
+    "delivery_subscription":{"label":"Home-delivery subscription","description":"Smaller recurring accounts with predictable demand.","closeMultiplier":0.95,"weeklyValueMultiplier":0.28,"durationWeeks":12},
+    "wholesale":{"label":"Retail/distributor contract","description":"Recurring wholesale volume with tighter margins and delivery commitments.","closeMultiplier":1,"weeklyValueMultiplier":0.5,"durationWeeks":8}
+  }
+}

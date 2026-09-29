@@ -1,0 +1,8 @@
+{
+  "projects":{
+    "herd_expansion":{"label":"Expand milking herd","minimumWeek":22,"upfrontCost":26000,"buildWeeks":8,"minimumCompliance":0.75,"maximumRisk":0.58,"minimumCumulativeProfit":4000,"marketDemandMultiplier":1.05,"capacityAdd":1800,"weeklyFixedCost":520,"weeklyRevenue":0},
+    "chilling_unit":{"label":"Install larger chilling unit","minimumWeek":18,"upfrontCost":14000,"buildWeeks":5,"minimumCompliance":0.72,"maximumRisk":0.62,"minimumCumulativeProfit":2500,"marketDemandMultiplier":1.04,"capacityAdd":1200,"weeklyFixedCost":210,"weeklyRevenue":0},
+    "processing_unit":{"label":"Add paneer / yogurt processing","minimumWeek":34,"upfrontCost":32000,"buildWeeks":9,"minimumCompliance":0.82,"maximumRisk":0.5,"minimumCumulativeProfit":9000,"marketDemandMultiplier":1.16,"capacityAdd":900,"weeklyFixedCost":620,"weeklyRevenue":420},
+    "distribution_route":{"label":"Open a new delivery route","minimumWeek":26,"upfrontCost":9500,"buildWeeks":4,"minimumCompliance":0.7,"maximumRisk":0.62,"minimumCumulativeProfit":3500,"marketDemandMultiplier":1.1,"capacityAdd":550,"weeklyFixedCost":170,"weeklyRevenue":180}
+  }
+}

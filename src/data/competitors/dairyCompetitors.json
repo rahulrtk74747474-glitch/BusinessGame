@@ -1,0 +1,12 @@
+{
+  "id":"dairy-competitors",
+  "pressure":{"demandBase":1.1,"demandStrengthWeight":0.15,"demandMin":0.72,"demandMax":1.07,"cacBase":0.93,"cacMarketingWeight":0.22,"cacMin":0.9,"cacMax":1.35},
+  "reaction":{"priceMoveSpeed":0.18,"qualityMoveSpeed":0.12,"marketingMoveSpeed":0.16,"reputationMoveSpeed":0.08,"noiseStd":0.012},
+  "strength":{"priceWeight":0.36,"qualityWeight":0.27,"marketingWeight":0.14,"reputationWeight":0.23,"qualityReference":0.75,"marketingReference":0.55,"reputationReference":0.7,"min":0.55,"max":1.55},
+  "publicIntel":{"priceNoisePct":0.02},
+  "rivals":[
+    {"id":"value_milk","name":"Value Milk Cooperative","archetype":"price_cutter","publicDescription":"Large cooperative competing on price and broad distribution.","initialPriceMultiplier":0.9,"initialQuality":0.68,"initialMarketing":0.5,"initialReputation":0.66,"targetPriceMultiplier":0.88,"priceWarTriggerShare":0.2,"priceWarCut":0.04,"qualityTarget":0.69,"marketingTarget":0.56},
+    {"id":"pure_harvest","name":"Pure Harvest Dairy","archetype":"premium","publicDescription":"Premium dairy emphasizing quality testing, freshness and brand trust.","initialPriceMultiplier":1.22,"initialQuality":0.87,"initialMarketing":0.58,"initialReputation":0.8,"targetPriceMultiplier":1.2,"qualityTarget":0.9,"marketingTarget":0.62},
+    {"id":"local_fresh","name":"Local Fresh Farms","archetype":"copycat","publicDescription":"Local rival following successful delivery routes and promotions.","initialPriceMultiplier":1.01,"initialQuality":0.73,"initialMarketing":0.48,"initialReputation":0.68,"copyPriceWeight":0.6,"copyMarketingWeight":0.45,"qualityTarget":0.75}
+  ]
+}

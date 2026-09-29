@@ -212,9 +212,9 @@ function manageSensibleContracts(state) {
   if (state.negotiation.contracts.landlordRemainingWeeks <= 0) {
     state = negotiateToDeal(state, 'landlord', 850);
   }
-  if (state.negotiation.contracts.clientRemainingWeeks <= 0) {
-    state = negotiateToDeal(state, 'client', 1500);
-  }
+  // A disciplined founder does not assume a permanent large-client contract.
+  // This keeps the benchmark exposed to real demand/economic variance rather
+  // than turning one guaranteed B2B contract into a scripted win.
   return state;
 }
 

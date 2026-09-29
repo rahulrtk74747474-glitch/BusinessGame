@@ -134,6 +134,16 @@ state = applyNegotiationAction(
   negotiationConfig,
   rolesData
 );
+console.log('INVESTOR_DEBUG', JSON.stringify({
+  gameStatus: state.status,
+  activeStatus: state.negotiation.active?.status,
+  direction: state.negotiation.active?.direction,
+  playerOffer: state.negotiation.active?.playerOffer,
+  counterOffer: state.negotiation.active?.counterOffer,
+  initialCounter: state.negotiation.active?.initialCounter,
+  walkAway: state.negotiation.active?.hidden?.walkAway,
+  outcome: state.negotiation.active?.outcome
+}));
 assert(state.negotiation.active.status === 'accepted', 'Investor opening valuation should settle when the player accepts it.');
 assert(state.negotiation.contracts.investorIndicativeValuation > 0, 'Indicative investor valuation was not recorded.');
 assert(state.finance.cash === cashBeforeInvestor, 'Phase 3 investor negotiation incorrectly injected funding cash.');

@@ -13,6 +13,9 @@ import FundingPanel from './FundingPanel.jsx';
 import LegalPanel from './LegalPanel.jsx';
 import RiskPanel from './RiskPanel.jsx';
 import GrowthExitPanel from './GrowthExitPanel.jsx';
+import FinancialsPanel from './FinancialsPanel.jsx';
+import FinancialLessonModal from './FinancialLessonModal.jsx';
+import financialLessons from '../data/learning/financialLessons.json';
 import { goalProgress } from '../engine/simulator.js';
 import { founderOwnership } from '../engine/logging.js';
 
@@ -46,7 +49,11 @@ export default function Dashboard({
   const goalIsPct = state.goal === 'marketShare';
   const [decisionDraft, setDecisionDraft] = React.useState(state.decisions);
   const [tab, setTab] = React.useState('dashboard');
+  const [financialLessonWeek, setFinancialLessonWeek] = React.useState(null);
   React.useEffect(() => setDecisionDraft(state.decisions), [state.week]);
+  React.useEffect(() => {
+    if (state.week >= 1 && state.week <= 20) setFinancialLessonWeek(state.week);
+  }, [state.week]);
   const setDecision = (key, value) => setDecisionDraft((d) => ({ ...d, [key]: Number(value) }));
   const runway = Number.isFinite(state.finance.runwayWeeks) ? state.finance.runwayWeeks.toFixed(1) + ' w' : 'Profitable';
   const priceMin = industry.priceDecisionMin ?? Math.max(0.01, industry.referencePrice * 0.45);
@@ -62,6 +69,7 @@ export default function Dashboard({
 
     <nav className="game-tabs" aria-label="Game sections">
       <button className={tab === 'dashboard' ? 'active' : ''} onClick={() => setTab('dashboard')}>Dashboard</button>
+      <button className={tab === 'financials' ? 'active' : ''} onClick={() => setTab('financials')}>Financials <span>{state.week <= 20 ? state.week + '/20' : '✓'}</span></button>
       <button className={tab === 'hiring' ? 'active' : ''} onClick={() => setTab('hiring')}>Hiring <span>{state.hr.candidates.filter((c) => c.available).length}</span></button>
       <button className={tab === 'team' ? 'active' : ''} onClick={() => setTab('team')}>Team <span>{state.hr.employees.length}</span></button>
       <button className={tab === 'negotiation' ? 'active' : ''} onClick={() => setTab('negotiation')}>Negotiate <span>{state.negotiation.history.length}</span></button>
@@ -77,6 +85,8 @@ export default function Dashboard({
 
     {state.status !== 'running' && <section className={'status-banner ' + state.status}><strong>{state.status === 'won' ? 'Goal reached' : state.status === 'lost' ? 'Company failed' : 'Run complete'}</strong><span>{state.resultReason}</span></section>}
     {state.status === 'running' && state.finance.cash <= 0 && <section className="status-banner finished"><strong>Liquidity distress</strong><span>{state.resultReason}</span></section>}
+
+    {tab === 'financials' && <FinancialsPanel state={state} industry={industry} />}
 
     {tab === 'hiring' && <>
       <HiringPanel
@@ -206,5 +216,16 @@ export default function Dashboard({
       </section>
       <MonthlyReport report={latestReport} />
     </>}
+
+    {financialLessonWeek === state.week && state.week >= 1 && state.week <= 20 && <FinancialLessonModal
+      state={state}
+      industry={industry}
+      lessons={financialLessons}
+      onClose={() => setFinancialLessonWeek(null)}
+      onOpenFinancials={() => {
+        setFinancialLessonWeek(null);
+        setTab('financials');
+      }}
+    />}
   </div>;
 }

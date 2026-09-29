@@ -1,0 +1,162 @@
+[
+  {
+    "week": 1,
+    "key": "revenue",
+    "title": "Revenue is not the same as cash",
+    "concept": "Revenue is the value of sales earned during the period. Cash is the money currently available to pay bills.",
+    "formula": "Revenue = units sold × selling price + other sales",
+    "skill": "Read the top line before judging whether the company is healthy."
+  },
+  {
+    "week": 2,
+    "key": "cogs",
+    "title": "Cost of goods sold (COGS)",
+    "concept": "COGS is the direct cost attached to the products or services sold this week. It rises when you sell more.",
+    "formula": "Gross profit = Revenue − COGS / variable costs",
+    "skill": "Separate direct unit costs from operating overhead."
+  },
+  {
+    "week": 3,
+    "key": "grossProfit",
+    "title": "Gross profit pays for the company",
+    "concept": "Gross profit is what remains after direct costs. It must be large enough to pay salaries, rent, marketing, administration and financing costs.",
+    "formula": "Gross profit = Revenue − Variable costs",
+    "skill": "Judge whether the core product economics can support the rest of the business."
+  },
+  {
+    "week": 4,
+    "key": "grossMargin",
+    "title": "Gross margin makes businesses comparable",
+    "concept": "Gross margin expresses gross profit as a percentage of revenue. A higher margin gives more room to pay operating expenses and survive shocks.",
+    "formula": "Gross margin % = Gross profit ÷ Revenue × 100",
+    "skill": "Track margin percentage, not only gross-profit dollars."
+  },
+  {
+    "week": 5,
+    "key": "fixedVariable",
+    "title": "Fixed costs vs variable costs",
+    "concept": "Variable costs move with sales volume. Fixed costs continue even when sales are weak, so a high fixed-cost base increases operating leverage.",
+    "formula": "Total operating cost = Variable costs + Fixed/operating costs",
+    "skill": "Know which costs disappear when volume falls and which do not."
+  },
+  {
+    "week": 6,
+    "key": "opex",
+    "title": "Operating expenses (OpEx)",
+    "concept": "Operating expenses are the costs of running the company beyond direct production: payroll, rent, marketing, administration, quality and similar items.",
+    "formula": "Operating profit = Gross profit − Operating expenses",
+    "skill": "Control overhead without starving growth or product quality."
+  },
+  {
+    "week": 7,
+    "key": "operatingProfit",
+    "title": "Operating profit and EBITDA thinking",
+    "concept": "Operating profit shows whether the business model works before financing and tax. This game currently uses an EBITDA-like operating measure because depreciation/amortization is not separately modeled.",
+    "formula": "Operating profit ≈ Gross profit − operating expenses",
+    "skill": "Separate operating performance from capital structure and tax."
+  },
+  {
+    "week": 8,
+    "key": "netProfit",
+    "title": "Net profit: the bottom line",
+    "concept": "Net profit is what remains after operating costs, interest, penalties and accrued tax. A company can grow revenue and still lose money.",
+    "formula": "Net profit = Pre-tax profit − Tax accrued",
+    "skill": "Always connect growth to profitability."
+  },
+  {
+    "week": 9,
+    "key": "cashFlow",
+    "title": "Profit is not cash flow",
+    "concept": "Profit follows accounting recognition; cash tracks actual money movement. Inventory purchases, loan principal and tax payments can move cash differently from profit.",
+    "formula": "Cash change = Ending cash − Previous ending cash",
+    "skill": "Reconcile profit with cash before deciding how much the company can spend."
+  },
+  {
+    "week": 10,
+    "key": "breakEven",
+    "title": "Break-even revenue",
+    "concept": "Break-even is the revenue level where contribution from sales covers operating expenses. Below it, the company normally loses money.",
+    "formula": "Break-even revenue = Operating expenses ÷ Contribution margin %",
+    "skill": "Know the minimum sales level required to support the cost base."
+  },
+  {
+    "week": 11,
+    "key": "runway",
+    "title": "Burn rate and runway",
+    "concept": "When the company is losing money, runway estimates how long cash can support that loss rate before financing becomes necessary.",
+    "formula": "Runway ≈ Cash ÷ Weekly burn",
+    "skill": "React to shrinking runway before cash reaches zero."
+  },
+  {
+    "week": 12,
+    "key": "assets",
+    "title": "Assets: resources the company controls",
+    "concept": "Assets include cash, protected reserves, inventory and capitalized expansion assets in this simulation.",
+    "formula": "Assets = Cash + Reserve + Inventory + Capitalized expansion assets",
+    "skill": "Distinguish spending that disappears from spending that creates an asset."
+  },
+  {
+    "week": 13,
+    "key": "liabilities",
+    "title": "Liabilities: claims against the company",
+    "concept": "Liabilities are obligations the company owes, such as loans and tax payable. They reduce the owners' residual claim on assets.",
+    "formula": "Liabilities = Debt + Tax payable + other obligations",
+    "skill": "Measure obligations alongside assets, not in isolation."
+  },
+  {
+    "week": 14,
+    "key": "equity",
+    "title": "The balance-sheet equation",
+    "concept": "Book equity is the accounting residual belonging to owners after liabilities are deducted from assets. It is different from market valuation.",
+    "formula": "Assets = Liabilities + Equity",
+    "skill": "Use the balance sheet to understand financial structure."
+  },
+  {
+    "week": 15,
+    "key": "workingCapital",
+    "title": "Working capital and inventory",
+    "concept": "Inventory can consume cash before it becomes an expense. Too little inventory loses sales; too much traps cash and may spoil or become obsolete.",
+    "formula": "Cash tied in inventory = Inventory units × unit cost",
+    "skill": "Manage liquidity as well as accounting profit."
+  },
+  {
+    "week": 16,
+    "key": "cac",
+    "title": "Customer acquisition cost (CAC)",
+    "concept": "CAC measures how much it costs to acquire a customer. Rising CAC can make growth destructive even when revenue increases.",
+    "formula": "CAC = Acquisition spend ÷ customers acquired",
+    "skill": "Compare acquisition cost with the value of the customer."
+  },
+  {
+    "week": 17,
+    "key": "ltv",
+    "title": "Lifetime value and LTV:CAC",
+    "concept": "LTV estimates gross value from a customer over the relationship. Comparing LTV with CAC tests whether paid growth can create value.",
+    "formula": "LTV:CAC = Estimated customer LTV ÷ Effective CAC",
+    "skill": "Avoid scaling acquisition until customer economics are attractive."
+  },
+  {
+    "week": 18,
+    "key": "debt",
+    "title": "Debt, interest and leverage",
+    "concept": "Debt provides cash without ownership dilution, but creates interest expense and mandatory principal repayments that reduce financial flexibility.",
+    "formula": "Debt-to-equity = Debt balance ÷ Book equity",
+    "skill": "Compare the benefit of borrowed capital with the fixed cash burden it creates."
+  },
+  {
+    "week": 19,
+    "key": "tax",
+    "title": "Tax accrual vs tax payment",
+    "concept": "Tax expense may be recognized before the cash is actually paid. Tax payable accumulates as a liability until the payment date.",
+    "formula": "Tax payable = Prior payable + tax accrued − tax paid",
+    "skill": "Reserve cash for taxes even before the payment date."
+  },
+  {
+    "week": 20,
+    "key": "valuation",
+    "title": "Valuation is not the same as profit or book equity",
+    "concept": "Valuation estimates what the company may be worth based on revenue, profit, customers and capital structure. It can move differently from cash or book equity.",
+    "formula": "Game valuation = revenue value + profit value + customer value − debt + selected assets",
+    "skill": "Understand the difference between operating performance, accounting equity and market value."
+  }
+]

@@ -235,7 +235,18 @@ export function advanceWeek(
     salesRevenue: financeWithoutValuation.salesRevenue,
     expansionRevenue: financeWithoutValuation.expansionRevenue,
     netProfit: financeWithoutValuation.netProfit,
+    variableCosts: financeWithoutValuation.variableCosts,
+    grossProfit: financeWithoutValuation.grossProfit,
     grossMargin: financeWithoutValuation.grossMargin,
+    fixedCosts: financeWithoutValuation.fixedCosts,
+    discretionaryCosts: financeWithoutValuation.discretionaryCosts,
+    oneTimeExpenses: financeWithoutValuation.oneTimeExpenses,
+    operatingProfit: financeWithoutValuation.operatingProfit,
+    legalPenaltyExpense: financeWithoutValuation.legalPenaltyExpense,
+    preTaxProfit: financeWithoutValuation.preTaxProfit,
+    taxAccrued: financeWithoutValuation.taxAccrued,
+    taxPayment: financeWithoutValuation.taxPayment,
+    taxPayable: financeWithoutValuation.taxPayable,
     cash: financeWithoutValuation.cash,
     totalLiquidity: financeWithoutValuation.totalLiquidity,
     debtBalance: financeWithoutValuation.debtBalance,
@@ -244,6 +255,10 @@ export function advanceWeek(
     inventoryPurchases: financeWithoutValuation.inventoryPurchases,
     inventoryAsset: financeWithoutValuation.inventoryAsset,
     expansionAssets: financeWithoutValuation.expansionAssets,
+    totalAssets: financeWithoutValuation.totalAssets,
+    totalLiabilities: financeWithoutValuation.totalLiabilities,
+    bookEquity: financeWithoutValuation.bookEquity,
+    reserveCash: financeWithoutValuation.reserveCash,
     orders: customers.orders,
     activeCustomers: customers.active,
     newCustomers: customers.newCustomers,
@@ -304,11 +319,11 @@ export function advanceWeek(
     expansionCapacityAdd: expansionStep.capacityAdd
   };
 
-  const history = [...state.history, weekRow];
+  const historyForValuation = [...state.history, weekRow];
   const debtBalance =
     fundingStep.state.debts.reduce((sum, debt) => sum + debt.balance, 0);
   const valuation = estimateValuation(
-    history,
+    historyForValuation,
     financeWithoutValuation,
     customers,
     config,
@@ -322,6 +337,8 @@ export function advanceWeek(
     ...financeWithoutValuation,
     valuation
   };
+  const finalWeekRow = { ...weekRow, valuation };
+  const history = [...state.history, finalWeekRow];
 
   const latestHrEvent = hrStep.events.at(-1);
   const hr = {

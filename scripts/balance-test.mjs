@@ -106,7 +106,12 @@ function runOne(name, seed) {
     cash: state.finance.cash,
     cumulativeProfit: state.finance.cumulativeProfit,
     customers: state.customers.active,
-    valuation: state.finance.valuation
+    valuation: state.finance.valuation,
+    lastWeek: state.history.at(-1),
+    finance: state.finance,
+    sales: state.sales.last,
+    operations: state.operations.last,
+    marketing: state.marketing.last
   };
 }
 

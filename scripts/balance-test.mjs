@@ -48,6 +48,38 @@ function policy(name, state) {
     };
   }
 
+  if (name === 'sensibleLean') {
+    return {
+      price: 9.5,
+      marketingSpend: state.week < 16 ? 700 : state.week < 40 ? 250 : 80,
+      qualitySpend: 140
+    };
+  }
+
+  if (name === 'sensibleGrowth') {
+    return {
+      price: 9.5,
+      marketingSpend: state.week < 12 ? 900 : state.week < 28 ? 450 : 120,
+      qualitySpend: 160
+    };
+  }
+
+  if (name === 'sensiblePremium') {
+    return {
+      price: 10.25,
+      marketingSpend: state.week < 16 ? 600 : state.week < 40 ? 250 : 80,
+      qualitySpend: 180
+    };
+  }
+
+  if (name === 'sensibleSales') {
+    return {
+      price: 9.75,
+      marketingSpend: state.week < 16 ? 500 : state.week < 40 ? 220 : 80,
+      qualitySpend: 140
+    };
+  }
+
   const cash = state.finance.cash;
   const satisfaction = state.customers.satisfaction;
   const active = state.customers.active;
@@ -67,18 +99,23 @@ function policy(name, state) {
 }
 
 function configureStrategy(name, state) {
-  if (name === 'sensible') {
+  if (['sensible', 'sensibleLean', 'sensibleGrowth', 'sensiblePremium', 'sensibleSales'].includes(name)) {
     state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'local_search', weight: 40 }, marketingData);
     state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'content_seo', weight: 30 }, marketingData);
     state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'paid_social', weight: 15 }, marketingData);
     state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'email', weight: 10 }, marketingData);
     state = applyMarketingAction(state, { type: 'setChannelWeight', channelId: 'influencer', weight: 5 }, marketingData);
-    state = applySalesAction(state, { type: 'setSalesSetting', key: 'outboundSpend', value: 180 }, salesData);
+    const salesSpend = name === 'sensibleLean' ? 60 : name === 'sensibleGrowth' ? 0 : name === 'sensibleSales' ? 350 : name === 'sensiblePremium' ? 100 : 180;
+    state = applySalesAction(state, { type: 'setSalesSetting', key: 'outboundSpend', value: salesSpend }, salesData);
     state = applySalesAction(state, { type: 'setSalesSetting', key: 'discountRate', value: 0.04 }, salesData);
     state = applySalesAction(state, { type: 'setSalesSetting', key: 'pricingModel', value: 'tiered' }, salesData);
     state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'reorderPoint', value: 380 }, operationsData);
     state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'orderQuantity', value: 540 }, operationsData);
-    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'qualityControlSpend', value: 100 }, operationsData);
+    const qcSpend = name === 'sensibleLean' ? 60 : name === 'sensibleGrowth' ? 80 : name === 'sensibleSales' ? 70 : 100;
+    state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'qualityControlSpend', value: qcSpend }, operationsData);
+    if (name === 'sensibleLean') {
+      state = applyOperationsAction(state, { type: 'setOperationsSetting', key: 'processMode', value: 'lean' }, operationsData);
+    }
   }
 
   if (name === 'reckless') {
@@ -115,7 +152,7 @@ function runOne(name, seed) {
   };
 }
 
-const names = ['do-nothing', 'reckless', 'sensible'];
+const names = ['do-nothing', 'reckless', 'sensible', 'sensibleLean', 'sensibleGrowth', 'sensiblePremium', 'sensibleSales'];
 const seeds = Array.from({ length: 60 }, (_, i) => 1000 + i * 97);
 const summaries = [];
 

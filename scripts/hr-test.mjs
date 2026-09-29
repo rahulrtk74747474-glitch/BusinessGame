@@ -5,12 +5,25 @@ import marketingData from '../src/data/marketing/cafeMarketing.json' with { type
 import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
 import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
 import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+import fundingData from '../src/data/funding/cafeFunding.json' with { type: 'json' };
+import legalData from '../src/data/legal/cafeLegal.json' with { type: 'json' };
+import riskData from '../src/data/risk/cafeRisk.json' with { type: 'json' };
+import expansionData from '../src/data/expansion/cafeExpansion.json' with { type: 'json' };
+import exitData from '../src/data/exit/cafeExit.json' with { type: 'json' };
 
 const phase4Data = {
   marketing: marketingData,
   sales: salesData,
   operations: operationsData,
   competitors: competitorData
+};
+
+const phase5Data = {
+  funding: fundingData,
+  legal: legalData,
+  risk: riskData,
+  expansion: expansionData,
+  exit: exitData
 };
 import { createGameState } from '../src/models/createGameState.js';
 import { applyHrAction, candidateView } from '../src/engine/hiring.js';
@@ -38,7 +51,7 @@ const assert = (condition, message) => {
 };
 
 // Regression test: a candidate's stated salary ask must be a viable hiring offer.
-let fairOfferState = createGameState(setup, config, industry, rolesData, 9911, phase4Data);
+let fairOfferState = createGameState(setup, config, industry, rolesData, 9911, phase4Data, phase5Data);
 const fairCandidate = fairOfferState.hr.candidates[0];
 fairOfferState = applyHrAction(fairOfferState, {
   type: 'makeOffer',
@@ -49,7 +62,7 @@ fairOfferState = applyHrAction(fairOfferState, {
 }, config, rolesData);
 assert(fairOfferState.hr.employees.length === 1, 'Regression: offering the stated salary ask should be accepted, not counter forever.');
 
-let state = createGameState(setup, config, industry, rolesData, 7777, phase4Data);
+let state = createGameState(setup, config, industry, rolesData, 7777, phase4Data, phase5Data);
 const candidate = state.hr.candidates[0];
 const publicBefore = candidateView(candidate, rolesData);
 assert(!('hidden' in publicBefore), 'Candidate public view leaked hidden traits.');
@@ -63,8 +76,8 @@ assert(state.hr.candidates[0].insights.references, 'Reference check did not reve
 
 state = applyHrAction(state, { type: 'startTrial', candidateId: candidate.id }, config, rolesData);
 assert(state.hr.trials.length === 1, 'Trial did not start.');
-state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
-state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
+state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data, phase5Data);
+state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data, phase5Data);
 assert(state.hr.candidates[0].trialCompleted, 'Trial did not complete after configured duration.');
 assert(state.hr.candidates[0].trialScore > 0, 'Trial did not produce performance evidence.');
 
@@ -78,7 +91,7 @@ state = applyHrAction(state, {
 }, config, rolesData);
 assert(state.hr.employees.length === 1, 'Fair offer should be accepted in HR integration test.');
 
-state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
+state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data, phase5Data);
 const employeeId = state.hr.employees[0].id;
 const firstProductivity = state.hr.employees[0].productivity;
 assert(state.finance.payrollCosts > 0, 'Payroll was not included in finance.');
@@ -100,7 +113,7 @@ assert(state.hr.employees[0].reviews === 1, 'Performance review was not recorded
 assert(state.hr.employees[0].lastPerformance?.reliabilitySignal, 'Performance review did not reveal employee signals.');
 
 for (let i = 0; i < 12 && state.hr.employees.length; i += 1) {
-  state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
+  state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data, phase5Data);
 }
 if (state.hr.employees.length) {
   assert(state.hr.employees[0].productivity >= firstProductivity * 0.75, 'Ramp-up/training produced an implausible productivity collapse.');

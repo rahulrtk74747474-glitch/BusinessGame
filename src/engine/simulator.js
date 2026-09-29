@@ -9,6 +9,12 @@ import { stepMarketing } from './marketing.js';
 import { stepSales } from './sales.js';
 import { stepOperationsPre, stepOperationsPost } from './operations.js';
 import { stepCompetitors } from './competitors.js';
+import { stepFunding, updateFundingDistress, hasFinancingOptions } from './funding.js';
+import { stepLegal } from './legal.js';
+import { stepRisk } from './risk.js';
+import { stepExpansion } from './expansion.js';
+import { stepExit } from './exit.js';
+import { recordEvents } from './logging.js';
 
 function reachedGoal(state) {
   switch (state.goal) {
@@ -31,11 +37,15 @@ export function advanceWeek(
   config,
   industry,
   rolesData,
-  phase4Data
+  phase4Data,
+  phase5Data
 ) {
   if (state.status !== 'running') return state;
   if (!phase4Data?.marketing || !phase4Data?.sales || !phase4Data?.operations || !phase4Data?.competitors) {
     throw new Error('Phase 4 data modules are required to advance the simulation.');
+  }
+  if (!phase5Data?.funding || !phase5Data?.legal || !phase5Data?.risk || !phase5Data?.expansion || !phase5Data?.exit) {
+    throw new Error('Phase 5 data modules are required to advance the simulation.');
   }
 
   const rng = createRng(
@@ -60,18 +70,65 @@ export function advanceWeek(
     )
   };
 
-  // Phase 4 order matters:
-  // people -> rivals -> marketing -> operations capacity/inventory -> market
-  // -> customers -> operations consumption -> sales -> finance.
+  // Phase 5 risk/compliance/funding/expansion step first so their current-week
+  // consequences can flow through operations, customers and finance.
+  const riskStep = stepRisk(state, phase5Data.risk);
+  const riskWorking = {
+    ...riskStep.state,
+    pendingExpenseRecognition: state.risk.pendingExpenseRecognition
+  };
+  const stateWithRisk = { ...state, risk: riskWorking };
+
+  const legalStep = stepLegal(
+    stateWithRisk,
+    phase5Data.legal,
+    riskStep,
+    rng
+  );
+  const legalWorking = {
+    ...legalStep.state,
+    pendingExpenseRecognition: state.legal.pendingExpenseRecognition
+  };
+  const stateWithLegal = {
+    ...stateWithRisk,
+    legal: legalWorking
+  };
+
+  const fundingStep = stepFunding(
+    stateWithLegal,
+    phase5Data.funding,
+    rng
+  );
+  const fundingWorking = {
+    ...fundingStep.state,
+    pendingExpenseRecognition: state.funding.pendingExpenseRecognition
+  };
+  const stateWithFunding = {
+    ...stateWithLegal,
+    funding: fundingWorking
+  };
+
+  const expansionStep = stepExpansion(
+    stateWithFunding,
+    phase5Data.expansion
+  );
+  const workingState = {
+    ...stateWithFunding,
+    expansion: expansionStep.state
+  };
+
+  // Existing Phase 4 order remains intact after the Phase 5 pre-step:
+  // people -> rivals -> marketing -> operations -> market -> customers
+  // -> sales -> finance.
   const hrStep = stepEmployees(
-    state,
+    workingState,
     config,
     rolesData,
     rng
   );
 
   const competitorStep = stepCompetitors(
-    state,
+    workingState,
     safeDecisions,
     industry,
     phase4Data.competitors,
@@ -79,7 +136,7 @@ export function advanceWeek(
   );
 
   const marketingStep = stepMarketing(
-    state,
+    workingState,
     safeDecisions,
     industry,
     phase4Data.marketing,
@@ -88,26 +145,38 @@ export function advanceWeek(
     competitorStep.last
   );
 
-  const operationsPre = stepOperationsPre(
-    state,
+  let operationsPre = stepOperationsPre(
+    workingState,
     industry,
     phase4Data.operations,
     locationConfig,
     hrStep,
-    rng
+    rng,
+    expansionStep
   );
 
+  if (legalStep.shutdownActive) {
+    operationsPre = {
+      ...operationsPre,
+      capacity: 0,
+      processCapacity: 0,
+      serviceAdd: Math.min(operationsPre.serviceAdd, -0.08),
+      stockoutConstrained: false
+    };
+  }
+
   const market = stepMarket(
-    state,
+    workingState,
     safeDecisions,
     industry,
     config,
     rng,
-    modeConfig
+    modeConfig,
+    expansionStep
   );
 
   const customers = stepCustomers(
-    state,
+    workingState,
     safeDecisions,
     industry,
     config,
@@ -121,14 +190,14 @@ export function advanceWeek(
   );
 
   const operationsStep = stepOperationsPost(
-    state,
+    workingState,
     customers,
     phase4Data.operations,
     operationsPre
   );
 
   const salesStep = stepSales(
-    state,
+    workingState,
     phase4Data.sales,
     marketingStep.last,
     hrStep,
@@ -137,8 +206,15 @@ export function advanceWeek(
     rng
   );
 
+  const phase5Step = {
+    risk: riskStep,
+    legal: legalStep,
+    funding: fundingStep,
+    expansion: expansionStep
+  };
+
   const financeWithoutValuation = stepFinance(
-    state,
+    workingState,
     safeDecisions,
     industry,
     config,
@@ -148,7 +224,8 @@ export function advanceWeek(
     hrStep,
     operationsStep,
     marketingStep,
-    salesStep
+    salesStep,
+    phase5Step
   );
 
   const weekRow = {
@@ -156,11 +233,17 @@ export function advanceWeek(
     revenue: financeWithoutValuation.revenue,
     coreRevenue: financeWithoutValuation.coreRevenue,
     salesRevenue: financeWithoutValuation.salesRevenue,
+    expansionRevenue: financeWithoutValuation.expansionRevenue,
     netProfit: financeWithoutValuation.netProfit,
     grossMargin: financeWithoutValuation.grossMargin,
     cash: financeWithoutValuation.cash,
+    totalLiquidity: financeWithoutValuation.totalLiquidity,
+    debtBalance: financeWithoutValuation.debtBalance,
+    debtService: financeWithoutValuation.debtService,
+    interestExpense: financeWithoutValuation.interestExpense,
     inventoryPurchases: financeWithoutValuation.inventoryPurchases,
     inventoryAsset: financeWithoutValuation.inventoryAsset,
+    expansionAssets: financeWithoutValuation.expansionAssets,
     orders: customers.orders,
     activeCustomers: customers.active,
     newCustomers: customers.newCustomers,
@@ -209,15 +292,31 @@ export function advanceWeek(
     salesPipelineValue: salesStep.last.pipelineValue,
     competitorPressure: competitorStep.last.pressureIndex,
     competitorDemandModifier: competitorStep.last.demandModifier,
-    competitorCACMultiplier: competitorStep.last.cacMultiplier
+    competitorCACMultiplier: competitorStep.last.cacMultiplier,
+    complianceScore: legalStep.complianceScore,
+    legalRisk: legalStep.legalRisk,
+    legalPenalty: legalStep.penaltyCash,
+    shutdownActive: legalStep.shutdownActive,
+    riskScore: riskStep.riskScore,
+    insurancePremiums: riskStep.weeklyPremiums,
+    emergencyReserve: state.risk.reserveCash,
+    expansionDemandMultiplier: expansionStep.demandMultiplier,
+    expansionCapacityAdd: expansionStep.capacityAdd
   };
 
   const history = [...state.history, weekRow];
+  const debtBalance =
+    fundingStep.state.debts.reduce((sum, debt) => sum + debt.balance, 0);
   const valuation = estimateValuation(
     history,
     financeWithoutValuation,
     customers,
-    config
+    config,
+    {
+      debt: debtBalance,
+      reserveCash: state.risk.reserveCash,
+      expansionAssets: expansionStep.state.capitalizedAssets
+    }
   );
   const finance = {
     ...financeWithoutValuation,
@@ -250,7 +349,12 @@ export function advanceWeek(
         : state.hr.lastRipple
   };
 
-  let next = {
+  let funding = updateFundingDistress(
+    { ...fundingStep.state, pendingExpenseRecognition: 0 },
+    finance.cash
+  );
+
+  let nextBase = {
     ...state,
     week: state.week + 1,
     decisions: safeDecisions,
@@ -263,8 +367,31 @@ export function advanceWeek(
     sales: salesStep,
     operations: operationsStep,
     competitors: competitorStep,
+    funding,
+    legal: { ...legalStep.state, pendingExpenseRecognition: 0 },
+    risk: { ...riskStep.state, pendingExpenseRecognition: 0 },
+    expansion: expansionStep.state,
     history
   };
+
+  const exitStep = stepExit(
+    nextBase,
+    phase5Data.exit,
+    rng
+  );
+  let next = {
+    ...nextBase,
+    exit: { ...exitStep.state, pendingExpenseRecognition: 0 }
+  };
+
+  const allEvents = [
+    ...hrStep.events.map((event) => ({ ...event, category: 'hr' })),
+    ...fundingStep.events,
+    ...legalStep.events,
+    ...expansionStep.events,
+    ...exitStep.events
+  ];
+  next = recordEvents(next, allEvents);
 
   if (next.week % config.turn.reportEveryWeeks === 0) {
     const report = createMonthlyReport(next, config);
@@ -274,13 +401,31 @@ export function advanceWeek(
     };
   }
 
-  if (
-    finance.cash <= config.finance.minCash &&
-    !config.finance.financingEnabledInPhase1
-  ) {
-    next.status = 'lost';
-    next.resultReason =
-      'Bankruptcy: cash fell to zero and the funding module is not unlocked yet.';
+  if (finance.cash <= config.finance.minCash) {
+    const financingAvailable = hasFinancingOptions(next, phase5Data.funding);
+    const graceAvailable =
+      next.funding.negativeCashWeeks <= phase5Data.funding.distress.graceWeeks;
+
+    if (!financingAvailable || !graceAvailable) {
+      next.status = 'lost';
+      next.resultReason =
+        'Bankruptcy: operating cash is exhausted and no viable financing/reserve option remains.';
+      next = recordEvents(next, [{
+        category: 'finance',
+        type: 'bankruptcy',
+        message: next.resultReason,
+        avoidable: true,
+        impact: { cash: finance.cash },
+        causeChain: [
+          'Negative-cash weeks: ' + next.funding.negativeCashWeeks,
+          'Financing available: ' + financingAvailable,
+          'Debt balance: $' + Math.round(finance.debtBalance || 0).toLocaleString()
+        ]
+      }]);
+    } else {
+      next.resultReason =
+        'Liquidity distress: cash is below zero, but financing or emergency reserves are still available for a limited grace period.';
+    }
   } else if (reachedGoal(next)) {
     next.status = 'won';
     next.resultReason = 'Goal reached.';
@@ -288,6 +433,8 @@ export function advanceWeek(
     next.status = 'finished';
     next.resultReason =
       'The selected time horizon ended before the goal was reached.';
+  } else {
+    next.resultReason = '';
   }
 
   return next;

@@ -1,0 +1,76 @@
+{
+  "reserve": {
+    "recommendedWeeksOfFixedCost": 8,
+    "minimumTransfer": 250
+  },
+  "policies": {
+    "general_liability": {
+      "label": "General liability insurance",
+      "setupFee": 120,
+      "weeklyPremium": 28,
+      "legalMitigation": 0.55,
+      "propertyMitigation": 0.15,
+      "cyberMitigation": 0
+    },
+    "property": {
+      "label": "Property/equipment insurance",
+      "setupFee": 90,
+      "weeklyPremium": 22,
+      "legalMitigation": 0.08,
+      "propertyMitigation": 0.68,
+      "cyberMitigation": 0
+    },
+    "cyber": {
+      "label": "Cyber insurance",
+      "setupFee": 80,
+      "weeklyPremium": 16,
+      "legalMitigation": 0.08,
+      "propertyMitigation": 0,
+      "cyberMitigation": 0.65
+    },
+    "key_person": {
+      "label": "Key-person cover",
+      "setupFee": 100,
+      "weeklyPremium": 18,
+      "legalMitigation": 0,
+      "propertyMitigation": 0.05,
+      "cyberMitigation": 0
+    }
+  },
+  "controls": {
+    "fraud_controls": {
+      "label": "Fraud/payment controls",
+      "cost": 500,
+      "riskReduction": 0.08
+    },
+    "backups": {
+      "label": "Backups and recovery plan",
+      "cost": 350,
+      "riskReduction": 0.06
+    },
+    "supplier_diversification": {
+      "label": "Backup supplier program",
+      "cost": 700,
+      "riskReduction": 0.1
+    },
+    "crisis_plan": {
+      "label": "Reputation/crisis plan",
+      "cost": 400,
+      "riskReduction": 0.06
+    },
+    "key_person_process": {
+      "label": "Document key-person processes",
+      "cost": 550,
+      "riskReduction": 0.08
+    }
+  },
+  "weights": {
+    "legal": 0.28,
+    "burnout": 0.18,
+    "supplier": 0.16,
+    "cash": 0.22,
+    "competition": 0.16
+  },
+  "riskMin": 0.04,
+  "riskMax": 0.95
+}

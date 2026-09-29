@@ -1,0 +1,56 @@
+{
+  "projects": {
+    "second_location": {
+      "label": "Open a second location",
+      "minimumWeek": 26,
+      "upfrontCost": 32000,
+      "buildWeeks": 8,
+      "minimumCompliance": 0.72,
+      "maximumRisk": 0.58,
+      "minimumCumulativeProfit": 5000,
+      "marketDemandMultiplier": 1.18,
+      "capacityAdd": 300,
+      "weeklyFixedCost": 950,
+      "weeklyRevenue": 0
+    },
+    "new_city": {
+      "label": "Enter a nearby city",
+      "minimumWeek": 20,
+      "upfrontCost": 18000,
+      "buildWeeks": 6,
+      "minimumCompliance": 0.68,
+      "maximumRisk": 0.62,
+      "minimumCumulativeProfit": 2500,
+      "marketDemandMultiplier": 1.12,
+      "capacityAdd": 130,
+      "weeklyFixedCost": 420,
+      "weeklyRevenue": 0
+    },
+    "export_channel": {
+      "label": "Launch packaged-product export channel",
+      "minimumWeek": 32,
+      "upfrontCost": 14000,
+      "buildWeeks": 7,
+      "minimumCompliance": 0.78,
+      "maximumRisk": 0.52,
+      "minimumCumulativeProfit": 8000,
+      "marketDemandMultiplier": 1.03,
+      "capacityAdd": 40,
+      "weeklyFixedCost": 260,
+      "weeklyRevenue": 520
+    },
+    "franchise_pilot": {
+      "label": "Launch a franchise pilot",
+      "minimumWeek": 40,
+      "upfrontCost": 9000,
+      "buildWeeks": 5,
+      "minimumCompliance": 0.8,
+      "maximumRisk": 0.5,
+      "minimumCumulativeProfit": 12000,
+      "marketDemandMultiplier": 1.05,
+      "capacityAdd": 20,
+      "weeklyFixedCost": 120,
+      "weeklyRevenue": 380
+    }
+  }
+}

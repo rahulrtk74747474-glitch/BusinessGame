@@ -5,12 +5,25 @@ import marketingData from '../src/data/marketing/cafeMarketing.json' with { type
 import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
 import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
 import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+import fundingData from '../src/data/funding/cafeFunding.json' with { type: 'json' };
+import legalData from '../src/data/legal/cafeLegal.json' with { type: 'json' };
+import riskData from '../src/data/risk/cafeRisk.json' with { type: 'json' };
+import expansionData from '../src/data/expansion/cafeExpansion.json' with { type: 'json' };
+import exitData from '../src/data/exit/cafeExit.json' with { type: 'json' };
 
 const phase4Data = {
   marketing: marketingData,
   sales: salesData,
   operations: operationsData,
   competitors: competitorData
+};
+
+const phase5Data = {
+  funding: fundingData,
+  legal: legalData,
+  risk: riskData,
+  expansion: expansionData,
+  exit: exitData
 };
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
@@ -38,9 +51,9 @@ for (const mode of Object.keys(config.modes)) {
             variableCostEstimate: industry.baseVariableCostPerOrder
           }
         };
-        let state = createGameState(setup, config, industry, rolesData, 4242 + cases, phase4Data);
+        let state = createGameState(setup, config, industry, rolesData, 4242 + cases, phase4Data, phase5Data);
         for (let i = 0; i < 8 && state.status === 'running'; i += 1) {
-          state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
+          state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data, phase5Data);
         }
 
         const values = [

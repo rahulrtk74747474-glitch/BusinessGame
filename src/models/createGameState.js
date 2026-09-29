@@ -4,6 +4,11 @@ import { createMarketingState } from '../engine/marketing.js';
 import { createSalesState } from '../engine/sales.js';
 import { createOperationsState } from '../engine/operations.js';
 import { createCompetitorState } from '../engine/competitors.js';
+import { createFundingState } from '../engine/funding.js';
+import { createLegalState } from '../engine/legal.js';
+import { createRiskState } from '../engine/risk.js';
+import { createExpansionState } from '../engine/expansion.js';
+import { createExitState } from '../engine/exit.js';
 
 export function createGameState(
   setup,
@@ -11,10 +16,14 @@ export function createGameState(
   industry,
   rolesData,
   seed = 42,
-  phase4Data
+  phase4Data,
+  phase5Data
 ) {
   if (!phase4Data?.marketing || !phase4Data?.sales || !phase4Data?.operations || !phase4Data?.competitors) {
     throw new Error('Phase 4 data modules are required to create the game state.');
+  }
+  if (!phase5Data?.funding || !phase5Data?.legal || !phase5Data?.risk || !phase5Data?.expansion || !phase5Data?.exit) {
+    throw new Error('Phase 5 data modules are required to create the game state.');
   }
 
   const structure = config.structures[setup.structure];
@@ -66,6 +75,7 @@ export function createGameState(
       coreRevenue: 0,
       clientRevenue: 0,
       salesRevenue: 0,
+      expansionRevenue: 0,
       variableCosts: 0,
       fixedCosts:
         industry.baseFixedCostPerWeek * location.fixedCostMultiplier +
@@ -74,13 +84,20 @@ export function createGameState(
       payrollCosts: 0,
       hrOneTimeExpenses: 0,
       negotiationOneTimeExpenses: 0,
+      fundingOneTimeExpenses: 0,
+      legalOneTimeExpenses: 0,
+      riskOneTimeExpenses: 0,
+      exitOneTimeExpenses: 0,
       inventoryPurchases: 0,
       inventoryAsset:
         phase4Data.operations.initialInventoryUnits *
         industry.baseVariableCostPerOrder,
+      expansionAssets: 0,
       grossProfit: 0,
       grossMargin: 0,
       operatingProfit: 0,
+      interestExpense: 0,
+      debtService: 0,
       taxAccrued: 0,
       taxPayment: 0,
       taxPayable: 0,
@@ -88,7 +105,12 @@ export function createGameState(
       cumulativeRevenue: 0,
       cumulativeProfit: 0,
       runwayWeeks: Infinity,
-      valuation: Number(setup.startingCapital)
+      valuation: Number(setup.startingCapital),
+      totalLiquidity: Number(setup.startingCapital),
+      debtBalance: 0,
+      totalAssets: Number(setup.startingCapital),
+      totalLiabilities: 0,
+      bookEquity: Number(setup.startingCapital)
     },
     hr: {
       employees: [],
@@ -134,6 +156,16 @@ export function createGameState(
     sales: createSalesState(phase4Data.sales),
     operations: createOperationsState(industry, phase4Data.operations),
     competitors: createCompetitorState(industry, phase4Data.competitors),
+    funding: createFundingState(Number(setup.startingCapital), phase5Data.funding),
+    legal: createLegalState(phase5Data.legal),
+    risk: createRiskState(),
+    expansion: createExpansionState(),
+    exit: createExitState(),
+    audit: {
+      decisions: [],
+      events: [],
+      causeLinks: []
+    },
     history: [],
     reports: []
   };

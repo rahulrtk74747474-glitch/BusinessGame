@@ -1,0 +1,113 @@
+{
+  "founderInjection": {
+    "reserveFractionOfStartingCapital": 0.35,
+    "minimumInjection": 500
+  },
+  "distress": {
+    "graceWeeks": 3
+  },
+  "termSheetExpiryWeeks": 3,
+  "esopPoolOptions": [0, 0.05, 0.1, 0.15],
+  "sources": {
+    "bank_loan": {
+      "label": "Small-business loan",
+      "type": "debt",
+      "minimumWeek": 6,
+      "minimumAmount": 5000,
+      "maximumAmount": 60000,
+      "applicationCost": 150,
+      "decisionWeeks": 2,
+      "maximumApplications": 3,
+      "baseApproval": 0.5,
+      "guaranteedApprovalScore": 0.84,
+      "preferredPitch": "unit_economics",
+      "baseApr": 0.11,
+      "riskAprSpread": 0.08,
+      "termWeeks": 104,
+      "originationFeeRate": 0.02,
+      "minimumTrailingWeeklyRevenue": 1500,
+      "minimumCompliance": 0.45,
+      "maximumRisk": 0.78
+    },
+    "grant": {
+      "label": "Local growth grant",
+      "type": "grant",
+      "minimumWeek": 8,
+      "minimumAmount": 5000,
+      "maximumAmount": 15000,
+      "applicationCost": 100,
+      "decisionWeeks": 4,
+      "maximumApplications": 2,
+      "baseApproval": 0.32,
+      "guaranteedApprovalScore": 0.9,
+      "preferredPitch": "community",
+      "minimumTrailingWeeklyRevenue": 1000,
+      "minimumCompliance": 0.7,
+      "maximumRisk": 0.65
+    },
+    "crowdfunding": {
+      "label": "Reward crowdfunding",
+      "type": "crowdfunding",
+      "minimumWeek": 8,
+      "minimumAmount": 5000,
+      "maximumAmount": 40000,
+      "applicationCost": 250,
+      "decisionWeeks": 3,
+      "maximumApplications": 2,
+      "baseApproval": 0.42,
+      "guaranteedApprovalScore": 0.86,
+      "preferredPitch": "customer_story",
+      "platformFeeRate": 0.06,
+      "fulfillmentCostRate": 0.08,
+      "fulfillmentWeeks": 8,
+      "minimumTrailingWeeklyRevenue": 800,
+      "minimumCompliance": 0.45,
+      "maximumRisk": 0.8
+    },
+    "angel": {
+      "label": "Angel round",
+      "type": "equity",
+      "minimumWeek": 12,
+      "minimumAmount": 10000,
+      "maximumAmount": 100000,
+      "applicationCost": 300,
+      "decisionWeeks": 3,
+      "maximumApplications": 2,
+      "baseApproval": 0.38,
+      "guaranteedApprovalScore": 0.88,
+      "preferredPitch": "traction",
+      "valuationFloorMultiple": 0.8,
+      "valuationCeilingMultiple": 1.25,
+      "minimumTrailingWeeklyRevenue": 1800,
+      "minimumCompliance": 0.55,
+      "maximumRisk": 0.72,
+      "expectation": "Quarterly updates, disciplined hiring, and a credible growth plan."
+    },
+    "vc": {
+      "label": "Venture capital round",
+      "type": "equity",
+      "minimumWeek": 26,
+      "minimumAmount": 50000,
+      "maximumAmount": 300000,
+      "applicationCost": 900,
+      "decisionWeeks": 5,
+      "maximumApplications": 2,
+      "baseApproval": 0.24,
+      "guaranteedApprovalScore": 0.92,
+      "preferredPitch": "growth",
+      "valuationFloorMultiple": 0.85,
+      "valuationCeilingMultiple": 1.35,
+      "minimumTrailingWeeklyRevenue": 4000,
+      "minimumCompliance": 0.7,
+      "maximumRisk": 0.58,
+      "expectation": "Fast scalable growth, board-quality reporting, and a credible path to a large exit."
+    }
+  },
+  "pitchFocus": {
+    "unit_economics": "Cash flow, margin, CAC/LTV and debt service capacity",
+    "community": "Local jobs, community impact and compliance",
+    "customer_story": "Customer enthusiasm, retention and brand loyalty",
+    "traction": "Revenue growth, repeat demand and execution",
+    "growth": "Large market, scalable systems and expansion"
+  }
+}

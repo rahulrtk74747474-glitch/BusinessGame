@@ -9,19 +9,20 @@ export function stepFinance(
   hrStep,
   operationsStep,
   marketingStep,
-  salesStep
+  salesStep,
+  phase5Step = {}
 ) {
   const contracts = state.negotiation?.contracts || {};
-
   const clientActive = (contracts.clientRemainingWeeks || 0) > 0;
   const clientRevenue = clientActive ? (contracts.clientWeeklyRevenue || 0) : 0;
   const clientVariableCosts =
     clientRevenue *
     (clientActive ? (contracts.clientVariableCostRate || 0) : 0);
 
+  const expansionRevenue = phase5Step.expansion?.weeklyRevenue || 0;
   const coreRevenue = customers.orders * decisions.price;
   const salesRevenue = salesStep?.last?.revenue || 0;
-  const revenue = coreRevenue + clientRevenue + salesRevenue;
+  const revenue = coreRevenue + clientRevenue + salesRevenue + expansionRevenue;
 
   const coreCogs =
     operationsStep?.last?.cogs ??
@@ -38,28 +39,47 @@ export function stepFinance(
       ? Math.max(0, contracts.landlordWeeklySavings || 0)
       : 0;
   const operationsFixedCosts = operationsStep?.last?.weeklyFixedCost || 0;
+  const expansionFixedCosts = phase5Step.expansion?.weeklyFixedCost || 0;
   const fixedCosts =
     Math.max(0, baseFixedCosts - landlordSavings) +
-    operationsFixedCosts;
+    operationsFixedCosts +
+    expansionFixedCosts;
 
   const marketingSpend = marketingStep?.last?.totalSpend ?? decisions.marketingSpend;
   const qualitySpend = decisions.qualitySpend;
   const salesOutboundSpend = salesStep?.last?.outboundSpend || 0;
   const salesCommissionCost = salesStep?.last?.commissionCost || 0;
+  const riskPremiums = phase5Step.risk?.weeklyPremiums || 0;
+  const crowdfundingCost = phase5Step.funding?.crowdfundingCost || 0;
   const discretionaryCosts =
     marketingSpend +
     qualitySpend +
     salesOutboundSpend +
-    salesCommissionCost;
+    salesCommissionCost +
+    riskPremiums +
+    crowdfundingCost;
 
   const payrollCosts = hrStep?.payrollCost || 0;
   const inventoryPurchases = operationsStep?.last?.purchaseCash || 0;
 
-  // HR and negotiation actions are paid immediately at action time. Recognize
-  // them in P&L here without reducing cash a second time.
   const hrOneTimeExpenses = state.hr?.pendingExpenseRecognition || 0;
   const negotiationOneTimeExpenses =
     state.negotiation?.pendingExpenseRecognition || 0;
+  const fundingOneTimeExpenses =
+    state.funding?.pendingExpenseRecognition || 0;
+  const legalOneTimeExpenses =
+    state.legal?.pendingExpenseRecognition || 0;
+  const riskOneTimeExpenses =
+    state.risk?.pendingExpenseRecognition || 0;
+  const exitOneTimeExpenses =
+    state.exit?.pendingExpenseRecognition || 0;
+  const oneTimeExpenses =
+    hrOneTimeExpenses +
+    negotiationOneTimeExpenses +
+    fundingOneTimeExpenses +
+    legalOneTimeExpenses +
+    riskOneTimeExpenses +
+    exitOneTimeExpenses;
 
   const operatingProfit =
     revenue -
@@ -67,12 +87,17 @@ export function stepFinance(
     fixedCosts -
     discretionaryCosts -
     payrollCosts -
-    hrOneTimeExpenses -
-    negotiationOneTimeExpenses;
+    oneTimeExpenses;
 
-  // Core COGS was paid when inventory was purchased. Client and sales delivery
-  // costs are treated as same-week cash costs. This creates a real working
-  // capital effect: buying inventory early reduces cash before it becomes COGS.
+  const interestExpense = phase5Step.funding?.interestExpense || 0;
+  const debtService = phase5Step.funding?.debtService || 0;
+  const legalPenaltyExpense = phase5Step.legal?.penaltyExpense || 0;
+  const legalPenaltyCash = phase5Step.legal?.penaltyCash || 0;
+  const preTaxProfit =
+    operatingProfit -
+    interestExpense -
+    legalPenaltyExpense;
+
   const directVariableCashCosts =
     clientVariableCosts + salesVariableCosts;
   const cashOperatingProfit =
@@ -81,9 +106,11 @@ export function stepFinance(
     directVariableCashCosts -
     fixedCosts -
     discretionaryCosts -
-    payrollCosts;
+    payrollCosts -
+    legalPenaltyCash -
+    debtService;
 
-  const taxableProfit = Math.max(0, operatingProfit);
+  const taxableProfit = Math.max(0, preTaxProfit);
   const taxAccrued = taxableProfit * structureConfig.taxRate;
   const cashBeforeTaxPayment =
     state.finance.cash + cashOperatingProfit;
@@ -98,7 +125,7 @@ export function stepFinance(
     ? 0
     : priorTaxPayable + taxAccrued;
   const cash = cashBeforeTaxPayment - taxPayment;
-  const netProfit = operatingProfit - taxAccrued;
+  const netProfit = preTaxProfit - taxAccrued;
 
   const trailingBurn = netProfit < 0 ? Math.abs(netProfit) : 0;
   const runwayWeeks =
@@ -107,13 +134,31 @@ export function stepFinance(
   const grossMargin =
     revenue > 0 ? grossProfit / revenue : 0;
 
+  const inventoryAsset =
+    (operationsStep?.inventoryUnits || 0) *
+    (operationsStep?.inventoryUnitCost || 0);
+  const reserveCash = state.risk?.reserveCash || 0;
+  const expansionAssets = state.expansion?.capitalizedAssets || 0;
+  const debtBalance =
+    phase5Step.funding?.state?.debts?.reduce((sum, debt) => sum + debt.balance, 0) ??
+    state.funding?.debts?.reduce((sum, debt) => sum + debt.balance, 0) ??
+    0;
+  const totalAssets =
+    cash + reserveCash + inventoryAsset + expansionAssets;
+  const totalLiabilities =
+    debtBalance + taxPayable;
+  const bookEquity =
+    totalAssets - totalLiabilities;
+
   return {
     startingCapital: state.finance.startingCapital,
     cash,
+    totalLiquidity: cash + reserveCash,
     revenue,
     coreRevenue,
     clientRevenue,
     salesRevenue,
+    expansionRevenue,
     variableCosts,
     coreCogs,
     effectiveVariableCostPerOrder:
@@ -125,33 +170,55 @@ export function stepFinance(
     salesVariableCosts,
     fixedCosts,
     operationsFixedCosts,
+    expansionFixedCosts,
     landlordSavings,
     discretionaryCosts,
     marketingSpend,
     qualitySpend,
     salesOutboundSpend,
     salesCommissionCost,
+    riskPremiums,
+    crowdfundingCost,
     inventoryPurchases,
-    inventoryAsset:
-      (operationsStep?.inventoryUnits || 0) *
-      (operationsStep?.inventoryUnitCost || 0),
+    inventoryAsset,
+    expansionAssets,
     payrollCosts,
     hrOneTimeExpenses,
     negotiationOneTimeExpenses,
+    fundingOneTimeExpenses,
+    legalOneTimeExpenses,
+    riskOneTimeExpenses,
+    exitOneTimeExpenses,
+    oneTimeExpenses,
     grossProfit,
     grossMargin,
     operatingProfit,
+    interestExpense,
+    debtService,
+    legalPenaltyExpense,
+    preTaxProfit,
     taxAccrued,
     taxPayment,
     taxPayable,
     netProfit,
     cumulativeRevenue: state.finance.cumulativeRevenue + revenue,
     cumulativeProfit: state.finance.cumulativeProfit + netProfit,
-    runwayWeeks
+    runwayWeeks,
+    debtBalance,
+    reserveCash,
+    totalAssets,
+    totalLiabilities,
+    bookEquity
   };
 }
 
-export function estimateValuation(history, finance, customers, config) {
+export function estimateValuation(
+  history,
+  finance,
+  customers,
+  config,
+  capitalStructure = {}
+) {
   const recent = history.slice(-8);
   const avgRevenue = recent.length
     ? recent.reduce((s, x) => s + x.revenue, 0) / recent.length
@@ -161,10 +228,16 @@ export function estimateValuation(history, finance, customers, config) {
     : finance.netProfit;
   const annualRevenue = avgRevenue * 52;
   const annualProfit = Math.max(0, avgProfit * 52);
+  const operatingValue =
+    annualRevenue * config.valuation.revenueMultiple +
+    annualProfit * config.valuation.profitMultiple +
+    customers.active * config.valuation.customerMultiple;
+
   return Math.max(
     0,
-    annualRevenue * config.valuation.revenueMultiple +
-      annualProfit * config.valuation.profitMultiple +
-      customers.active * config.valuation.customerMultiple
+    operatingValue -
+      (capitalStructure.debt || 0) +
+      (capitalStructure.reserveCash || 0) +
+      (capitalStructure.expansionAssets || 0) * 0.6
   );
 }

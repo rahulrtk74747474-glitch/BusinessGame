@@ -1,7 +1,7 @@
 {
   "name": "founder-lab",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,9 +10,10 @@
     "test:balance": "node scripts/balance-test.mjs",
     "test:hr": "node scripts/hr-test.mjs",
     "test:smoke": "node scripts/smoke-test.mjs",
-    "test": "npm run test:smoke && npm run test:hr && npm run test:negotiation && npm run test:phase4 && npm run test:balance",
     "test:negotiation": "node scripts/negotiation-test.mjs",
-    "test:phase4": "node scripts/phase4-test.mjs"
+    "test:phase4": "node scripts/phase4-test.mjs",
+    "test:phase5": "node scripts/phase5-test.mjs",
+    "test": "npm run test:smoke && npm run test:hr && npm run test:negotiation && npm run test:phase4 && npm run test:phase5 && npm run test:balance"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

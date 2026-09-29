@@ -5,6 +5,11 @@ import marketingData from '../src/data/marketing/cafeMarketing.json' with { type
 import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
 import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
 import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+import fundingData from '../src/data/funding/cafeFunding.json' with { type: 'json' };
+import legalData from '../src/data/legal/cafeLegal.json' with { type: 'json' };
+import riskData from '../src/data/risk/cafeRisk.json' with { type: 'json' };
+import expansionData from '../src/data/expansion/cafeExpansion.json' with { type: 'json' };
+import exitData from '../src/data/exit/cafeExit.json' with { type: 'json' };
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
 import { applyMarketingAction } from '../src/engine/marketing.js';
@@ -17,6 +22,14 @@ const phase4Data = {
   sales: salesData,
   operations: operationsData,
   competitors: competitorData
+};
+
+const phase5Data = {
+  funding: fundingData,
+  legal: legalData,
+  risk: riskData,
+  expansion: expansionData,
+  exit: exitData
 };
 
 const setup = {
@@ -46,8 +59,7 @@ let state = createGameState(
   industry,
   rolesData,
   13579,
-  phase4Data
-);
+  phase4Data, phase5Data);
 
 // Marketing must be data-driven and editable without changing the engine.
 const localBefore = state.marketing.channelWeights.local_search;
@@ -108,8 +120,7 @@ state = advanceWeek(
   config,
   industry,
   rolesData,
-  phase4Data
-);
+  phase4Data, phase5Data);
 
 assert(state.marketing.last.totalSpend === 700, 'Marketing engine did not use weekly budget.');
 assert(state.marketing.last.totalAcquired > 0, 'Marketing produced no customer acquisition.');
@@ -139,8 +150,7 @@ for (let i = 0; i < 8 && state.status === 'running'; i += 1) {
     config,
     industry,
     rolesData,
-    phase4Data
-  );
+    phase4Data, phase5Data);
   if (state.sales.last.revenue > 0) sawSalesRevenue = true;
   if (state.operations.last.receivedUnits > 0) sawInventoryReceipt = true;
 }

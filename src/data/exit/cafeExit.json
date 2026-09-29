@@ -1,0 +1,26 @@
+{
+  "brokerReviewCost": 600,
+  "brokerReviewWeeks": 2,
+  "offerValidityWeeks": 4,
+  "transactionFeeRate": 0.035,
+  "successionPreparationCost": 900,
+  "successionGain": 0.2,
+  "readiness": {
+    "minimumWeek": 30,
+    "minimumTrailingAverageRevenue": 2500,
+    "minimumTrailingAverageProfit": 0,
+    "minimumCompliance": 0.72,
+    "maximumRisk": 0.6,
+    "minimumSuccession": 0.4
+  },
+  "valuation": {
+    "baseMultiple": 1,
+    "growthBonusMax": 0.15,
+    "profitBonusMax": 0.12,
+    "complianceBonusMax": 0.08,
+    "riskPenaltyMax": 0.16,
+    "ownerDependencePenaltyMax": 0.14,
+    "noiseMin": 0.96,
+    "noiseMax": 1.04
+  }
+}

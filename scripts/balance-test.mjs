@@ -6,11 +6,17 @@ import marketingData from '../src/data/marketing/cafeMarketing.json' with { type
 import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
 import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
 import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+import fundingData from '../src/data/funding/cafeFunding.json' with { type: 'json' };
+import legalData from '../src/data/legal/cafeLegal.json' with { type: 'json' };
+import riskData from '../src/data/risk/cafeRisk.json' with { type: 'json' };
+import expansionData from '../src/data/expansion/cafeExpansion.json' with { type: 'json' };
+import exitData from '../src/data/exit/cafeExit.json' with { type: 'json' };
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
 import { applyMarketingAction } from '../src/engine/marketing.js';
 import { applySalesAction } from '../src/engine/sales.js';
 import { applyOperationsAction } from '../src/engine/operations.js';
+import { applyLegalAction } from '../src/engine/legal.js';
 import { applyNegotiationAction, negotiationPublicView } from '../src/engine/negotiation.js';
 
 const phase4Data = {
@@ -18,6 +24,14 @@ const phase4Data = {
   sales: salesData,
   operations: operationsData,
   competitors: competitorData
+};
+
+const phase5Data = {
+  funding: fundingData,
+  legal: legalData,
+  risk: riskData,
+  expansion: expansionData,
+  exit: exitData
 };
 
 const baseSetup = {
@@ -115,6 +129,15 @@ function configureStrategy(name, state) {
       { type: 'setOperationsSetting', key: 'qualityControlSpend', value: 90 },
       operationsData
     );
+
+    // A sensible founder closes known compliance gaps before their deadlines.
+    for (const itemId of ['food_license', 'fire_safety', 'privacy_policy']) {
+      state = applyLegalAction(
+        state,
+        { type: 'startCompliance', itemId },
+        legalData
+      );
+    }
   }
 
   if (name === 'reckless') {
@@ -225,8 +248,7 @@ function runOne(name, seed) {
     industry,
     rolesData,
     seed,
-    phase4Data
-  );
+    phase4Data, phase5Data);
   state = configureStrategy(name, state);
 
   while (state.status === 'running') {
@@ -237,8 +259,7 @@ function runOne(name, seed) {
       config,
       industry,
       rolesData,
-      phase4Data
-    );
+      phase4Data, phase5Data);
   }
 
   return {

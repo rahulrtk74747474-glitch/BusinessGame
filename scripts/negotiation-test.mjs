@@ -5,12 +5,25 @@ import marketingData from '../src/data/marketing/cafeMarketing.json' with { type
 import salesData from '../src/data/sales/cafeSales.json' with { type: 'json' };
 import operationsData from '../src/data/operations/cafeOperations.json' with { type: 'json' };
 import competitorData from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
+import fundingData from '../src/data/funding/cafeFunding.json' with { type: 'json' };
+import legalData from '../src/data/legal/cafeLegal.json' with { type: 'json' };
+import riskData from '../src/data/risk/cafeRisk.json' with { type: 'json' };
+import expansionData from '../src/data/expansion/cafeExpansion.json' with { type: 'json' };
+import exitData from '../src/data/exit/cafeExit.json' with { type: 'json' };
 
 const phase4Data = {
   marketing: marketingData,
   sales: salesData,
   operations: operationsData,
   competitors: competitorData
+};
+
+const phase5Data = {
+  funding: fundingData,
+  legal: legalData,
+  risk: riskData,
+  expansion: expansionData,
+  exit: exitData
 };
 import negotiationConfig from '../src/data/negotiation/negotiationConfig.json' with { type: 'json' };
 import { createGameState } from '../src/models/createGameState.js';
@@ -45,7 +58,7 @@ const close = (state) => applyNegotiationAction(
   rolesData
 );
 
-let state = createGameState(setup, config, industry, rolesData, 24680, phase4Data);
+let state = createGameState(setup, config, industry, rolesData, 24680, phase4Data, phase5Data);
 
 // Supplier: hidden fields must stay out of the UI view, research must cost money,
 // and a mutually acceptable offer must create a real operating contract.
@@ -84,7 +97,7 @@ assert(state.negotiation.contracts.supplierUnitCost > 0, 'Supplier unit cost was
 state = close(state);
 
 // Finance integration: the negotiated supplier unit cost must flow into the weekly P&L.
-state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
+state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data, phase5Data);
 assert(
   Math.abs(state.finance.effectiveVariableCostPerOrder - state.negotiation.contracts.supplierUnitCost) < 0.0001,
   'Supplier deal did not flow into variable cost.'
@@ -125,7 +138,7 @@ assert(state.negotiation.active.status === 'accepted', 'Client negotiation did n
 const clientRevenue = state.negotiation.contracts.clientWeeklyRevenue;
 assert(clientRevenue > 0, 'Client contract revenue was not stored.');
 state = close(state);
-state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data);
+state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4Data, phase5Data);
 assert(state.finance.clientRevenue === clientRevenue, 'Client contract revenue did not reach finance.');
 assert(state.finance.clientVariableCosts > 0, 'Client delivery costs were not modeled.');
 

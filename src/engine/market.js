@@ -4,7 +4,7 @@ function monthIndexForWeek(week) {
   return Math.min(11, Math.floor(((week - 1) % 52) / (52 / 12)));
 }
 
-export function stepMarket(state, decisions, industry, config, rng, modeConfig) {
+export function stepMarket(state, decisions, industry, config, rng, modeConfig, expansionEffects = {}) {
   const marketCfg = config.market;
   const volatility = modeConfig.economyVolatility;
   const economicShock = rng.normal(0, marketCfg.economicShockStd * volatility);
@@ -31,8 +31,15 @@ export function stepMarket(state, decisions, industry, config, rng, modeConfig) 
     marketCfg.weeklyDemandNoiseMax
   );
 
-  const marketDemand = Math.max(0,
-    industry.baseMarketDemand * seasonality * economicIndex * trendIndex * priceDemandFactor * noise
+  const marketDemand = Math.max(
+    0,
+    industry.baseMarketDemand *
+      seasonality *
+      economicIndex *
+      trendIndex *
+      priceDemandFactor *
+      noise *
+      (expansionEffects.demandMultiplier || 1)
   );
 
   return { economicIndex, trendIndex, seasonality, marketDemand, priceDemandFactor };

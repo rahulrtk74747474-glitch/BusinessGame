@@ -69,7 +69,7 @@ export function applyOperationsAction(state, action, operationsData) {
   };
 }
 
-export function stepOperationsPre(state, industry, operationsData, locationConfig, teamEffects, rng) {
+export function stepOperationsPre(state, industry, operationsData, locationConfig, teamEffects, rng, expansionEffects = {}) {
   const currentWeek = state.week + 1;
   const settings = state.operations.settings;
   const process = operationsData.processModes[settings.processMode];
@@ -144,7 +144,8 @@ export function stepOperationsPre(state, industry, operationsData, locationConfi
   const operationsEfficiency = 1 + (teamEffects.operationsEfficiencyAdd || 0);
   const processCapacity =
     (industry.capacityOrdersPerWeek * locationConfig.capacityMultiplier +
-      (teamEffects.capacityAdd || 0)) *
+      (teamEffects.capacityAdd || 0) +
+      (expansionEffects.capacityAdd || 0)) *
     process.capacityMultiplier *
     operationsEfficiency;
 

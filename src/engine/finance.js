@@ -1,15 +1,40 @@
 export function stepFinance(state, decisions, industry, config, customers, structureConfig, locationConfig, hrStep) {
-  const revenue = customers.orders * decisions.price;
-  const variableCosts = customers.orders * industry.baseVariableCostPerOrder;
-  const fixedCosts = industry.baseFixedCostPerWeek * locationConfig.fixedCostMultiplier + structureConfig.weeklyAdminCost;
+  const contracts = state.negotiation?.contracts || {};
+  const supplierActive = (contracts.supplierRemainingWeeks || 0) > 0 && Number.isFinite(contracts.supplierUnitCost);
+  const effectiveVariableCostPerOrder = supplierActive
+    ? contracts.supplierUnitCost
+    : industry.baseVariableCostPerOrder;
+
+  const clientActive = (contracts.clientRemainingWeeks || 0) > 0;
+  const clientRevenue = clientActive ? (contracts.clientWeeklyRevenue || 0) : 0;
+  const clientVariableCosts = clientRevenue * (clientActive ? (contracts.clientVariableCostRate || 0) : 0);
+
+  const coreRevenue = customers.orders * decisions.price;
+  const revenue = coreRevenue + clientRevenue;
+  const variableCosts = customers.orders * effectiveVariableCostPerOrder + clientVariableCosts;
+
+  const baseFixedCosts =
+    industry.baseFixedCostPerWeek * locationConfig.fixedCostMultiplier +
+    structureConfig.weeklyAdminCost;
+  const landlordSavings = (contracts.landlordRemainingWeeks || 0) > 0
+    ? Math.max(0, contracts.landlordWeeklySavings || 0)
+    : 0;
+  const fixedCosts = Math.max(0, baseFixedCosts - landlordSavings);
+
   const discretionaryCosts = decisions.marketingSpend + decisions.qualitySpend;
   const payrollCosts = hrStep?.payrollCost || 0;
-  // Interview/training/severance cash was paid when the action happened.
-  // We recognize it in this week's P&L without subtracting the cash twice.
-  const hrOneTimeExpenses = state.hr?.pendingExpenseRecognition || 0;
 
-  const cashOperatingProfit = revenue - variableCosts - fixedCosts - discretionaryCosts - payrollCosts;
-  const operatingProfit = cashOperatingProfit - hrOneTimeExpenses;
+  // HR and negotiation actions such as interviews, training, severance and
+  // research are paid immediately. Recognize them in this week's P&L without
+  // subtracting their cash a second time.
+  const hrOneTimeExpenses = state.hr?.pendingExpenseRecognition || 0;
+  const negotiationOneTimeExpenses = state.negotiation?.pendingExpenseRecognition || 0;
+
+  const cashOperatingProfit =
+    revenue - variableCosts - fixedCosts - discretionaryCosts - payrollCosts;
+  const operatingProfit =
+    cashOperatingProfit - hrOneTimeExpenses - negotiationOneTimeExpenses;
+
   const taxableProfit = Math.max(0, operatingProfit);
   const taxAccrued = taxableProfit * structureConfig.taxRate;
   const cashBeforeTaxPayment = state.finance.cash + cashOperatingProfit;
@@ -29,11 +54,18 @@ export function stepFinance(state, decisions, industry, config, customers, struc
   return {
     cash,
     revenue,
+    coreRevenue,
+    clientRevenue,
     variableCosts,
+    effectiveVariableCostPerOrder,
+    supplierContractActive: supplierActive,
+    clientVariableCosts,
     fixedCosts,
+    landlordSavings,
     discretionaryCosts,
     payrollCosts,
     hrOneTimeExpenses,
+    negotiationOneTimeExpenses,
     grossProfit,
     grossMargin,
     operatingProfit,

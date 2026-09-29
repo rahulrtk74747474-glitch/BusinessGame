@@ -31,6 +31,25 @@ export function createMonthlyReport(state, config) {
   if (avg(recent, 'lostOrders') > rCfg.lostOrdersExplainThreshold) explanations.push(`Capacity constraints caused about ${avg(recent, 'lostOrders').toFixed(0)} lost orders per week, so some demand could not become revenue.`);
   if (avg(recent, 'grossMargin') < rCfg.lowGrossMarginThreshold) explanations.push(`Gross margin averaged ${pct(avg(recent, 'grossMargin'))}; price versus variable cost is limiting how much each sale contributes to fixed costs.`);
 
+  const clientContractRevenue = sum(recent, 'clientContractRevenue');
+  const landlordSavings = sum(recent, 'landlordSavings');
+  const negotiationExpenses = sum(recent, 'negotiationOneTimeExpenses');
+  const negotiatedUnitCost = avg(recent.filter((row) => row.supplierContractActive), 'negotiatedUnitCost');
+  const supplierContractWeeks = recent.filter((row) => row.supplierContractActive).length;
+
+  if (clientContractRevenue > 0) {
+    explanations.push(`Negotiated client work contributed ${money(clientContractRevenue)} of revenue this period, with its delivery costs included in variable costs.`);
+  }
+  if (landlordSavings > 0) {
+    explanations.push(`Lease negotiation reduced fixed costs by ${money(landlordSavings)} over this report period.`);
+  }
+  if (supplierContractWeeks > 0 && negotiatedUnitCost > 0) {
+    explanations.push(`Negotiated supplier terms set average input cost to ${money(negotiatedUnitCost)} per order across ${supplierContractWeeks} week(s) this period, changing gross margin directly.`);
+  }
+  if (negotiationExpenses > 0) {
+    explanations.push(`Negotiation preparation cost ${money(negotiationExpenses)} this period. Preparation can improve deal quality, but it is still a real business expense.`);
+  }
+
   const payroll = sum(recent, 'payrollCosts');
   if (payroll > 0) {
     const headcount = avg(recent, 'headcount');
@@ -56,6 +75,10 @@ export function createMonthlyReport(state, config) {
     payroll,
     averageHeadcount: avg(recent, 'headcount'),
     averageTeamProductivity: avg(recent, 'teamProductivity'),
+    clientContractRevenue,
+    landlordSavings,
+    negotiationExpenses,
+    negotiatedUnitCost,
     explanations: explanations.slice(0, rCfg.maxExplanations)
   };
 }

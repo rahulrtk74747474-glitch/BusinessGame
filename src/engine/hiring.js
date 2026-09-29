@@ -143,6 +143,12 @@ function hireCandidate(state, candidate, terms, rolesData) {
   return chargeImmediate(next, rolesData.hireAdminCost, `Hiring/admin: ${candidate.name}`);
 }
 
+export function hireCandidateFromNegotiation(state, candidateId, terms, rolesData) {
+  const candidate = getCandidate(state, candidateId);
+  if (!candidate?.available) return state;
+  return hireCandidate(state, candidate, terms, rolesData);
+}
+
 function evaluateOffer(candidate, terms) {
   const weeklySalary = Math.max(1, Math.round(Number(terms.weeklySalary)));
   const perksWeekly = Math.max(0, Math.round(Number(terms.perksWeekly || 0)));

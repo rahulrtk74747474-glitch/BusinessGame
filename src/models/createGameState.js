@@ -76,6 +76,29 @@ export function createGameState(setup, config, industry, rolesData, seed = 42) {
       events: [],
       lastRipple: null
     },
+    negotiation: {
+      active: null,
+      nextSessionId: 1,
+      relationships: {
+        supplier: 0,
+        landlord: 0,
+        client: 0,
+        investor: 0
+      },
+      history: [],
+      pendingExpenseRecognition: 0,
+      contracts: {
+        supplierUnitCost: null,
+        supplierRemainingWeeks: 0,
+        landlordWeeklySavings: 0,
+        landlordRemainingWeeks: 0,
+        clientWeeklyRevenue: 0,
+        clientVariableCostRate: 0,
+        clientRemainingWeeks: 0,
+        investorIndicativeValuation: null
+      },
+      lastRipple: null
+    },
     history: [],
     reports: []
   };

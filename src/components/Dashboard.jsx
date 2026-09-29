@@ -4,12 +4,13 @@ import MonthlyReport from './MonthlyReport.jsx';
 import HiringPanel from './HiringPanel.jsx';
 import TeamPanel from './TeamPanel.jsx';
 import RippleMap from './RippleMap.jsx';
+import NegotiationPanel from './NegotiationPanel.jsx';
 import { goalProgress } from '../engine/simulator.js';
 
 const money = (n) => '$' + Math.round(n).toLocaleString();
 const pct = (n) => (n * 100).toFixed(1) + '%';
 
-export default function Dashboard({ state, config, industry, rolesData, onAdvance, onHrAction, onReset }) {
+export default function Dashboard({ state, config, industry, rolesData, negotiationConfig, onAdvance, onHrAction, onNegotiationAction, onReset }) {
   const progress = goalProgress(state);
   const latestReport = state.reports.at(-1);
   const goalIsPct = state.goal === 'marketShare';
@@ -29,18 +30,32 @@ export default function Dashboard({ state, config, industry, rolesData, onAdvanc
       <button className={tab === 'dashboard' ? 'active' : ''} onClick={() => setTab('dashboard')}>Dashboard</button>
       <button className={tab === 'hiring' ? 'active' : ''} onClick={() => setTab('hiring')}>Hiring <span>{state.hr.candidates.filter((c) => c.available).length}</span></button>
       <button className={tab === 'team' ? 'active' : ''} onClick={() => setTab('team')}>Team <span>{state.hr.employees.length}</span></button>
+      <button className={tab === 'negotiation' ? 'active' : ''} onClick={() => setTab('negotiation')}>Negotiate <span>{state.negotiation.history.length}</span></button>
     </nav>
 
     {state.status !== 'running' && <section className={'status-banner ' + state.status}><strong>{state.status === 'won' ? 'Goal reached' : state.status === 'lost' ? 'Company failed' : 'Run complete'}</strong><span>{state.resultReason}</span></section>}
 
     {tab === 'hiring' && <>
-      <HiringPanel state={state} rolesData={rolesData} onHrAction={onHrAction} />
+      <HiringPanel
+        state={state}
+        rolesData={rolesData}
+        onHrAction={onHrAction}
+        onStartNegotiation={(candidateId) => {
+          onNegotiationAction({ type: 'start', counterpartyType: 'candidate', candidateId });
+          setTab('negotiation');
+        }}
+      />
       <RippleMap ripple={state.hr.lastRipple} />
     </>}
 
     {tab === 'team' && <>
       <TeamPanel state={state} rolesData={rolesData} onHrAction={onHrAction} />
       <RippleMap ripple={state.hr.lastRipple} />
+    </>}
+
+    {tab === 'negotiation' && <>
+      <NegotiationPanel state={state} negotiationConfig={negotiationConfig} onAction={onNegotiationAction} />
+      <RippleMap ripple={state.negotiation.lastRipple} />
     </>}
 
     {tab === 'dashboard' && <>
@@ -67,7 +82,7 @@ export default function Dashboard({ state, config, industry, rolesData, onAdvanc
           <label>Marketing spend <b>{money(decisionDraft.marketingSpend)}</b><input type="range" min={config.decisions.marketingSpend.min} max={config.decisions.marketingSpend.max} step={config.decisions.marketingSpend.step} value={decisionDraft.marketingSpend} onChange={(e) => setDecision('marketingSpend', e.target.value)} /></label>
           <label>Quality/service spend <b>{money(decisionDraft.qualitySpend)}</b><input type="range" min={config.decisions.qualitySpend.min} max={config.decisions.qualitySpend.max} step={config.decisions.qualitySpend.step} value={decisionDraft.qualitySpend} onChange={(e) => setDecision('qualitySpend', e.target.value)} /></label>
           <button className="primary" disabled={state.status !== 'running'} onClick={() => onAdvance(decisionDraft)}>Advance one week</button>
-          <div className="hidden-info"><b>What you can observe:</b> demand and employee hidden traits are not shown directly. Use orders, CAC, satisfaction, reviews, reference checks, trial performance, morale, and monthly explanations to infer them.</div>
+          <div className="hidden-info"><b>What you can observe:</b> demand and employee hidden traits are not shown directly. Use orders, CAC, satisfaction, reviews, reference checks, trial performance, negotiation signals, morale, and monthly explanations to infer them.</div>
         </section>
         <section className="panel">
           <h2>Market & team signals</h2>
@@ -80,12 +95,14 @@ export default function Dashboard({ state, config, industry, rolesData, onAdvanc
             <span>Trend <b>{state.market.trendIndex > config.market.signalStrongThreshold ? 'Favorable' : state.market.trendIndex < config.market.signalWeakThreshold ? 'Unfavorable' : 'Flat'}</b></span>
             <span>Manager quality <b>{pct(state.hr.managerQuality)}</b></span>
             <span>Active trials <b>{state.hr.trials.length}</b></span>
+            <span>Client contract <b>{money(state.finance.clientRevenue || 0)}/wk</b></span>
+            <span>Lease savings <b>{money(state.finance.landlordSavings || 0)}/wk</b></span>
           </div>
           <div className="industry-notes"><h3>Typical failure modes</h3><ul>{industry.typicalFailureModes.map((x) => <li key={x}>{x}</li>)}</ul></div>
         </section>
       </section>
 
-      <RippleMap ripple={state.hr.lastRipple} />
+      <RippleMap ripple={state.negotiation.lastRipple || state.hr.lastRipple} />
 
       <section className="charts-grid">
         <MiniChart label="Cash" values={state.history.map((x) => x.cash)} />

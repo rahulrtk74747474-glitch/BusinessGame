@@ -1,0 +1,205 @@
+{
+  "researchCost": 75,
+  "researchPreparationGain": 0.18,
+  "maxResearchActions": 3,
+  "initialPreparation": 0.12,
+  "candidateDueDiligencePreparation": {
+    "interview": 0.12,
+    "references": 0.12,
+    "trial": 0.2
+  },
+  "maxRounds": 8,
+  "relationshipMin": -1,
+  "relationshipMax": 1,
+  "moodMin": 0.08,
+  "moodMax": 0.98,
+  "preparationMin": 0,
+  "preparationMax": 1,
+  "leverageMin": 0.05,
+  "leverageMax": 0.95,
+  "tacticFit": {
+    "aggressive": {
+      "anchor": 0.08,
+      "split": -0.02,
+      "bundle": 0.01,
+      "deadline": 0.1,
+      "ask_info": -0.035
+    },
+    "friendly": {
+      "anchor": -0.025,
+      "split": 0.09,
+      "bundle": 0.1,
+      "deadline": -0.11,
+      "ask_info": 0.045
+    },
+    "analytical": {
+      "anchor": -0.015,
+      "split": 0.035,
+      "bundle": 0.085,
+      "deadline": -0.075,
+      "ask_info": 0.1
+    }
+  },
+  "tacticMoodImpact": {
+    "anchor": -0.025,
+    "split": 0.025,
+    "bundle": 0.045,
+    "deadline": -0.12,
+    "ask_info": 0.02
+  },
+  "tacticRelationshipImpact": {
+    "anchor": -0.015,
+    "split": 0.025,
+    "bundle": 0.045,
+    "deadline": -0.075,
+    "ask_info": 0.025,
+    "walk_away": -0.015
+  },
+  "askInfoPreparationGain": 0.08,
+  "bundleConcessionValue": 0.075,
+  "deadlinePressureValue": 0.075,
+  "acceptance": {
+    "dealFitWeight": 0.55,
+    "moodWeight": 0.12,
+    "relationshipWeight": 0.08,
+    "preparationWeight": 0.08,
+    "leverageWeight": 0.1,
+    "tacticFitWeight": 0.07,
+    "baseThreshold": 0.5,
+    "aggressiveThresholdAdjustment": 0.035,
+    "friendlyThresholdAdjustment": -0.025,
+    "analyticalThresholdAdjustment": 0.01,
+    "automaticBestOfferFit": 0.96
+  },
+  "counter": {
+    "baseMovement": 0.18,
+    "leverageWeight": 0.2,
+    "preparationWeight": 0.14,
+    "tacticFitWeight": 0.28,
+    "relationshipWeight": 0.08,
+    "movementMin": 0.08,
+    "movementMax": 0.62,
+    "noise": 0.025,
+    "negativeFitFloor": -0.08
+  },
+  "leave": {
+    "outsideWalkAwayTolerance": 0.04,
+    "baseChance": 0.08,
+    "badMoodWeight": 0.34,
+    "deadlineExtraChance": 0.2,
+    "negativeRelationshipWeight": 0.14,
+    "chanceMax": 0.82
+  },
+  "personalities": [
+    "aggressive",
+    "friendly",
+    "analytical"
+  ],
+  "templates": {
+    "supplier": {
+      "label": "Coffee & food supplier",
+      "direction": "lower",
+      "unit": "$/order",
+      "initialCounter": 3.35,
+      "playerOpening": 2.9,
+      "walkAwayMin": 2.92,
+      "walkAwayMax": 3.15,
+      "bundleLabel": "Commit to 26 weeks + faster payment",
+      "contractWeeks": 26,
+      "lesson": "Purchase price matters, but payment terms, volume commitments, reliability and relationship can be traded together."
+    },
+    "landlord": {
+      "label": "Shop landlord",
+      "direction": "lower",
+      "unit": "$/week",
+      "initialCounter": 900,
+      "playerOpening": 700,
+      "walkAwayMin": 750,
+      "walkAwayMax": 850,
+      "bundleLabel": "Longer lease + maintenance responsibility",
+      "contractWeeks": 52,
+      "lesson": "Rent negotiations can trade term length, maintenance, deposits and flexibility—not only headline rent."
+    },
+    "client": {
+      "label": "Corporate catering client",
+      "direction": "higher",
+      "unit": "$/week",
+      "initialCounter": 1350,
+      "playerOpening": 1900,
+      "walkAwayMin": 1580,
+      "walkAwayMax": 1810,
+      "bundleLabel": "Priority service + quarterly review",
+      "contractWeeks": 8,
+      "clientVariableCostRate": 0.46,
+      "lesson": "A bigger contract is not automatically better: price, service scope, delivery obligations and gross margin must work together."
+    },
+    "investor": {
+      "label": "Angel investor",
+      "direction": "higher",
+      "unit": "valuation",
+      "initialCounterMultiplier": 0.8,
+      "playerOpeningMultiplier": 1.35,
+      "walkAwayMinMultiplier": 0.98,
+      "walkAwayMaxMultiplier": 1.18,
+      "bundleLabel": "Information rights + advisor access",
+      "contractWeeks": 0,
+      "lesson": "Valuation is only one funding term. Dilution, control, liquidation preference and investor rights matter; full funding mechanics unlock in Phase 5."
+    },
+    "candidate": {
+      "label": "Job candidate",
+      "direction": "lower",
+      "unit": "$/week",
+      "playerOpeningMultiplier": 0.9,
+      "bundleLabel": "Perks + development plan + small equity grant",
+      "candidateBundlePerksWeekly": 40,
+      "candidateBundleEquityBps": 15,
+      "contractWeeks": 0,
+      "lesson": "Compensation is a package: salary, benefits, equity, growth, flexibility and role quality all affect acceptance."
+    }
+  },
+  "relationshipSuccessGain": 0.06,
+  "socialFitMoodWeight": 0.35,
+  "socialFitRelationshipWeight": 0.22,
+  "walkAwayRevealBand": 0.03,
+  "outsideDistanceChanceCap": 0.25,
+  "generalMoodRange": {
+    "min": 0.42,
+    "max": 0.82
+  },
+  "candidatePersonality": {
+    "aggressiveAmbitionThreshold": 0.78,
+    "friendlyCultureThreshold": 0.74
+  },
+  "candidateMood": {
+    "base": 0.48,
+    "cultureFitWeight": 0.32,
+    "ambitionWeight": 0.08
+  },
+  "leverage": {
+    "cashScaleMultiplier": 1.5,
+    "marketShareReference": 0.35,
+    "profitOffset": 1500,
+    "profitScale": 3000,
+    "defaultWeights": {
+      "cash": 0.35,
+      "satisfaction": 0.25,
+      "marketShare": 0.2,
+      "profitability": 0.2
+    },
+    "candidateWeights": {
+      "cash": 0.45,
+      "alternatives": 0.35,
+      "profitability": 0.2
+    },
+    "clientWeights": {
+      "satisfaction": 0.45,
+      "marketShare": 0.35,
+      "cash": 0.2
+    },
+    "investorWeights": {
+      "profitability": 0.4,
+      "marketShare": 0.35,
+      "cash": 0.25
+    }
+  }
+}

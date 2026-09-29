@@ -4,6 +4,7 @@ import { stepCustomers } from './customers.js';
 import { stepEmployees } from './employees.js';
 import { stepFinance, estimateValuation } from './finance.js';
 import { createMonthlyReport } from './report.js';
+import { stepNegotiationContracts } from './negotiation.js';
 
 function reachedGoal(state) {
   switch (state.goal) {
@@ -64,7 +65,12 @@ export function advanceWeek(state, decisions, config, industry, rolesData) {
     teamProductivity: hrStep.averageProductivity,
     teamMorale: hrStep.averageMorale,
     teamBurnout: hrStep.averageBurnout,
-    managerQuality: hrStep.managerQuality
+    managerQuality: hrStep.managerQuality,
+    clientContractRevenue: financeWithoutValuation.clientRevenue || 0,
+    landlordSavings: financeWithoutValuation.landlordSavings || 0,
+    negotiatedUnitCost: financeWithoutValuation.effectiveVariableCostPerOrder,
+    supplierContractActive: financeWithoutValuation.supplierContractActive,
+    negotiationOneTimeExpenses: financeWithoutValuation.negotiationOneTimeExpenses || 0
   };
 
   const history = [...state.history, weekRow];
@@ -98,6 +104,7 @@ export function advanceWeek(state, decisions, config, industry, rolesData) {
     customers,
     finance,
     hr,
+    negotiation: stepNegotiationContracts(state),
     history
   };
 

@@ -26,6 +26,18 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 
+// Regression test: a candidate's stated salary ask must be a viable hiring offer.
+let fairOfferState = createGameState(setup, config, industry, rolesData, 9911);
+const fairCandidate = fairOfferState.hr.candidates[0];
+fairOfferState = applyHrAction(fairOfferState, {
+  type: 'makeOffer',
+  candidateId: fairCandidate.id,
+  weeklySalary: fairCandidate.salaryAsk,
+  perksWeekly: 0,
+  equityBps: 0
+}, config, rolesData);
+assert(fairOfferState.hr.employees.length === 1, 'Regression: offering the stated salary ask should be accepted, not counter forever.');
+
 let state = createGameState(setup, config, industry, rolesData, 7777);
 const candidate = state.hr.candidates[0];
 const publicBefore = candidateView(candidate, rolesData);
@@ -49,11 +61,11 @@ const target = state.hr.candidates[0];
 state = applyHrAction(state, {
   type: 'makeOffer',
   candidateId: target.id,
-  weeklySalary: Math.round(target.salaryAsk * 1.2),
-  perksWeekly: 80,
-  equityBps: 50
+  weeklySalary: target.salaryAsk,
+  perksWeekly: 0,
+  equityBps: 0
 }, config, rolesData);
-assert(state.hr.employees.length === 1, 'Strong offer should have been accepted in deterministic HR test.');
+assert(state.hr.employees.length === 1, 'Fair offer should be accepted in HR integration test.');
 
 state = advanceWeek(state, state.decisions, config, industry, rolesData);
 const employeeId = state.hr.employees[0].id;
@@ -90,4 +102,4 @@ if (state.hr.employees.length) {
   assert(state.hr.legalRisk === legalRiskBefore, 'Reviewed termination unexpectedly increased documentation risk.');
 }
 
-console.log('HR integration test passed: due diligence, trial, offer, payroll, ramp-up, training, raise, review, ripple map, and termination.');
+console.log('HR integration test passed: fair-offer regression, due diligence, trial, offer, payroll, ramp-up, training, raise, review, ripple map, and termination.');

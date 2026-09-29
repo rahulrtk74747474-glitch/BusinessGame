@@ -116,6 +116,84 @@ function makeEmployee(candidate, offer, state, rolesData) {
   };
 }
 
+function hireCandidate(state, candidate, terms, rolesData) {
+  const acceptedOffer = {
+    status: 'accepted',
+    weeklySalary: Math.max(1, Math.round(terms.weeklySalary)),
+    perksWeekly: Math.max(0, Math.round(terms.perksWeekly || 0)),
+    equityBps: clamp(Math.round(terms.equityBps || 0), 0, 100),
+    message: 'Offer accepted.'
+  };
+  const employee = makeEmployee(candidate, acceptedOffer, state, rolesData);
+  const updated = { ...candidate, available: false, offer: acceptedOffer };
+  let next = replaceCandidate(state, updated);
+  next = {
+    ...next,
+    hr: {
+      ...next.hr,
+      employees: [...next.hr.employees, employee],
+      trials: next.hr.trials.filter((t) => t.candidateId !== candidate.id),
+      nextEmployeeId: next.hr.nextEmployeeId + 1,
+      lastRipple: {
+        title: `Hired ${candidate.name}`,
+        nodes: ['HR: headcount +1', 'Finance: weekly payroll rises', 'Operations: capacity/service may improve', 'Leadership: manager load changes']
+      }
+    }
+  };
+  return chargeImmediate(next, rolesData.hireAdminCost, `Hiring/admin: ${candidate.name}`);
+}
+
+function evaluateOffer(candidate, terms) {
+  const weeklySalary = Math.max(1, Math.round(Number(terms.weeklySalary)));
+  const perksWeekly = Math.max(0, Math.round(Number(terms.perksWeekly || 0)));
+  const equityBps = clamp(Math.round(Number(terms.equityBps || 0)), 0, 100);
+
+  // Salary ask is intentionally a realistic asking point, not an unreachable
+  // minimum. A full asking-salary offer should normally be acceptable.
+  const cashCompRatio = (weeklySalary + perksWeekly * 0.75) / Math.max(1, candidate.salaryAsk);
+  const equityValueRatio = equityBps * 0.0008;
+  const relationshipBonus =
+    (candidate.insights.interview ? 0.008 : 0) +
+    (candidate.insights.references ? 0.006 : 0) +
+    (candidate.trialCompleted ? 0.025 : 0);
+  const fitBonus = candidate.hidden.cultureFit * 0.02;
+
+  const effectiveOffer = cashCompRatio + equityValueRatio + relationshipBonus + fitBonus;
+  const acceptanceThreshold = clamp(
+    0.955 + candidate.hidden.ambition * 0.025 - candidate.hidden.cultureFit * 0.012,
+    0.95,
+    0.982
+  );
+
+  return {
+    weeklySalary,
+    perksWeekly,
+    equityBps,
+    effectiveOffer,
+    acceptanceThreshold
+  };
+}
+
+function counterTerms(candidate, evaluated) {
+  const nonSalaryValue =
+    (evaluated.perksWeekly * 0.75) / Math.max(1, candidate.salaryAsk) +
+    evaluated.equityBps * 0.0008 +
+    (candidate.insights.interview ? 0.008 : 0) +
+    (candidate.insights.references ? 0.006 : 0) +
+    (candidate.trialCompleted ? 0.025 : 0) +
+    candidate.hidden.cultureFit * 0.02;
+
+  const requiredSalaryRatio = Math.max(
+    candidate.hidden.walkAwayRatio,
+    evaluated.acceptanceThreshold - nonSalaryValue
+  );
+
+  return Math.max(
+    evaluated.weeklySalary + 1,
+    Math.ceil(candidate.salaryAsk * requiredSalaryRatio)
+  );
+}
+
 export function applyHrAction(state, action, config, rolesData) {
   if (state.status !== 'running') return state;
 
@@ -182,57 +260,45 @@ export function applyHrAction(state, action, config, rolesData) {
     return chargeImmediate(next, rolesData.trialAdminCost, `Trial setup: ${candidate.name}`);
   }
 
+  if (action.type === 'acceptCounter' && candidate?.available && candidate.offer?.status === 'counter') {
+    return hireCandidate(state, candidate, {
+      weeklySalary: candidate.offer.counterSalary,
+      perksWeekly: candidate.offer.perksWeekly || 0,
+      equityBps: candidate.offer.equityBps || 0
+    }, rolesData);
+  }
+
   if (action.type === 'makeOffer' && candidate?.available) {
-    const weeklySalary = Math.max(1, Math.round(Number(action.weeklySalary)));
-    const perksWeekly = Math.max(0, Math.round(Number(action.perksWeekly || 0)));
-    const equityBps = clamp(Math.round(Number(action.equityBps || 0)), 0, 100);
-    const salaryRatio = weeklySalary / candidate.salaryAsk;
-    const offerValue =
-      salaryRatio * 0.78 +
-      Math.min(1, perksWeekly / 80) * 0.08 +
-      Math.min(1, equityBps / 50) * 0.06 +
-      candidate.hidden.cultureFit * 0.08;
+    const evaluated = evaluateOffer(candidate, action);
+    const cashOnlyRatio = (evaluated.weeklySalary + evaluated.perksWeekly * 0.75) / Math.max(1, candidate.salaryAsk);
 
-    const rng = createRng(state.seed + state.week * 4909 + Number(candidate.id.split('-').at(-1)) * 313);
-    const noise = rng.range(-0.025, 0.025);
-    const walkAway = candidate.hidden.walkAwayRatio;
-
-    if (salaryRatio + perksWeekly / Math.max(1, candidate.salaryAsk) < walkAway && offerValue + noise < 0.9) {
+    // A genuinely weak offer can make the candidate leave.
+    if (cashOnlyRatio < candidate.hidden.walkAwayRatio - 0.015) {
       const updated = {
         ...candidate,
         available: false,
-        offer: { status: 'declined', message: 'The candidate declined and left the process.' }
+        offer: { status: 'declined', message: 'The candidate declined the offer and left the process.' }
       };
       return replaceCandidate(state, updated);
     }
 
-    if (offerValue + noise < 0.99) {
-      const counterSalary = Math.max(weeklySalary + 1, Math.round(candidate.salaryAsk * (0.96 - Math.min(0.05, perksWeekly / 2000))));
-      const updated = {
-        ...candidate,
-        offer: { status: 'counter', counterSalary, message: `Candidate countered at $${counterSalary}/week.` }
-      };
-      return replaceCandidate(state, updated);
+    // At or near the stated ask, acceptance is now normal rather than impossible.
+    if (evaluated.effectiveOffer >= evaluated.acceptanceThreshold) {
+      return hireCandidate(state, candidate, evaluated, rolesData);
     }
 
-    const offer = { status: 'accepted', weeklySalary, perksWeekly, equityBps, message: 'Offer accepted.' };
-    const employee = makeEmployee(candidate, offer, state, rolesData);
-    const updated = { ...candidate, available: false, offer };
-    let next = replaceCandidate(state, updated);
-    next = {
-      ...next,
-      hr: {
-        ...next.hr,
-        employees: [...next.hr.employees, employee],
-        trials: next.hr.trials.filter((t) => t.candidateId !== candidate.id),
-        nextEmployeeId: next.hr.nextEmployeeId + 1,
-        lastRipple: {
-          title: `Hired ${candidate.name}`,
-          nodes: ['HR: headcount +1', 'Finance: weekly payroll rises', 'Operations: capacity/service may improve', 'Leadership: manager load changes']
-        }
+    const counterSalary = counterTerms(candidate, evaluated);
+    const updated = {
+      ...candidate,
+      offer: {
+        status: 'counter',
+        counterSalary,
+        perksWeekly: evaluated.perksWeekly,
+        equityBps: evaluated.equityBps,
+        message: `Candidate countered at $${counterSalary}/week. You can accept it directly or submit another offer.`
       }
     };
-    return chargeImmediate(next, rolesData.hireAdminCost, `Hiring/admin: ${candidate.name}`);
+    return replaceCandidate(state, updated);
   }
 
   const employeeIndex = action.employeeId ? state.hr.employees.findIndex((e) => e.id === action.employeeId) : -1;

@@ -12,15 +12,17 @@ export default function HiringPanel({ state, rolesData, onHrAction }) {
   const [offers, setOffers] = useState({});
 
   const draftFor = (candidate) => offers[candidate.id] || {
-    weeklySalary: candidate.offer?.counterSalary || candidate.salaryAsk,
-    perksWeekly: 0,
-    equityBps: 0
+    weeklySalary: candidate.offer?.status === 'counter' ? candidate.offer.counterSalary : candidate.salaryAsk,
+    perksWeekly: candidate.offer?.perksWeekly || 0,
+    equityBps: candidate.offer?.equityBps || 0
   };
 
   const setDraft = (candidateId, key, value) => {
+    const candidate = views.find((v) => v.id === candidateId);
+    const base = draftFor(candidate);
     setOffers((current) => ({
       ...current,
-      [candidateId]: { ...draftFor(views.find((v) => v.id === candidateId)), ...current[candidateId], [key]: Number(value) }
+      [candidateId]: { ...base, ...current[candidateId], [key]: Number(value) }
     }));
   };
 
@@ -41,6 +43,7 @@ export default function HiringPanel({ state, rolesData, onHrAction }) {
         const role = rolesData.roles[candidate.roleId];
         const draft = draftFor(candidate);
         const trial = state.hr.trials.find((t) => t.candidateId === candidate.id);
+        const hasCounter = candidate.offer?.status === 'counter';
 
         return <article className={"candidate-card " + (!candidate.available ? 'inactive' : '')} key={candidate.id}>
           <div className="candidate-head">
@@ -71,16 +74,25 @@ export default function HiringPanel({ state, rolesData, onHrAction }) {
               <button className="secondary" disabled={Boolean(trial)} onClick={() => onHrAction({ type: 'startTrial', candidateId: candidate.id })}>2-week trial · {money(rolesData.trialAdminCost)}</button>
             </div>
 
+            {hasCounter && <button
+              className="primary"
+              onClick={() => onHrAction({ type: 'acceptCounter', candidateId: candidate.id })}
+            >
+              Accept counter · {money(candidate.offer.counterSalary)}/week
+            </button>}
+
             <div className="offer-form">
               <label>Salary / week<input type="number" min="1" value={draft.weeklySalary} onChange={(e) => setDraft(candidate.id, 'weeklySalary', e.target.value)} /></label>
               <label>Perks / week<input type="number" min="0" step="10" value={draft.perksWeekly} onChange={(e) => setDraft(candidate.id, 'perksWeekly', e.target.value)} /></label>
               <label>Equity (bps)<input type="number" min="0" max="100" value={draft.equityBps} onChange={(e) => setDraft(candidate.id, 'equityBps', e.target.value)} /></label>
             </div>
-            <button className="primary" onClick={() => onHrAction({ type: 'makeOffer', candidateId: candidate.id, ...draft })}>Make one-shot offer</button>
+            <button className={hasCounter ? 'secondary' : 'primary'} onClick={() => onHrAction({ type: 'makeOffer', candidateId: candidate.id, ...draft })}>
+              {hasCounter ? 'Submit different offer' : 'Make offer'}
+            </button>
           </>}
         </article>;
       })}
     </div>
-    <div className="phase-note">Phase 2 uses a one-shot offer/counter/decline model. Phase 3 will replace this with the full tactic-based negotiation engine.</div>
+    <div className="phase-note">A candidate's salary ask is now a realistic asking point: offering the full ask will normally be accepted. Lower offers may be countered or rejected. Phase 3 will add the full tactic-based negotiation engine.</div>
   </section>;
 }

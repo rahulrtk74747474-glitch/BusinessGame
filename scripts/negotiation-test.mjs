@@ -127,24 +127,14 @@ state = applyNegotiationAction(
   rolesData
 );
 view = negotiationPublicView(state, negotiationConfig);
+const investorOpening = view.counterOffer;
 state = applyNegotiationAction(
   state,
-  { type: 'tactic', tactic: 'split' },
+  { type: 'tactic', tactic: 'anchor', proposal: investorOpening },
   negotiationConfig,
   rolesData
 );
-if (state.negotiation.active.status === 'active') {
-  // For a higher-is-better-for-player negotiation, moving well below the
-  // counterparty's current valuation is unquestionably favorable to them.
-  view = negotiationPublicView(state, negotiationConfig);
-  state = applyNegotiationAction(
-    state,
-    { type: 'tactic', tactic: 'anchor', proposal: Math.max(1, Math.round(view.counterOffer * 0.8)) },
-    negotiationConfig,
-    rolesData
-  );
-}
-assert(state.negotiation.active.status === 'accepted', 'Investor indicative negotiation did not settle.');
+assert(state.negotiation.active.status === 'accepted', 'Investor opening valuation should settle when the player accepts it.');
 assert(state.negotiation.contracts.investorIndicativeValuation > 0, 'Indicative investor valuation was not recorded.');
 assert(state.finance.cash === cashBeforeInvestor, 'Phase 3 investor negotiation incorrectly injected funding cash.');
 state = close(state);

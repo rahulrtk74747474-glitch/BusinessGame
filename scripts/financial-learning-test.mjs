@@ -11,9 +11,11 @@ import riskData from '../src/data/risk/cafeRisk.json' with { type: 'json' };
 import expansionData from '../src/data/expansion/cafeExpansion.json' with { type: 'json' };
 import exitData from '../src/data/exit/cafeExit.json' with { type: 'json' };
 import lessons from '../src/data/learning/financialLessons.json' with { type: 'json' };
+import formulaCatalog from '../src/data/learning/financialFormulaCatalog.json' with { type: 'json' };
 import { createGameState } from '../src/models/createGameState.js';
 import { advanceWeek } from '../src/engine/simulator.js';
 import { buildWeeklyFinancialLesson, createFinancialSnapshot } from '../src/engine/financialEducation.js';
+import { buildFormulaExplanation } from '../src/engine/financialFormulaExplorer.js';
 
 const phase4Data = { marketing: marketingData, sales: salesData, operations: operationsData, competitors: competitorData };
 const phase5Data = { funding: fundingData, legal: legalData, risk: riskData, expansion: expansionData, exit: exitData };
@@ -68,4 +70,32 @@ state = advanceWeek(state, state.decisions, config, industry, rolesData, phase4D
 assert(state.week === 21, 'Could not reach week 21.');
 assert(buildWeeklyFinancialLesson(state, industry, lessons) === null, 'Financial popup lesson should stop after week 20.');
 
-console.log('Financial learning test passed: 20 weekly lessons, P&L, balance sheet, ratios, break-even and financial history all reconcile.');
+
+assert(formulaCatalog.length >= 25, 'Formula library should cover the major financial statement values and ratios.');
+assert(new Set(formulaCatalog.map((item) => item.key)).size === formulaCatalog.length, 'Formula catalog keys must be unique.');
+
+const formulaSnapshot = createFinancialSnapshot(state, industry);
+for (const item of formulaCatalog) {
+  const detail = buildFormulaExplanation(item.key, state, industry, formulaCatalog, formulaSnapshot);
+  assert(detail, 'Formula explorer failed to build: ' + item.key);
+  assert(detail.formula && detail.formula.length > 8, 'Formula text missing for: ' + item.key);
+  assert(detail.meaning && detail.meaning.length > 20, 'Plain-English meaning missing for: ' + item.key);
+  assert(Array.isArray(detail.steps) && detail.steps.length > 0, 'Worked calculation missing for: ' + item.key);
+  assert(typeof detail.result === 'string' && detail.result.length > 0, 'Calculated result missing for: ' + item.key);
+  assert(detail.interpretation && detail.interpretation.length > 20, 'Interpretation missing for: ' + item.key);
+  assert(detail.simpleExample && detail.simpleExample.length > 20, 'Simple example missing for: ' + item.key);
+}
+
+const grossMarginDetail = buildFormulaExplanation('grossMargin', state, industry, formulaCatalog, formulaSnapshot);
+assert(grossMarginDetail.result.endsWith('%'), 'Gross-margin explorer should return a percentage.');
+
+const equityDetail = buildFormulaExplanation('bookEquity', state, industry, formulaCatalog, formulaSnapshot);
+assert(equityDetail.steps.some((step) => step.includes('−')), 'Book-equity worked example must show assets minus liabilities.');
+
+const ltvCacDetail = buildFormulaExplanation('ltvCac', state, industry, formulaCatalog, formulaSnapshot);
+assert(ltvCacDetail.result.endsWith('x') || ltvCacDetail.result === 'N/M', 'LTV:CAC explorer should return a ratio.');
+
+const annualizedDetail = buildFormulaExplanation('annualizedRevenue', state, industry, formulaCatalog, formulaSnapshot);
+assert(annualizedDetail.steps.some((step) => step.includes('× 52')), 'Annualized revenue should visibly show weekly revenue times 52.');
+
+console.log('Financial learning test passed: 20 weekly lessons plus searchable worked financial formulas all reconcile.');

@@ -1,0 +1,245 @@
+[
+  {
+    "key": "revenue",
+    "title": "Revenue",
+    "category": "Income statement",
+    "formula": "Revenue = Core sales + Client revenue + B2B sales + Expansion revenue",
+    "meaning": "Revenue is the value of sales earned during the period before deducting costs.",
+    "higherLower": "Higher revenue is useful only when margins and cash economics remain healthy.",
+    "simpleExample": "If a shop earns $8,000 from normal sales and $2,000 from a corporate order, total revenue is $10,000."
+  },
+  {
+    "key": "variableCosts",
+    "title": "Direct / Variable Costs",
+    "category": "Income statement",
+    "formula": "Variable costs = Core COGS + Client variable costs + Sales-contract variable costs",
+    "meaning": "These are costs that rise mainly because the company sold or delivered more.",
+    "higherLower": "Lower variable cost per unit generally improves margins, but cutting quality can hurt retention and demand.",
+    "simpleExample": "If 1,000 units cost $4 each to deliver, variable costs are $4,000."
+  },
+  {
+    "key": "grossProfit",
+    "title": "Gross Profit",
+    "category": "Income statement",
+    "formula": "Gross profit = Revenue − Variable costs",
+    "meaning": "Gross profit is the money left from sales after paying direct costs, before overhead such as payroll, rent and marketing.",
+    "higherLower": "Higher gross profit gives the business more capacity to pay operating expenses and reinvest.",
+    "simpleExample": "$10,000 revenue − $4,000 direct costs = $6,000 gross profit."
+  },
+  {
+    "key": "grossMargin",
+    "title": "Gross Margin",
+    "category": "Income statement",
+    "formula": "Gross margin % = Gross profit ÷ Revenue × 100",
+    "meaning": "Gross margin shows how much of each revenue dollar remains after direct costs.",
+    "higherLower": "A higher margin usually provides more operating cushion, but normal margins vary greatly by industry.",
+    "simpleExample": "$6,000 gross profit ÷ $10,000 revenue = 60% gross margin."
+  },
+  {
+    "key": "operatingExpenses",
+    "title": "Operating Expenses",
+    "category": "Income statement",
+    "formula": "Operating expenses = Fixed costs + Discretionary costs + Payroll + One-time operating expenses",
+    "meaning": "Operating expenses are the costs of running the company beyond direct production or delivery.",
+    "higherLower": "Lower is not automatically better; underinvesting in people, product or marketing can reduce future growth.",
+    "simpleExample": "$2,000 fixed + $1,000 marketing/other + $1,500 payroll = $4,500 operating expenses."
+  },
+  {
+    "key": "operatingProfit",
+    "title": "Operating Profit",
+    "category": "Income statement",
+    "formula": "Operating profit = Gross profit − Operating expenses",
+    "meaning": "Operating profit tests whether the business model works before interest and tax. In this game it is EBITDA-like because depreciation is not separately modeled.",
+    "higherLower": "Positive and improving operating profit usually indicates that the core business can support itself.",
+    "simpleExample": "$6,000 gross profit − $4,500 operating expenses = $1,500 operating profit."
+  },
+  {
+    "key": "operatingMargin",
+    "title": "Operating Margin",
+    "category": "Income statement",
+    "formula": "Operating margin % = Operating profit ÷ Revenue × 100",
+    "meaning": "Operating margin shows how much operating profit the company keeps from each dollar of revenue.",
+    "higherLower": "Higher can indicate stronger operating efficiency, but compare businesses with similar models and maturity.",
+    "simpleExample": "$1,500 operating profit ÷ $10,000 revenue = 15% operating margin."
+  },
+  {
+    "key": "preTaxProfit",
+    "title": "Profit Before Tax (PBT)",
+    "category": "Income statement",
+    "formula": "PBT = Operating profit − Interest expense − Legal penalty expense",
+    "meaning": "PBT shows profit after financing costs and modeled penalties, but before income tax.",
+    "higherLower": "Higher PBT usually means stronger pre-tax profitability; leverage can make PBT much lower than operating profit.",
+    "simpleExample": "$1,500 operating profit − $200 interest = $1,300 PBT."
+  },
+  {
+    "key": "taxAccrued",
+    "title": "Tax Accrued",
+    "category": "Income statement",
+    "formula": "Tax accrued = max(0, PBT) × Tax rate",
+    "meaning": "Tax accrued is the tax expense recognized for profitable activity even if the cash payment occurs later.",
+    "higherLower": "A higher tax bill can simply reflect higher profit. The key is planning cash for the liability.",
+    "simpleExample": "$1,300 taxable profit × 20% tax rate = $260 tax accrued."
+  },
+  {
+    "key": "netProfit",
+    "title": "Net Profit / Loss",
+    "category": "Income statement",
+    "formula": "Net profit = PBT − Tax accrued",
+    "meaning": "Net profit is the accounting bottom line after operating costs, interest, penalties and accrued tax.",
+    "higherLower": "Positive net profit is generally desirable, but one week should not be mistaken for a durable trend.",
+    "simpleExample": "$1,300 PBT − $260 tax = $1,040 net profit."
+  },
+  {
+    "key": "netMargin",
+    "title": "Net Profit Margin",
+    "category": "Income statement",
+    "formula": "Net margin % = Net profit ÷ Revenue × 100",
+    "meaning": "Net margin shows how much final profit remains from each dollar of revenue.",
+    "higherLower": "Higher is usually better, but capital intensity, growth stage and industry structure matter.",
+    "simpleExample": "$1,040 net profit ÷ $10,000 revenue = 10.4% net margin."
+  },
+  {
+    "key": "cashChange",
+    "title": "Change in Cash",
+    "category": "Cash & liquidity",
+    "formula": "Cash change = Ending cash − Previous ending cash",
+    "meaning": "Cash change measures whether operating cash actually increased or decreased during the week.",
+    "higherLower": "Positive cash generation improves flexibility. Negative cash can be acceptable temporarily if it funds productive growth.",
+    "simpleExample": "Cash rises from $20,000 to $23,000, so weekly cash change is +$3,000."
+  },
+  {
+    "key": "runway",
+    "title": "Cash Runway",
+    "category": "Cash & liquidity",
+    "formula": "Runway = Cash ÷ Weekly burn",
+    "meaning": "Runway estimates how many weeks the company could continue if its current loss rate persisted.",
+    "higherLower": "More runway generally means more time to fix problems or raise capital. It is only an estimate when burn changes rapidly.",
+    "simpleExample": "$30,000 cash ÷ $3,000 weekly burn = 10 weeks of runway."
+  },
+  {
+    "key": "inventoryAsset",
+    "title": "Inventory Asset",
+    "category": "Balance sheet",
+    "formula": "Inventory asset = Inventory units × Average inventory unit cost",
+    "meaning": "Unsold inventory is normally an asset rather than an immediate expense because it can support future sales.",
+    "higherLower": "More inventory can protect availability but also traps cash and creates spoilage or obsolescence risk.",
+    "simpleExample": "500 units × $4 average cost = $2,000 inventory asset."
+  },
+  {
+    "key": "totalAssets",
+    "title": "Total Assets",
+    "category": "Balance sheet",
+    "formula": "Total assets = Operating cash + Emergency reserve + Inventory + Expansion assets",
+    "meaning": "Assets are resources the company controls that have economic value in the simulation.",
+    "higherLower": "More assets are useful only if they are productive, liquid enough and financed sensibly.",
+    "simpleExample": "$20,000 cash + $5,000 reserve + $2,000 inventory + $8,000 equipment = $35,000 assets."
+  },
+  {
+    "key": "totalLiabilities",
+    "title": "Total Liabilities",
+    "category": "Balance sheet",
+    "formula": "Total liabilities = Debt + Tax payable",
+    "meaning": "Liabilities are obligations the company must eventually settle.",
+    "higherLower": "Higher liabilities increase financial obligations; whether they are acceptable depends on earning power and asset quality.",
+    "simpleExample": "$15,000 debt + $2,000 tax payable = $17,000 liabilities."
+  },
+  {
+    "key": "bookEquity",
+    "title": "Book Equity",
+    "category": "Balance sheet",
+    "formula": "Book equity = Total assets − Total liabilities",
+    "meaning": "Book equity is the accounting residual attributable to owners after subtracting liabilities from assets.",
+    "higherLower": "Positive equity generally gives a stronger balance-sheet cushion, but book equity is not the same as market valuation.",
+    "simpleExample": "$35,000 assets − $17,000 liabilities = $18,000 book equity."
+  },
+  {
+    "key": "contributionMargin",
+    "title": "Contribution Margin",
+    "category": "Unit economics",
+    "formula": "Contribution margin % = (Revenue − Variable costs) ÷ Revenue × 100",
+    "meaning": "Contribution margin shows the percentage of revenue available to pay operating expenses after variable costs.",
+    "higherLower": "Higher contribution margin lowers the revenue needed to cover fixed and operating expenses.",
+    "simpleExample": "$10,000 revenue − $4,000 variable costs = $6,000 contribution; $6,000 ÷ $10,000 = 60%."
+  },
+  {
+    "key": "breakEvenRevenue",
+    "title": "Break-even Revenue",
+    "category": "Unit economics",
+    "formula": "Break-even revenue = Operating expenses ÷ Contribution margin %",
+    "meaning": "Break-even revenue estimates the sales level needed for contribution profit to cover operating expenses.",
+    "higherLower": "A lower break-even point generally makes the company easier to sustain, all else equal.",
+    "simpleExample": "$4,500 operating expenses ÷ 60% contribution margin = $7,500 break-even revenue."
+  },
+  {
+    "key": "cac",
+    "title": "Customer Acquisition Cost (CAC)",
+    "category": "Unit economics",
+    "formula": "Simple CAC = Acquisition spend ÷ Paid customers acquired",
+    "meaning": "CAC measures how much it costs to acquire one customer. The game also uses channel-specific efficiency and competitor effects to produce its effective CAC.",
+    "higherLower": "Lower CAC is usually better if customer quality and retention are unchanged.",
+    "simpleExample": "$1,000 marketing spend ÷ 20 paid customers = $50 CAC."
+  },
+  {
+    "key": "ltv",
+    "title": "Customer Lifetime Value (LTV)",
+    "category": "Unit economics",
+    "formula": "Game LTV = Revenue per customer × Unit gross margin ÷ Weekly churn rate",
+    "meaning": "LTV estimates the gross-profit value expected from a customer over the relationship.",
+    "higherLower": "Higher LTV is generally better, but it is highly sensitive to churn and margin assumptions.",
+    "simpleExample": "$20 weekly revenue/customer × 60% margin ÷ 5% churn = about $240 LTV."
+  },
+  {
+    "key": "ltvCac",
+    "title": "LTV : CAC",
+    "category": "Unit economics",
+    "formula": "LTV:CAC = Estimated LTV ÷ Effective CAC",
+    "meaning": "This compares expected customer value with the cost of acquiring that customer.",
+    "higherLower": "Below 1x suggests value destruction. Around 3x is a common rough benchmark in some recurring-revenue businesses, but it is not universal. Very high values can also mean you are underinvesting in growth.",
+    "simpleExample": "$300 LTV ÷ $100 CAC = 3.0x LTV:CAC."
+  },
+  {
+    "key": "roas",
+    "title": "Marketing ROAS",
+    "category": "Unit economics",
+    "formula": "ROAS = Revenue attributed to advertising ÷ Advertising spend",
+    "meaning": "Return on ad spend measures revenue generated for each advertising dollar.",
+    "higherLower": "Higher is generally better, but ROAS ignores many costs and should not replace contribution margin or LTV:CAC.",
+    "simpleExample": "$4,000 attributed revenue ÷ $1,000 ad spend = 4.0x ROAS."
+  },
+  {
+    "key": "debtToEquity",
+    "title": "Debt : Book Equity",
+    "category": "Capital structure",
+    "formula": "Debt-to-equity = Debt balance ÷ Book equity",
+    "meaning": "Debt-to-equity measures financial leverage: how much debt is supported by each dollar of accounting equity.",
+    "higherLower": "Higher leverage can amplify returns and risk. Normal levels differ dramatically across industries.",
+    "simpleExample": "$15,000 debt ÷ $30,000 book equity = 0.50x debt-to-equity."
+  },
+  {
+    "key": "annualizedRevenue",
+    "title": "Annualized Current Revenue",
+    "category": "Valuation",
+    "formula": "Annualized revenue = Current weekly revenue × 52",
+    "meaning": "Annualizing scales the current week's revenue to a one-year rate. It is a run-rate estimate, not a forecast.",
+    "higherLower": "Higher annualized revenue can support a higher valuation, but seasonality and one-off sales can make the estimate misleading.",
+    "simpleExample": "$10,000 weekly revenue × 52 = $520,000 annualized run-rate revenue."
+  },
+  {
+    "key": "valuationToRevenue",
+    "title": "Valuation : Revenue Multiple",
+    "category": "Valuation",
+    "formula": "Valuation / Revenue = Company valuation ÷ Annualized revenue",
+    "meaning": "This multiple compares estimated company value with annualized revenue.",
+    "higherLower": "A higher multiple usually requires stronger growth, margins, retention or strategic value. Compare only with similar companies.",
+    "simpleExample": "$1,040,000 valuation ÷ $520,000 annualized revenue = 2.0x revenue."
+  },
+  {
+    "key": "valuation",
+    "title": "Company Valuation",
+    "category": "Valuation",
+    "formula": "Game valuation = Revenue value + Profit value + Customer value − Debt + Selected assets",
+    "meaning": "Valuation estimates what the operating business may be worth. It is not cash, profit or book equity.",
+    "higherLower": "A higher valuation is useful only if supported by durable economics; valuation can fall quickly when growth, margins or risk deteriorate.",
+    "simpleExample": "A company can have $50,000 cash but a $500,000 valuation because buyers value its future earnings and customers."
+  }
+]

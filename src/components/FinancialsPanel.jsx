@@ -95,16 +95,21 @@ export default function FinancialsPanel({ state, industry }) {
         <Row label="Marketing, quality, sales & other discretionary" value={'(' + money(s.pnl.discretionaryCosts) + ')'} />
         <Row label="Payroll" value={'(' + money(s.pnl.payrollCosts) + ')'} />
         <Row label="One-time operating expenses" value={'(' + money(s.pnl.oneTimeExpenses) + ')'} />
+        <Row label="Asset maintenance" value={'(' + money(s.pnl.assetMaintenanceCosts) + ')'} />
         <Row label="Total operating expenses" value={'(' + money(s.pnl.operatingExpenses) + ')'} formulaKey="operatingExpenses" onExplain={setFormulaKey} />
         <Row label="Operating profit (EBITDA-like)" value={money(s.pnl.operatingProfit)} strong note={'Margin ' + pct(s.pnl.operatingMargin)} formulaKey="operatingProfit" onExplain={setFormulaKey} />
         <Row label="Operating margin" value={pct(s.pnl.operatingMargin)} formulaKey="operatingMargin" onExplain={setFormulaKey} />
+        <Row label="Depreciation expense" value={'(' + money(s.pnl.depreciationExpense) + ')'} formulaKey="depreciationExpense" onExplain={setFormulaKey} />
+        <Row label="EBIT" value={money(s.pnl.ebit)} strong formulaKey="ebit" onExplain={setFormulaKey} />
+        <Row label="Investment income" value={money(s.pnl.investmentIncome)} formulaKey="investmentIncome" onExplain={setFormulaKey} />
+        <Row label="Asset disposal gain / loss" value={money(s.pnl.assetDisposalGainLoss)} />
         <Row label="Interest expense" value={'(' + money(s.pnl.interestExpense) + ')'} />
         <Row label="Legal penalty expense" value={'(' + money(s.pnl.legalPenaltyExpense) + ')'} />
         <Row label="Profit before tax" value={money(s.pnl.preTaxProfit)} formulaKey="preTaxProfit" onExplain={setFormulaKey} />
         <Row label="Tax accrued" value={'(' + money(s.pnl.taxAccrued) + ')'} formulaKey="taxAccrued" onExplain={setFormulaKey} />
         <Row label="Net profit / loss" value={money(s.pnl.netProfit)} strong formulaKey="netProfit" onExplain={setFormulaKey} />
         <Row label="Net margin" value={pct(s.pnl.netMargin)} note="Net profit as % of revenue" formulaKey="netMargin" onExplain={setFormulaKey} />
-        <div className="statement-note">The game does not yet model depreciation/amortization separately, so operating profit is shown as an EBITDA-like teaching measure rather than formal reported EBITDA.</div>
+        <div className="statement-note">Operating profit is an EBITDA-like teaching measure. Depreciation is then deducted separately to arrive at EBIT. Depreciation lowers accounting profit but is not itself a weekly cash payment.</div>
       </section>
 
       <section className="panel financial-statement">
@@ -116,6 +121,10 @@ export default function FinancialsPanel({ state, industry }) {
         <Row label="Emergency reserve" value={money(s.balanceSheet.reserveCash)} />
         <Row label="Inventory asset" value={money(s.balanceSheet.inventoryAsset)} formulaKey="inventoryAsset" onExplain={setFormulaKey} />
         <Row label="Expansion assets" value={money(s.balanceSheet.expansionAssets)} />
+        <Row label="Gross PPE / fixed assets" value={money(s.balanceSheet.ppeGross)} />
+        <Row label="Accumulated depreciation" value={'(' + money(s.balanceSheet.accumulatedDepreciation) + ')'} formulaKey="accumulatedDepreciation" onExplain={setFormulaKey} />
+        <Row label="Net PPE" value={money(s.balanceSheet.ppeNet)} formulaKey="ppeNet" onExplain={setFormulaKey} />
+        <Row label="Financial investments" value={money(s.balanceSheet.financialInvestments)} />
         <Row label="Total assets" value={money(s.balanceSheet.totalAssets)} strong formulaKey="totalAssets" onExplain={setFormulaKey} />
         <div className="statement-spacer" />
         <Row label="Debt" value={money(s.balanceSheet.debtBalance)} />
@@ -137,6 +146,7 @@ export default function FinancialsPanel({ state, industry }) {
         <Row label="Change in operating cash" value={money(s.cashFlow.cashChange)} strong formulaKey="cashChange" onExplain={setFormulaKey} />
         <Row label="Ending operating cash" value={money(s.cashFlow.endingCash)} strong />
         <Row label="Inventory / production cash used" value={money(s.cashFlow.inventoryPurchases)} />
+        <Row label="Investment income received" value={money(s.cashFlow.investmentIncome)} />
         <Row label="Debt service" value={money(s.cashFlow.debtService)} />
         <Row label="Tax paid in cash" value={money(s.cashFlow.taxPayment)} />
         <Row label="Protected emergency reserve" value={money(s.cashFlow.reserveCash)} />

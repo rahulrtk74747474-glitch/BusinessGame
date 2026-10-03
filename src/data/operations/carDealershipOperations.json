@@ -1,0 +1,65 @@
+{
+  "id": "car-dealership-operations",
+  "inventoryMode": "physical",
+  "initialInventoryUnits": 8,
+  "initialInventoryFundingIncluded": true,
+  "defaults": {
+    "processMode": "balanced",
+    "qualityControlSpend": 180,
+    "reorderPoint": 4,
+    "orderQuantity": 5,
+    "outsourceShare": 0
+  },
+  "limits": {
+    "qualityControlSpendMax": 900,
+    "reorderPointMax": 14,
+    "orderQuantityMin": 1,
+    "orderQuantityMax": 10,
+    "outsourceShareMax": 0.25
+  },
+  "supplier": {
+    "baseLeadTimeWeeks": 2,
+    "baseReliability": 0.92,
+    "lateDelayWeeks": 1,
+    "orderAdminCost": 40
+  },
+  "inventory": {
+    "spoilageRatePerWeek": 0.001,
+    "emergencyPurchaseMarkup": 0.08,
+    "forecastDemandWeight": 0.45
+  },
+  "qualityControl": {
+    "baseDefectRate": 0.035,
+    "spendScale": 260,
+    "maxDefectReduction": 0.7,
+    "satisfactionPenaltyPerDefectRate": 0.8
+  },
+  "outsource": {
+    "capacityPerShare": 5,
+    "unitCostMarkup": 0.07,
+    "servicePenaltyPerShare": 0.04
+  },
+  "processModes": {
+    "lean": {
+      "label": "Fast stock turnover",
+      "capacityMultiplier": 1.08,
+      "serviceAdd": -0.025,
+      "wasteMultiplier": 0.8,
+      "weeklyFixedCost": 100
+    },
+    "balanced": {
+      "label": "Balanced showroom",
+      "capacityMultiplier": 1,
+      "serviceAdd": 0,
+      "wasteMultiplier": 1,
+      "weeklyFixedCost": 180
+    },
+    "service": {
+      "label": "Premium delivery & PDI",
+      "capacityMultiplier": 0.9,
+      "serviceAdd": 0.065,
+      "wasteMultiplier": 1,
+      "weeklyFixedCost": 320
+    }
+  }
+}

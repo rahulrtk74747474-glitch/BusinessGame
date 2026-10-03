@@ -1,0 +1,51 @@
+{
+  "id": "auto-workshop-sales",
+  "defaults": {
+    "outboundSpend": 80,
+    "discountRate": 0.05,
+    "commissionRate": 0.04,
+    "pricingModel": "fleet_maintenance"
+  },
+  "limits": {
+    "outboundSpendMax": 1600,
+    "discountRateMax": 0.2,
+    "commissionRateMin": 0,
+    "commissionRateMax": 0.12
+  },
+  "leadCost": 55,
+  "qualificationRate": 0.5,
+  "proposalRate": 0.65,
+  "baseCloseRate": 0.28,
+  "averageDealValue": 1800,
+  "variableCostRate": 0.38,
+  "marketingB2BLeadWeight": 1,
+  "teamEfficiencyWeight": 0.85,
+  "competitorPressureWeight": 0.22,
+  "discountCloseLift": 1.15,
+  "commissionMotivationWeight": 1,
+  "leadNoiseStd": 0.06,
+  "closeNoiseStd": 0.05,
+  "pricingModels": {
+    "one_time": {
+      "label": "One-time fleet repair",
+      "description": "Immediate fleet work with no recurrence.",
+      "closeMultiplier": 1.12,
+      "weeklyValueMultiplier": 1,
+      "durationWeeks": 1
+    },
+    "fleet_maintenance": {
+      "label": "Fleet maintenance contract",
+      "description": "Recurring servicing for a small commercial fleet.",
+      "closeMultiplier": 0.95,
+      "weeklyValueMultiplier": 0.28,
+      "durationWeeks": 12
+    },
+    "amc": {
+      "label": "Annual maintenance contract",
+      "description": "Harder to close but creates recurring planned service.",
+      "closeMultiplier": 0.82,
+      "weeklyValueMultiplier": 0.1,
+      "durationWeeks": 52
+    }
+  }
+}

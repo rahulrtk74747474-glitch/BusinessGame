@@ -1,0 +1,69 @@
+{
+  "initialRegistrationComplete": true,
+  "hrLegalRiskWeight": 0.35,
+  "enforcementBaseChance": 0.014,
+  "enforcementRiskWeight": 0.1,
+  "shutdownCustomerPenalty": 0.05,
+  "items": {
+    "premises_trade": {
+      "label": "Workshop premises / local trade compliance",
+      "required": true,
+      "trigger": "always",
+      "dueWeek": 6,
+      "cost": 420,
+      "processingWeeks": 2,
+      "renewalWeeks": 52,
+      "weight": 1.15,
+      "fine": 3000,
+      "shutdownWeeks": 1
+    },
+    "waste_oil": {
+      "label": "Waste oil, battery & hazardous-waste process",
+      "required": true,
+      "trigger": "always",
+      "dueWeek": 8,
+      "cost": 520,
+      "processingWeeks": 2,
+      "renewalWeeks": 26,
+      "weight": 1.35,
+      "fine": 4500,
+      "shutdownWeeks": 1
+    },
+    "fire_safety": {
+      "label": "Fire & workshop safety approval",
+      "required": true,
+      "trigger": "always",
+      "dueWeek": 10,
+      "cost": 550,
+      "processingWeeks": 2,
+      "renewalWeeks": 104,
+      "weight": 1.2,
+      "fine": 4200,
+      "shutdownWeeks": 1
+    },
+    "jobcard_consumer": {
+      "label": "Job-card, estimate & customer authorization process",
+      "required": true,
+      "trigger": "always",
+      "dueWeek": 9,
+      "cost": 320,
+      "processingWeeks": 1,
+      "renewalWeeks": 52,
+      "weight": 0.9,
+      "fine": 2200,
+      "shutdownWeeks": 0
+    },
+    "employment_policy": {
+      "label": "Technician workplace & employment policy",
+      "required": true,
+      "trigger": "employees",
+      "dueWeek": 4,
+      "cost": 300,
+      "processingWeeks": 1,
+      "renewalWeeks": 52,
+      "weight": 0.9,
+      "fine": 2500,
+      "shutdownWeeks": 0
+    }
+  }
+}

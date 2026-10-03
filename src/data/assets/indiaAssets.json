@@ -1,0 +1,319 @@
+{
+  "jurisdiction": "India",
+  "currencyNote": "The core game still uses normalized simulation dollars for balance. India reference labels/models and depreciation rules are educational references; they are not live dealer quotations or tax advice.",
+  "accounting": {
+    "method": "straight_line",
+    "residualValueRateDefault": 0.05,
+    "note": "Book depreciation uses straight-line allocation over the configured useful life. Schedule II useful lives are used as the India reference where applicable."
+  },
+  "tax": {
+    "method": "wdv_reference_only",
+    "note": "Tax WDV rates are displayed for learning but are not currently used to calculate the game's simplified income tax. Actual tax depreciation depends on asset block, put-to-use timing and law."
+  },
+  "catalog": {
+    "maruti_swift": {
+      "label": "Maruti Suzuki Swift — business car",
+      "model": "Maruti Suzuki Swift",
+      "category": "Motor vehicle",
+      "assetClass": "Passenger car (not run on hire)",
+      "indiaReference": "India-market passenger car; live on-road/ex-showroom price varies by variant, state and date.",
+      "simulationCost": 9000,
+      "usefulLifeYears": 8,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.15,
+      "annualMaintenanceRate": 0.05,
+      "resaleMultiplier": 0.95,
+      "capacityAdd": 4,
+      "serviceAdd": 0.005,
+      "recommendedFor": [
+        "car_dealership",
+        "auto_workshop",
+        "logistics"
+      ],
+      "description": "Useful for local travel, customer pickup/drop, sales visits and as a dealership demo vehicle."
+    },
+    "tata_nexon_ev": {
+      "label": "Tata Nexon EV — electric business car",
+      "model": "Tata Nexon EV",
+      "category": "Motor vehicle",
+      "assetClass": "Electrically operated motor vehicle",
+      "indiaReference": "India-market EV; live price varies by battery/variant, incentives, state and date.",
+      "simulationCost": 17000,
+      "usefulLifeYears": 8,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.15,
+      "annualMaintenanceRate": 0.04,
+      "resaleMultiplier": 0.92,
+      "capacityAdd": 5,
+      "serviceAdd": 0.008,
+      "recommendedFor": [
+        "car_dealership",
+        "auto_workshop",
+        "logistics",
+        "energy"
+      ],
+      "description": "An EV operating asset that can support customer movement, demonstrations or field operations."
+    },
+    "toyota_innova_hycross": {
+      "label": "Toyota Innova Hycross — premium MPV",
+      "model": "Toyota Innova Hycross",
+      "category": "Motor vehicle",
+      "assetClass": "Passenger car (not run on hire)",
+      "indiaReference": "India-market MPV; live price varies by variant, state and date.",
+      "simulationCost": 27000,
+      "usefulLifeYears": 8,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.15,
+      "annualMaintenanceRate": 0.05,
+      "resaleMultiplier": 0.95,
+      "capacityAdd": 7,
+      "serviceAdd": 0.012,
+      "recommendedFor": [
+        "car_dealership",
+        "travel",
+        "hospitality"
+      ],
+      "description": "Higher-cost customer/fleet vehicle with more service capacity and a larger capital commitment."
+    },
+    "mahindra_xuv700": {
+      "label": "Mahindra XUV700 — SUV",
+      "model": "Mahindra XUV700",
+      "category": "Motor vehicle",
+      "assetClass": "Passenger car (not run on hire)",
+      "indiaReference": "India-market SUV; live price varies by powertrain, trim, state and date.",
+      "simulationCost": 24000,
+      "usefulLifeYears": 8,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.15,
+      "annualMaintenanceRate": 0.055,
+      "resaleMultiplier": 0.94,
+      "capacityAdd": 6,
+      "serviceAdd": 0.01,
+      "recommendedFor": [
+        "car_dealership",
+        "travel",
+        "construction"
+      ],
+      "description": "A larger vehicle suited to field sales, executive transport or rugged operating environments."
+    },
+    "hire_taxi": {
+      "label": "Commercial taxi / fleet car",
+      "model": "Generic India commercial taxi",
+      "category": "Motor vehicle",
+      "assetClass": "Motor taxi used in business of running on hire",
+      "indiaReference": "Configured as an on-hire vehicle for depreciation learning; actual registration/permit economics vary.",
+      "simulationCost": 11000,
+      "usefulLifeYears": 6,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.3,
+      "annualMaintenanceRate": 0.09,
+      "resaleMultiplier": 0.88,
+      "capacityAdd": 12,
+      "serviceAdd": 0,
+      "recommendedFor": [
+        "automotive",
+        "travel",
+        "logistics"
+      ],
+      "description": "Higher-utilization vehicle: shorter book useful life, higher maintenance and a higher tax WDV reference rate."
+    },
+    "workshop_lift": {
+      "label": "Two-post hydraulic vehicle lift",
+      "model": "4-ton two-post workshop lift",
+      "category": "Workshop equipment",
+      "assetClass": "General plant & machinery",
+      "indiaReference": "Common automotive workshop equipment; vendor price and capacity vary.",
+      "simulationCost": 3500,
+      "usefulLifeYears": 15,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.15,
+      "annualMaintenanceRate": 0.04,
+      "resaleMultiplier": 0.8,
+      "capacityAdd": 16,
+      "serviceAdd": 0.018,
+      "recommendedFor": [
+        "auto_workshop"
+      ],
+      "description": "Raises workshop throughput and makes underbody/brake/suspension jobs possible."
+    },
+    "alignment_machine": {
+      "label": "3D wheel alignment machine",
+      "model": "3D wheel alignment system",
+      "category": "Workshop equipment",
+      "assetClass": "General plant & machinery",
+      "indiaReference": "Common tyre/alignment workshop equipment; live vendor pricing varies.",
+      "simulationCost": 5200,
+      "usefulLifeYears": 15,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.15,
+      "annualMaintenanceRate": 0.045,
+      "resaleMultiplier": 0.78,
+      "capacityAdd": 10,
+      "serviceAdd": 0.025,
+      "recommendedFor": [
+        "auto_workshop"
+      ],
+      "description": "Adds alignment capability, improves service quality and supports higher-value repair jobs."
+    },
+    "diagnostic_scanner": {
+      "label": "Professional automotive diagnostic scanner",
+      "model": "Multi-brand OBD/ECU diagnostic system",
+      "category": "Workshop equipment",
+      "assetClass": "General plant & machinery",
+      "indiaReference": "Professional multi-brand workshop diagnostic tool; coverage/subscription costs vary.",
+      "simulationCost": 1800,
+      "usefulLifeYears": 5,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.15,
+      "annualMaintenanceRate": 0.08,
+      "resaleMultiplier": 0.7,
+      "capacityAdd": 8,
+      "serviceAdd": 0.035,
+      "recommendedFor": [
+        "auto_workshop"
+      ],
+      "description": "Improves fault diagnosis, technician productivity and customer trust."
+    },
+    "tyre_machine": {
+      "label": "Tyre changer + wheel balancer",
+      "model": "Workshop tyre service set",
+      "category": "Workshop equipment",
+      "assetClass": "General plant & machinery",
+      "indiaReference": "Common tyre service equipment; live price varies by automation and capacity.",
+      "simulationCost": 3200,
+      "usefulLifeYears": 15,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.15,
+      "annualMaintenanceRate": 0.04,
+      "resaleMultiplier": 0.78,
+      "capacityAdd": 9,
+      "serviceAdd": 0.015,
+      "recommendedFor": [
+        "auto_workshop"
+      ],
+      "description": "Adds tyre replacement/balancing services and expands workshop job capacity."
+    },
+    "computer_laptop": {
+      "label": "Business laptop / desktop",
+      "model": "End-user computer",
+      "category": "IT equipment",
+      "assetClass": "Computers and end-user devices",
+      "indiaReference": "Generic business computer asset.",
+      "simulationCost": 1400,
+      "usefulLifeYears": 3,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.4,
+      "annualMaintenanceRate": 0.03,
+      "resaleMultiplier": 0.65,
+      "capacityAdd": 2,
+      "serviceAdd": 0.004,
+      "recommendedFor": [
+        "software_saas",
+        "car_dealership",
+        "auto_workshop"
+      ],
+      "description": "Short-life IT asset used for accounting, CRM, diagnostics, design or operations."
+    },
+    "office_furniture": {
+      "label": "Office/showroom furniture set",
+      "model": "Furniture & fittings package",
+      "category": "Furniture",
+      "assetClass": "Furniture and fittings",
+      "indiaReference": "Generic showroom/office furniture package.",
+      "simulationCost": 2500,
+      "usefulLifeYears": 10,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.1,
+      "annualMaintenanceRate": 0.02,
+      "resaleMultiplier": 0.55,
+      "capacityAdd": 0,
+      "serviceAdd": 0.012,
+      "recommendedFor": [
+        "car_dealership",
+        "software_saas",
+        "cafe"
+      ],
+      "description": "Improves customer-facing premises and creates a depreciating balance-sheet asset."
+    },
+    "cessna_172s": {
+      "label": "Cessna 172S Skyhawk",
+      "model": "Cessna 172S",
+      "category": "Aircraft",
+      "assetClass": "Aircraft / aeroplane",
+      "indiaReference": "Imported light aircraft; India landed/operating cost can differ materially from overseas list prices.",
+      "simulationCost": 520000,
+      "usefulLifeYears": 20,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.4,
+      "annualMaintenanceRate": 0.08,
+      "resaleMultiplier": 0.88,
+      "capacityAdd": 18,
+      "serviceAdd": 0.012,
+      "recommendedFor": [
+        "travel",
+        "aviation"
+      ],
+      "description": "Light aircraft example for learning high-value capex, depreciation, maintenance and liquidity risk."
+    },
+    "pilatus_pc12": {
+      "label": "Pilatus PC-12 NGX",
+      "model": "Pilatus PC-12 NGX",
+      "category": "Aircraft",
+      "assetClass": "Aircraft / aeroplane",
+      "indiaReference": "Imported business/turboprop aircraft; purchase and operating costs can be many crores of rupees.",
+      "simulationCost": 5200000,
+      "usefulLifeYears": 20,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.4,
+      "annualMaintenanceRate": 0.07,
+      "resaleMultiplier": 0.9,
+      "capacityAdd": 60,
+      "serviceAdd": 0.025,
+      "recommendedFor": [
+        "travel",
+        "aviation"
+      ],
+      "description": "Large capital commitment illustrating depreciation, financing pressure and asset utilization."
+    },
+    "embraer_phenom_300e": {
+      "label": "Embraer Phenom 300E",
+      "model": "Embraer Phenom 300E",
+      "category": "Aircraft",
+      "assetClass": "Aircraft / aeroplane",
+      "indiaReference": "Imported business jet; landed cost, duties, maintenance and operating structure vary materially.",
+      "simulationCost": 11000000,
+      "usefulLifeYears": 20,
+      "residualValueRate": 0.05,
+      "taxWDVRate": 0.4,
+      "annualMaintenanceRate": 0.09,
+      "resaleMultiplier": 0.9,
+      "capacityAdd": 90,
+      "serviceAdd": 0.03,
+      "recommendedFor": [
+        "travel",
+        "aviation"
+      ],
+      "description": "Business jet example intended mainly for advanced capital-allocation and depreciation learning."
+    }
+  },
+  "treasuryOptions": {
+    "bank_fd": {
+      "label": "Company Bank Fixed Deposit",
+      "category": "Low-risk treasury",
+      "simulatedAnnualReturn": 0.065,
+      "minimumInvestment": 1000,
+      "lockWeeks": 13,
+      "earlyExitPenaltyRate": 0.01,
+      "note": "Educational simulated return, not a live bank quote. Principal does not depreciate in the fixed-asset sense."
+    },
+    "treasury_bill": {
+      "label": "Short-term Government Treasury Investment",
+      "category": "Low-risk treasury",
+      "simulatedAnnualReturn": 0.06,
+      "minimumInvestment": 1000,
+      "lockWeeks": 13,
+      "earlyExitPenaltyRate": 0.0025,
+      "note": "Simplified cash-management instrument for learning; return is a simulation assumption, not a live yield."
+    }
+  }
+}

@@ -15,6 +15,7 @@ import RiskPanel from './RiskPanel.jsx';
 import GrowthExitPanel from './GrowthExitPanel.jsx';
 import FinancialsPanel from './FinancialsPanel.jsx';
 import FinancialLessonModal from './FinancialLessonModal.jsx';
+import AssetInvestmentPanel from './AssetInvestmentPanel.jsx';
 import financialLessons from '../data/learning/financialLessons.json';
 import { goalProgress } from '../engine/simulator.js';
 import { founderOwnership } from '../engine/logging.js';
@@ -42,6 +43,7 @@ export default function Dashboard({
   onRiskAction,
   onExpansionAction,
   onExitAction,
+  onAssetAction,
   onReset
 }) {
   const progress = goalProgress(state);
@@ -78,6 +80,7 @@ export default function Dashboard({
       <button className={tab === 'operations' ? 'active' : ''} onClick={() => setTab('operations')}>Operations</button>
       <button className={tab === 'competitors' ? 'active' : ''} onClick={() => setTab('competitors')}>Competitors</button>
       <button className={tab === 'funding' ? 'active' : ''} onClick={() => setTab('funding')}>Funding <span>{state.funding.termSheets.length}</span></button>
+      <button className={tab === 'assets' ? 'active' : ''} onClick={() => setTab('assets')}>Investments / Assets <span>{(state.assets?.ownedAssets?.length || 0) + (state.assets?.treasuryHoldings?.length || 0)}</span></button>
       <button className={tab === 'legal' ? 'active' : ''} onClick={() => setTab('legal')}>Legal</button>
       <button className={tab === 'risk' ? 'active' : ''} onClick={() => setTab('risk')}>Risk</button>
       <button className={tab === 'growth' ? 'active' : ''} onClick={() => setTab('growth')}>Growth / Exit</button>
@@ -133,6 +136,11 @@ export default function Dashboard({
       <RippleMap ripple={state.funding.lastRipple} />
     </>}
 
+    {tab === 'assets' && <>
+      <AssetInvestmentPanel state={state} industry={industry} data={phase5Data.assets} onAction={onAssetAction} />
+      <RippleMap ripple={state.assets?.lastRipple} />
+    </>}
+
     {tab === 'legal' && <>
       <LegalPanel state={state} data={phase5Data.legal} onAction={onLegalAction} />
       <RippleMap ripple={state.legal.lastRipple} />
@@ -167,6 +175,7 @@ export default function Dashboard({
         <div className="kpi"><span>{operationsMode === 'virtual' ? 'Delivery capacity' : (industry.inventoryLabel || 'Inventory')}</span><b>{operationsMode === 'virtual' ? state.operations.last.capacity.toFixed(0) : state.operations.inventoryUnits.toFixed(0)}</b><small>{operationsMode === 'virtual' ? (industry.unitLabel || 'units') + '/week' : 'Asset ' + money(state.finance.inventoryAsset || 0)}</small></div>
         <div className="kpi"><span>B2B sales</span><b>{money(state.finance.salesRevenue || 0)}</b><small>Pipeline {money(state.sales.last.pipelineValue || 0)}</small></div>
         <div className="kpi"><span>Debt</span><b>{money(state.finance.debtBalance)}</b><small>Service {money(state.finance.debtService)}/wk</small></div>
+        <div className="kpi"><span>Fixed assets</span><b>{money(state.finance.ppeNet || 0)}</b><small>Depreciation {money(state.finance.depreciationExpense || 0)}/wk</small></div>
         <div className="kpi"><span>Compliance</span><b>{pct(state.legal.complianceScore)}</b><small>Risk {pct(state.risk.last.riskScore)}</small></div>
       </section>
 
@@ -207,7 +216,7 @@ export default function Dashboard({
         </section>
       </section>
 
-      <RippleMap ripple={state.exit.lastRipple || state.expansion.lastRipple || state.risk.lastRipple || state.legal.lastRipple || state.funding.lastRipple || state.operations.lastRipple || state.sales.lastRipple || state.marketing.lastRipple || state.negotiation.lastRipple || state.hr.lastRipple} />
+      <RippleMap ripple={state.exit.lastRipple || state.expansion.lastRipple || state.risk.lastRipple || state.legal.lastRipple || state.assets?.lastRipple || state.funding.lastRipple || state.operations.lastRipple || state.sales.lastRipple || state.marketing.lastRipple || state.negotiation.lastRipple || state.hr.lastRipple} />
 
       <section className="charts-grid">
         <MiniChart label="Cash" values={state.history.map((x) => x.cash)} />

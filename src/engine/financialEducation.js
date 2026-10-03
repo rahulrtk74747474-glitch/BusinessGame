@@ -9,12 +9,12 @@ export function createFinancialSnapshot(state, industry) {
   const previous = state.history.length > 1 ? state.history.at(-2) : null;
   const openingCash = previous?.cash ?? f.startingCapital;
   const cashChange = f.cash - openingCash;
-  const operatingExpenses = safe(f.fixedCosts) + safe(f.discretionaryCosts) + safe(f.payrollCosts) + safe(f.oneTimeExpenses);
+  const operatingExpenses = safe(f.fixedCosts) + safe(f.discretionaryCosts) + safe(f.payrollCosts) + safe(f.oneTimeExpenses) + safe(f.assetMaintenanceCosts);
   const contributionMargin = f.revenue > 0 ? 1 - safe(f.variableCosts) / f.revenue : 0;
   const breakEvenRevenue = contributionMargin > 0 ? operatingExpenses / contributionMargin : Infinity;
   const netMargin = f.revenue > 0 ? f.netProfit / f.revenue : 0;
   const operatingMargin = f.revenue > 0 ? f.operatingProfit / f.revenue : 0;
-  const currentAssets = safe(f.cash) + safe(f.reserveCash) + safe(f.inventoryAsset) + safe(f.expansionAssets);
+  const currentAssets = safe(f.cash) + safe(f.reserveCash) + safe(f.inventoryAsset) + safe(f.financialInvestments);
   const debtToEquity = f.bookEquity > 0 ? safe(f.debtBalance) / f.bookEquity : Infinity;
   const ltvCac = state.customers.effectiveCAC > 0 ? state.customers.estimatedLtv / state.customers.effectiveCAC : Infinity;
   const annualizedRevenue = f.revenue * 52;
@@ -36,9 +36,14 @@ export function createFinancialSnapshot(state, industry) {
       discretionaryCosts: safe(f.discretionaryCosts),
       payrollCosts: safe(f.payrollCosts),
       oneTimeExpenses: safe(f.oneTimeExpenses),
+      assetMaintenanceCosts: safe(f.assetMaintenanceCosts),
       operatingExpenses,
       operatingProfit: safe(f.operatingProfit),
       operatingMargin,
+      depreciationExpense: safe(f.depreciationExpense),
+      ebit: safe(f.ebit),
+      investmentIncome: safe(f.investmentIncome),
+      assetDisposalGainLoss: safe(f.assetDisposalGainLoss),
       interestExpense: safe(f.interestExpense),
       legalPenaltyExpense: safe(f.legalPenaltyExpense),
       preTaxProfit: safe(f.preTaxProfit),
@@ -51,6 +56,7 @@ export function createFinancialSnapshot(state, industry) {
       endingCash: safe(f.cash),
       cashChange,
       inventoryPurchases: safe(f.inventoryPurchases),
+      investmentIncome: safe(f.investmentIncome),
       debtService: safe(f.debtService),
       taxPayment: safe(f.taxPayment),
       reserveCash: safe(f.reserveCash)
@@ -60,6 +66,11 @@ export function createFinancialSnapshot(state, industry) {
       reserveCash: safe(f.reserveCash),
       inventoryAsset: safe(f.inventoryAsset),
       expansionAssets: safe(f.expansionAssets),
+      ppeGross: safe(f.ppeGross),
+      accumulatedDepreciation: safe(f.accumulatedDepreciation),
+      ppeNet: safe(f.ppeNet),
+      financialInvestments: safe(f.financialInvestments),
+      taxWdvReference: safe(f.taxWdvReference),
       totalAssets: safe(f.totalAssets),
       debtBalance: safe(f.debtBalance),
       taxPayable: safe(f.taxPayable),
@@ -153,7 +164,7 @@ export function buildWeeklyFinancialLesson(state, industry, lessons) {
       action = 'Treat runway as an early warning. Financing is easier to arrange before the company is desperate.';
       break;
     case 'assets':
-      example = 'Assets total ' + money(s.balanceSheet.totalAssets) + ': cash ' + money(s.balanceSheet.cash) + ', reserve ' + money(s.balanceSheet.reserveCash) + ', inventory ' + money(s.balanceSheet.inventoryAsset) + ' and expansion assets ' + money(s.balanceSheet.expansionAssets) + '.';
+      example = 'Assets total ' + money(s.balanceSheet.totalAssets) + ': cash ' + money(s.balanceSheet.cash) + ', reserve ' + money(s.balanceSheet.reserveCash) + ', inventory ' + money(s.balanceSheet.inventoryAsset) + ', expansion assets ' + money(s.balanceSheet.expansionAssets) + ', net PPE ' + money(s.balanceSheet.ppeNet) + ' and financial investments ' + money(s.balanceSheet.financialInvestments) + '.';
       action = 'Ask whether each asset is productive, liquid and worth the cash tied up in it.';
       break;
     case 'liabilities':

@@ -1,0 +1,65 @@
+{
+  "id": "auto-workshop-operations",
+  "inventoryMode": "physical",
+  "initialInventoryUnits": 160,
+  "initialInventoryFundingIncluded": true,
+  "defaults": {
+    "processMode": "balanced",
+    "qualityControlSpend": 140,
+    "reorderPoint": 90,
+    "orderQuantity": 140,
+    "outsourceShare": 0.05
+  },
+  "limits": {
+    "qualityControlSpendMax": 850,
+    "reorderPointMax": 280,
+    "orderQuantityMin": 30,
+    "orderQuantityMax": 320,
+    "outsourceShareMax": 0.35
+  },
+  "supplier": {
+    "baseLeadTimeWeeks": 1,
+    "baseReliability": 0.94,
+    "lateDelayWeeks": 1,
+    "orderAdminCost": 20
+  },
+  "inventory": {
+    "spoilageRatePerWeek": 0.003,
+    "emergencyPurchaseMarkup": 0.28,
+    "forecastDemandWeight": 0.4
+  },
+  "qualityControl": {
+    "baseDefectRate": 0.075,
+    "spendScale": 190,
+    "maxDefectReduction": 0.75,
+    "satisfactionPenaltyPerDefectRate": 1.05
+  },
+  "outsource": {
+    "capacityPerShare": 35,
+    "unitCostMarkup": 0.45,
+    "servicePenaltyPerShare": 0.055
+  },
+  "processModes": {
+    "lean": {
+      "label": "Fast-turnaround workshop",
+      "capacityMultiplier": 1.12,
+      "serviceAdd": -0.035,
+      "wasteMultiplier": 0.85,
+      "weeklyFixedCost": 65
+    },
+    "balanced": {
+      "label": "Balanced workshop",
+      "capacityMultiplier": 1,
+      "serviceAdd": 0,
+      "wasteMultiplier": 1,
+      "weeklyFixedCost": 105
+    },
+    "service": {
+      "label": "Diagnosis & quality first",
+      "capacityMultiplier": 0.9,
+      "serviceAdd": 0.075,
+      "wasteMultiplier": 1.05,
+      "weeklyFixedCost": 190
+    }
+  }
+}

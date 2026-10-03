@@ -40,6 +40,7 @@ export function stepFinance(
       : 0;
   const operationsFixedCosts = operationsStep?.last?.weeklyFixedCost || 0;
   const expansionFixedCosts = phase5Step.expansion?.weeklyFixedCost || 0;
+  const assetMaintenanceCosts = phase5Step.assets?.maintenanceCashCost || 0;
   const fixedCosts =
     Math.max(0, baseFixedCosts - landlordSavings) +
     operationsFixedCosts +
@@ -87,26 +88,36 @@ export function stepFinance(
     fixedCosts -
     discretionaryCosts -
     payrollCosts -
-    oneTimeExpenses;
+    oneTimeExpenses -
+    assetMaintenanceCosts;
+
+  const depreciationExpense = phase5Step.assets?.depreciationExpense || 0;
+  const ebit = operatingProfit - depreciationExpense;
+  const investmentIncome = phase5Step.assets?.investmentIncome || 0;
+  const assetDisposalGainLoss = phase5Step.assets?.disposalGainLoss || 0;
 
   const interestExpense = phase5Step.funding?.interestExpense || 0;
   const debtService = phase5Step.funding?.debtService || 0;
   const legalPenaltyExpense = phase5Step.legal?.penaltyExpense || 0;
   const legalPenaltyCash = phase5Step.legal?.penaltyCash || 0;
   const preTaxProfit =
-    operatingProfit -
+    ebit +
+    investmentIncome +
+    assetDisposalGainLoss -
     interestExpense -
     legalPenaltyExpense;
 
   const directVariableCashCosts =
     clientVariableCosts + salesVariableCosts;
   const cashOperatingProfit =
-    revenue -
+    revenue +
+    investmentIncome -
     inventoryPurchases -
     directVariableCashCosts -
     fixedCosts -
     discretionaryCosts -
     payrollCosts -
+    assetMaintenanceCosts -
     legalPenaltyCash -
     debtService;
 
@@ -139,12 +150,22 @@ export function stepFinance(
     (operationsStep?.inventoryUnitCost || 0);
   const reserveCash = state.risk?.reserveCash || 0;
   const expansionAssets = state.expansion?.capitalizedAssets || 0;
+  const ppeGross = phase5Step.assets?.grossPpe || 0;
+  const accumulatedDepreciation = phase5Step.assets?.accumulatedDepreciation || 0;
+  const ppeNet = phase5Step.assets?.netPpe || 0;
+  const financialInvestments = phase5Step.assets?.financialInvestments || 0;
+  const taxWdvReference = phase5Step.assets?.taxWdvReference || 0;
   const debtBalance =
     phase5Step.funding?.state?.debts?.reduce((sum, debt) => sum + debt.balance, 0) ??
     state.funding?.debts?.reduce((sum, debt) => sum + debt.balance, 0) ??
     0;
   const totalAssets =
-    cash + reserveCash + inventoryAsset + expansionAssets;
+    cash +
+    reserveCash +
+    inventoryAsset +
+    expansionAssets +
+    ppeNet +
+    financialInvestments;
   const totalLiabilities =
     debtBalance + taxPayable;
   const bookEquity =
@@ -182,6 +203,16 @@ export function stepFinance(
     inventoryPurchases,
     inventoryAsset,
     expansionAssets,
+    ppeGross,
+    accumulatedDepreciation,
+    ppeNet,
+    financialInvestments,
+    taxWdvReference,
+    assetMaintenanceCosts,
+    depreciationExpense,
+    ebit,
+    investmentIncome,
+    assetDisposalGainLoss,
     payrollCosts,
     hrOneTimeExpenses,
     negotiationOneTimeExpenses,
@@ -238,6 +269,8 @@ export function estimateValuation(
     operatingValue -
       (capitalStructure.debt || 0) +
       (capitalStructure.reserveCash || 0) +
-      (capitalStructure.expansionAssets || 0) * 0.6
+      (capitalStructure.expansionAssets || 0) * 0.6 +
+      (capitalStructure.assetNetPpe || 0) * 0.55 +
+      (capitalStructure.financialInvestments || 0)
   );
 }

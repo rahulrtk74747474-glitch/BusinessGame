@@ -1,0 +1,56 @@
+{
+  "projects": {
+    "second_bay": {
+      "label": "Add two workshop bays",
+      "minimumWeek": 16,
+      "upfrontCost": 9500,
+      "buildWeeks": 4,
+      "minimumCompliance": 0.68,
+      "maximumRisk": 0.62,
+      "minimumCumulativeProfit": 2200,
+      "marketDemandMultiplier": 1.04,
+      "capacityAdd": 18,
+      "weeklyFixedCost": 160,
+      "weeklyRevenue": 0
+    },
+    "alignment_tyres": {
+      "label": "Launch tyre & alignment center",
+      "minimumWeek": 20,
+      "upfrontCost": 12000,
+      "buildWeeks": 5,
+      "minimumCompliance": 0.7,
+      "maximumRisk": 0.6,
+      "minimumCumulativeProfit": 3500,
+      "marketDemandMultiplier": 1.1,
+      "capacityAdd": 10,
+      "weeklyFixedCost": 190,
+      "weeklyRevenue": 160
+    },
+    "body_shop": {
+      "label": "Add denting & painting body shop",
+      "minimumWeek": 30,
+      "upfrontCost": 24000,
+      "buildWeeks": 7,
+      "minimumCompliance": 0.8,
+      "maximumRisk": 0.52,
+      "minimumCumulativeProfit": 7000,
+      "marketDemandMultiplier": 1.15,
+      "capacityAdd": 12,
+      "weeklyFixedCost": 430,
+      "weeklyRevenue": 260
+    },
+    "ev_service": {
+      "label": "Add EV diagnostics & service capability",
+      "minimumWeek": 26,
+      "upfrontCost": 16000,
+      "buildWeeks": 6,
+      "minimumCompliance": 0.78,
+      "maximumRisk": 0.55,
+      "minimumCumulativeProfit": 5000,
+      "marketDemandMultiplier": 1.12,
+      "capacityAdd": 8,
+      "weeklyFixedCost": 260,
+      "weeklyRevenue": 180
+    }
+  }
+}

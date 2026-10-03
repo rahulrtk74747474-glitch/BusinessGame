@@ -1,0 +1,77 @@
+{
+  "id": "car-dealership-competitors",
+  "pressure": {
+    "demandBase": 1.13,
+    "demandStrengthWeight": 0.18,
+    "demandMin": 0.64,
+    "demandMax": 1.07,
+    "cacBase": 0.95,
+    "cacMarketingWeight": 0.28,
+    "cacMin": 0.92,
+    "cacMax": 1.5
+  },
+  "reaction": {
+    "priceMoveSpeed": 0.3,
+    "qualityMoveSpeed": 0.13,
+    "marketingMoveSpeed": 0.22,
+    "reputationMoveSpeed": 0.08,
+    "noiseStd": 0.012
+  },
+  "strength": {
+    "priceWeight": 0.38,
+    "qualityWeight": 0.2,
+    "marketingWeight": 0.2,
+    "reputationWeight": 0.22,
+    "qualityReference": 0.72,
+    "marketingReference": 0.6,
+    "reputationReference": 0.7,
+    "min": 0.55,
+    "max": 1.65
+  },
+  "publicIntel": {
+    "priceNoisePct": 0.018
+  },
+  "rivals": [
+    {
+      "id": "discount_motors",
+      "name": "Discount Motors",
+      "archetype": "price_cutter",
+      "publicDescription": "Pushes discounts and finance offers to move stock.",
+      "initialPriceMultiplier": 0.97,
+      "initialQuality": 0.63,
+      "initialMarketing": 0.68,
+      "initialReputation": 0.61,
+      "targetPriceMultiplier": 0.95,
+      "priceWarTriggerShare": 0.16,
+      "priceWarCut": 0.025,
+      "qualityTarget": 0.65,
+      "marketingTarget": 0.74
+    },
+    {
+      "id": "prime_auto",
+      "name": "Prime Auto Gallery",
+      "archetype": "premium",
+      "publicDescription": "Competes on premium delivery experience and trust.",
+      "initialPriceMultiplier": 1.05,
+      "initialQuality": 0.87,
+      "initialMarketing": 0.62,
+      "initialReputation": 0.82,
+      "targetPriceMultiplier": 1.05,
+      "qualityTarget": 0.9,
+      "marketingTarget": 0.66
+    },
+    {
+      "id": "city_wheels",
+      "name": "City Wheels",
+      "archetype": "copycat",
+      "publicDescription": "Copies successful offers, trade-in campaigns and pricing.",
+      "initialPriceMultiplier": 1,
+      "initialQuality": 0.71,
+      "initialMarketing": 0.58,
+      "initialReputation": 0.68,
+      "copyPriceWeight": 0.65,
+      "copyMarketingWeight": 0.5,
+      "qualityTarget": 0.73
+    }
+  ]
+}

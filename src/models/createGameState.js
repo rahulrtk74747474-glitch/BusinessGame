@@ -9,6 +9,7 @@ import { createLegalState } from '../engine/legal.js';
 import { createRiskState } from '../engine/risk.js';
 import { createExpansionState } from '../engine/expansion.js';
 import { createExitState } from '../engine/exit.js';
+import { createAssetInvestmentState } from '../engine/assets.js';
 
 export function createGameState(setup, config, industry, rolesData, seed = 42, phase4Data, phase5Data) {
   if (!phase4Data?.marketing || !phase4Data?.sales || !phase4Data?.operations || !phase4Data?.competitors) {
@@ -64,7 +65,9 @@ export function createGameState(setup, config, industry, rolesData, seed = 42, p
       hrOneTimeExpenses: 0, negotiationOneTimeExpenses: 0, fundingOneTimeExpenses: 0, legalOneTimeExpenses: 0, riskOneTimeExpenses: 0, exitOneTimeExpenses: 0,
       inventoryPurchases: 0,
       inventoryAsset: (phase4Data.operations.inventoryMode === 'virtual' ? 0 : phase4Data.operations.initialInventoryUnits) * industry.baseVariableCostPerOrder,
-      expansionAssets: 0, grossProfit: 0, grossMargin: 0, operatingProfit: 0, interestExpense: 0, debtService: 0,
+      expansionAssets: 0, ppeGross: 0, accumulatedDepreciation: 0, ppeNet: 0, financialInvestments: 0,
+      grossProfit: 0, grossMargin: 0, operatingProfit: 0, depreciationExpense: 0, ebit: 0,
+      investmentIncome: 0, assetDisposalGainLoss: 0, assetMaintenanceCosts: 0, interestExpense: 0, debtService: 0,
       taxAccrued: 0, taxPayment: 0, taxPayable: 0, netProfit: 0, cumulativeRevenue: 0, cumulativeProfit: 0,
       runwayWeeks: Infinity, valuation: Number(setup.startingCapital), totalLiquidity: Number(setup.startingCapital),
       debtBalance: 0, totalAssets: Number(setup.startingCapital), totalLiabilities: 0, bookEquity: Number(setup.startingCapital)
@@ -92,6 +95,7 @@ export function createGameState(setup, config, industry, rolesData, seed = 42, p
     risk: createRiskState(),
     expansion: createExpansionState(),
     exit: createExitState(),
+    assets: createAssetInvestmentState(),
     audit: { decisions: [], events: [], causeLinks: [] },
     history: [],
     reports: []

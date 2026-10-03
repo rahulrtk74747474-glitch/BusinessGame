@@ -1,0 +1,105 @@
+{
+  "id": "car_dealership",
+  "name": "Car Dealership",
+  "category": "Automotive",
+  "description": "Sell new/used vehicles through a showroom-style business. The main lessons are inventory financing, thin gross margins, stock turnover, sales conversion, after-sales reputation and working capital.",
+  "unitLabel": "vehicles",
+  "customerLabel": "buyers",
+  "operationsLabel": "Vehicle inventory, PDI & delivery",
+  "inventoryLabel": "Vehicle stock",
+  "referencePrice": 2800,
+  "priceElasticity": 1.35,
+  "baseMarketDemand": 14,
+  "weeklyNewCustomerPool": 45,
+  "organicConversionRate": 0.09,
+  "basePaidCAC": 180,
+  "baseVariableCostPerOrder": 2450,
+  "baseFixedCostPerWeek": 2200,
+  "capacityOrdersPerWeek": 9,
+  "initialCustomers": 24,
+  "initialAwareness": 0.14,
+  "initialSatisfaction": 0.7,
+  "purchaseFrequency": 0.09,
+  "baseWeeklyChurn": 0.018,
+  "referralRate": 0.025,
+  "qualitySpendReference": 350,
+  "qualitySpendEffect": 0.11,
+  "serviceBaseline": 0.74,
+  "marketingEfficiencyCeiling": 1.32,
+  "seasonalityMonthly": [
+    0.9,
+    0.93,
+    0.98,
+    1,
+    0.98,
+    0.94,
+    0.92,
+    0.98,
+    1.1,
+    1.18,
+    1.16,
+    1.05
+  ],
+  "allowedLocations": [
+    "rented"
+  ],
+  "locationLabels": {
+    "rented": "Leased showroom / dealership"
+  },
+  "starterPlan": {
+    "idea": "Multi-brand or franchise-style car dealership focused on transparent sales, finance assistance and after-sales trust.",
+    "targetCustomer": "Households, professionals and small fleet buyers comparing vehicles, finance and trade-in value.",
+    "weeklyFixedCostEstimate": 2200,
+    "variableCostEstimate": 2450
+  },
+  "negotiation": {
+    "supplier": {
+      "label": "Vehicle OEM / distributor",
+      "unit": "$/vehicle",
+      "initialCounter": 2450,
+      "playerOpening": 2320,
+      "walkAwayMin": 2350,
+      "walkAwayMax": 2420,
+      "bundleLabel": "Volume target + faster stock rotation"
+    },
+    "landlord": {
+      "label": "Showroom landlord",
+      "initialCounter": 1250,
+      "playerOpening": 980,
+      "walkAwayMin": 1040,
+      "walkAwayMax": 1180,
+      "bundleLabel": "Longer lease + fit-out responsibility"
+    },
+    "client": {
+      "label": "Corporate fleet buyer",
+      "initialCounter": 6500,
+      "playerOpening": 8200,
+      "walkAwayMin": 7000,
+      "walkAwayMax": 7800,
+      "bundleLabel": "Fleet volume + service package",
+      "clientVariableCostRate": 0.86
+    }
+  },
+  "regulations": [
+    "Dealer/trade-certificate and vehicle documentation requirements",
+    "GST invoicing/accounting obligations",
+    "Consumer protection and warranty disclosures",
+    "Premises/fire safety and employee compliance"
+  ],
+  "typicalFailureModes": [
+    "Too much cash trapped in slow-moving vehicle inventory",
+    "Discounting destroys already-thin gross margin",
+    "Weak finance/insurance conversion and sales process",
+    "Poor PDI/delivery experience damages referrals",
+    "Expanding showroom overhead before stock turnover is proven"
+  ],
+  "kpis": [
+    "vehicles sold",
+    "inventory days/stock turnover",
+    "gross margin per vehicle",
+    "CAC",
+    "sales close rate",
+    "cash tied in stock",
+    "runway"
+  ]
+}

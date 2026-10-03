@@ -1,0 +1,105 @@
+{
+  "id": "auto_workshop",
+  "name": "Auto Repair Workshop",
+  "category": "Automotive",
+  "description": "Run a multi-brand vehicle repair and service workshop. Profitability depends on technician productivity, bay capacity, parts control, diagnosis quality, repeat customers and compliance.",
+  "unitLabel": "repair jobs",
+  "customerLabel": "vehicle owners",
+  "operationsLabel": "Workshop bays, parts & quality",
+  "inventoryLabel": "Parts/service inventory",
+  "referencePrice": 220,
+  "priceElasticity": 0.85,
+  "baseMarketDemand": 95,
+  "weeklyNewCustomerPool": 90,
+  "organicConversionRate": 0.19,
+  "basePaidCAC": 28,
+  "baseVariableCostPerOrder": 72,
+  "baseFixedCostPerWeek": 1600,
+  "capacityOrdersPerWeek": 55,
+  "initialCustomers": 45,
+  "initialAwareness": 0.18,
+  "initialSatisfaction": 0.72,
+  "purchaseFrequency": 0.28,
+  "baseWeeklyChurn": 0.035,
+  "referralRate": 0.045,
+  "qualitySpendReference": 220,
+  "qualitySpendEffect": 0.16,
+  "serviceBaseline": 0.75,
+  "marketingEfficiencyCeiling": 1.38,
+  "seasonalityMonthly": [
+    0.98,
+    0.98,
+    1,
+    1.03,
+    1.06,
+    1.03,
+    0.98,
+    0.99,
+    1.05,
+    1.08,
+    1.04,
+    0.99
+  ],
+  "allowedLocations": [
+    "rented"
+  ],
+  "locationLabels": {
+    "rented": "Leased automotive workshop"
+  },
+  "starterPlan": {
+    "idea": "Trusted multi-brand workshop offering scheduled service, diagnostics, brakes/suspension and selected tyre/alignment work.",
+    "targetCustomer": "Local car owners and small fleets that value transparent estimates, reliable turnaround and repeat maintenance.",
+    "weeklyFixedCostEstimate": 1600,
+    "variableCostEstimate": 72
+  },
+  "negotiation": {
+    "supplier": {
+      "label": "Auto-parts distributor",
+      "unit": "$/job",
+      "initialCounter": 72,
+      "playerOpening": 61,
+      "walkAwayMin": 63,
+      "walkAwayMax": 69,
+      "bundleLabel": "Volume parts order + faster payment"
+    },
+    "landlord": {
+      "label": "Workshop landlord",
+      "initialCounter": 980,
+      "playerOpening": 760,
+      "walkAwayMin": 810,
+      "walkAwayMax": 920,
+      "bundleLabel": "Longer lease + maintenance responsibility"
+    },
+    "client": {
+      "label": "Fleet maintenance client",
+      "initialCounter": 2600,
+      "playerOpening": 3600,
+      "walkAwayMin": 2950,
+      "walkAwayMax": 3400,
+      "bundleLabel": "Guaranteed fleet volume + priority slots",
+      "clientVariableCostRate": 0.38
+    }
+  },
+  "regulations": [
+    "Local business/premises approvals",
+    "Waste oil, batteries and hazardous workshop waste handling",
+    "Fire/workplace safety obligations",
+    "GST invoices, job cards, customer authorization and consumer protection"
+  ],
+  "typicalFailureModes": [
+    "Underpricing labor while parts costs rise",
+    "Poor diagnosis creates rework and refunds",
+    "Workshop bays sit idle because scheduling is weak",
+    "Technician turnover reduces capacity and quality",
+    "Waste-oil/battery handling or safety compliance is ignored"
+  ],
+  "kpis": [
+    "jobs/week",
+    "average repair order",
+    "parts margin",
+    "technician productivity",
+    "repeat customers",
+    "rework/defect rate",
+    "runway"
+  ]
+}

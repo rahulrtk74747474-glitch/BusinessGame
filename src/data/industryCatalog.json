@@ -20,6 +20,20 @@
       "category": "Agriculture",
       "icon": "🥛",
       "description": "Produce and sell milk while managing farm capacity, spoilage, herd operations, distribution and compliance."
+    },
+    {
+      "id": "car_dealership",
+      "name": "Car Dealership",
+      "category": "Automotive",
+      "icon": "🚗",
+      "description": "Sell vehicles while managing inventory financing, stock turnover, discounts, fleet deals and showroom operations."
+    },
+    {
+      "id": "auto_workshop",
+      "name": "Auto Repair Workshop",
+      "category": "Automotive",
+      "icon": "🔧",
+      "description": "Run a multi-brand repair workshop with technicians, parts inventory, workshop bays, diagnostics and fleet maintenance."
     }
   ],
   "customArchetypes": [

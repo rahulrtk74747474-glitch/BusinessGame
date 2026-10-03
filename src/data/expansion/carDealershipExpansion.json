@@ -1,0 +1,56 @@
+{
+  "projects": {
+    "used_car_desk": {
+      "label": "Add used-car desk",
+      "minimumWeek": 18,
+      "upfrontCost": 14000,
+      "buildWeeks": 4,
+      "minimumCompliance": 0.68,
+      "maximumRisk": 0.62,
+      "minimumCumulativeProfit": 2500,
+      "marketDemandMultiplier": 1.12,
+      "capacityAdd": 2,
+      "weeklyFixedCost": 260,
+      "weeklyRevenue": 120
+    },
+    "service_center": {
+      "label": "Add dealership service center",
+      "minimumWeek": 28,
+      "upfrontCost": 26000,
+      "buildWeeks": 7,
+      "minimumCompliance": 0.75,
+      "maximumRisk": 0.55,
+      "minimumCumulativeProfit": 7000,
+      "marketDemandMultiplier": 1.08,
+      "capacityAdd": 3,
+      "weeklyFixedCost": 520,
+      "weeklyRevenue": 420
+    },
+    "second_showroom": {
+      "label": "Open second showroom",
+      "minimumWeek": 36,
+      "upfrontCost": 42000,
+      "buildWeeks": 9,
+      "minimumCompliance": 0.78,
+      "maximumRisk": 0.52,
+      "minimumCumulativeProfit": 11000,
+      "marketDemandMultiplier": 1.22,
+      "capacityAdd": 5,
+      "weeklyFixedCost": 1050,
+      "weeklyRevenue": 0
+    },
+    "fleet_desk": {
+      "label": "Build corporate fleet desk",
+      "minimumWeek": 24,
+      "upfrontCost": 9000,
+      "buildWeeks": 4,
+      "minimumCompliance": 0.7,
+      "maximumRisk": 0.6,
+      "minimumCumulativeProfit": 4000,
+      "marketDemandMultiplier": 1.07,
+      "capacityAdd": 1,
+      "weeklyFixedCost": 180,
+      "weeklyRevenue": 220
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "id": "auto-workshop-competitors",
+  "pressure": {
+    "demandBase": 1.1,
+    "demandStrengthWeight": 0.16,
+    "demandMin": 0.7,
+    "demandMax": 1.08,
+    "cacBase": 0.93,
+    "cacMarketingWeight": 0.24,
+    "cacMin": 0.9,
+    "cacMax": 1.4
+  },
+  "reaction": {
+    "priceMoveSpeed": 0.2,
+    "qualityMoveSpeed": 0.2,
+    "marketingMoveSpeed": 0.18,
+    "reputationMoveSpeed": 0.1,
+    "noiseStd": 0.014
+  },
+  "strength": {
+    "priceWeight": 0.3,
+    "qualityWeight": 0.3,
+    "marketingWeight": 0.15,
+    "reputationWeight": 0.25,
+    "qualityReference": 0.75,
+    "marketingReference": 0.55,
+    "reputationReference": 0.72,
+    "min": 0.55,
+    "max": 1.6
+  },
+  "publicIntel": {
+    "priceNoisePct": 0.02
+  },
+  "rivals": [
+    {
+      "id": "quickfix",
+      "name": "QuickFix Garage",
+      "archetype": "price_cutter",
+      "publicDescription": "Low-price workshop competing on fast routine service.",
+      "initialPriceMultiplier": 0.86,
+      "initialQuality": 0.62,
+      "initialMarketing": 0.55,
+      "initialReputation": 0.58,
+      "targetPriceMultiplier": 0.84,
+      "priceWarTriggerShare": 0.18,
+      "priceWarCut": 0.05,
+      "qualityTarget": 0.64,
+      "marketingTarget": 0.62
+    },
+    {
+      "id": "autocare_pro",
+      "name": "AutoCare Pro",
+      "archetype": "premium",
+      "publicDescription": "Premium workshop emphasizing diagnostics, warranty and quality.",
+      "initialPriceMultiplier": 1.22,
+      "initialQuality": 0.88,
+      "initialMarketing": 0.58,
+      "initialReputation": 0.82,
+      "targetPriceMultiplier": 1.2,
+      "qualityTarget": 0.91,
+      "marketingTarget": 0.62
+    },
+    {
+      "id": "neighbourhood_motors",
+      "name": "Neighbourhood Motors",
+      "archetype": "copycat",
+      "publicDescription": "Local rival copying successful service packages and promotions.",
+      "initialPriceMultiplier": 1,
+      "initialQuality": 0.71,
+      "initialMarketing": 0.48,
+      "initialReputation": 0.68,
+      "copyPriceWeight": 0.6,
+      "copyMarketingWeight": 0.48,
+      "qualityTarget": 0.74
+    }
+  ]
+}

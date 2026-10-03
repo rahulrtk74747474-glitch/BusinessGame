@@ -1,0 +1,85 @@
+{
+  "id": "car-dealership-marketing",
+  "defaultWeights": {
+    "auto_portals": 30,
+    "local_search": 25,
+    "social_video": 20,
+    "referral": 15,
+    "fleet_outreach": 10
+  },
+  "efficiency": {
+    "base": 0.7,
+    "satisfactionWeight": 0.3,
+    "teamWeight": 1,
+    "min": 0.52,
+    "max": 1.5
+  },
+  "strength": {
+    "min": 0.7,
+    "max": 1.5
+  },
+  "roasContributionWeeks": 6,
+  "channels": {
+    "auto_portals": {
+      "label": "Auto portals / lead platforms",
+      "description": "High-intent vehicle shoppers comparing models and dealers.",
+      "baseCAC": 190,
+      "saturationSpend": 1300,
+      "saturationSlope": 0.65,
+      "awarenessPer100": 0.004,
+      "noiseStd": 0.07,
+      "strengthDecay": 0.985,
+      "strengthGrowthPer100": 0.004,
+      "b2bLeadsPer100": 0.025
+    },
+    "local_search": {
+      "label": "Local search & Maps",
+      "description": "Captures nearby showroom-intent traffic.",
+      "baseCAC": 160,
+      "saturationSpend": 950,
+      "saturationSlope": 0.55,
+      "awarenessPer100": 0.004,
+      "noiseStd": 0.05,
+      "strengthDecay": 0.99,
+      "strengthGrowthPer100": 0.006,
+      "b2bLeadsPer100": 0.02
+    },
+    "social_video": {
+      "label": "Social / vehicle video",
+      "description": "Builds awareness through model walkarounds, delivery posts and offers.",
+      "baseCAC": 230,
+      "saturationSpend": 1100,
+      "saturationSlope": 0.7,
+      "awarenessPer100": 0.009,
+      "noiseStd": 0.12,
+      "strengthDecay": 0.97,
+      "strengthGrowthPer100": 0.003,
+      "b2bLeadsPer100": 0.015
+    },
+    "referral": {
+      "label": "Owner referral program",
+      "description": "Lower-volume but trust-heavy leads from existing buyers.",
+      "baseCAC": 95,
+      "saturationSpend": 500,
+      "saturationSlope": 0.8,
+      "awarenessPer100": 0.004,
+      "noiseStd": 0.05,
+      "strengthDecay": 0.995,
+      "strengthGrowthPer100": 0.008,
+      "audienceCapRate": 0.05,
+      "b2bLeadsPer100": 0.01
+    },
+    "fleet_outreach": {
+      "label": "Corporate / fleet outreach",
+      "description": "Slower but can create multi-vehicle B2B opportunities.",
+      "baseCAC": 260,
+      "saturationSpend": 900,
+      "saturationSlope": 0.4,
+      "awarenessPer100": 0.002,
+      "noiseStd": 0.08,
+      "strengthDecay": 0.99,
+      "strengthGrowthPer100": 0.006,
+      "b2bLeadsPer100": 0.09
+    }
+  }
+}

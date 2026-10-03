@@ -1,0 +1,69 @@
+{
+  "initialRegistrationComplete": true,
+  "hrLegalRiskWeight": 0.32,
+  "enforcementBaseChance": 0.012,
+  "enforcementRiskWeight": 0.09,
+  "shutdownCustomerPenalty": 0.04,
+  "items": {
+    "dealer_trade_docs": {
+      "label": "Dealer / trade-certificate documentation",
+      "required": true,
+      "trigger": "always",
+      "dueWeek": 6,
+      "cost": 500,
+      "processingWeeks": 2,
+      "renewalWeeks": 52,
+      "weight": 1.3,
+      "fine": 3800,
+      "shutdownWeeks": 1
+    },
+    "gst_invoicing": {
+      "label": "GST invoicing & accounting controls",
+      "required": true,
+      "trigger": "always",
+      "dueWeek": 8,
+      "cost": 420,
+      "processingWeeks": 2,
+      "renewalWeeks": 52,
+      "weight": 1.1,
+      "fine": 3200,
+      "shutdownWeeks": 0
+    },
+    "consumer_warranty": {
+      "label": "Consumer, warranty & disclosure process",
+      "required": true,
+      "trigger": "always",
+      "dueWeek": 10,
+      "cost": 450,
+      "processingWeeks": 2,
+      "renewalWeeks": 52,
+      "weight": 1.05,
+      "fine": 3000,
+      "shutdownWeeks": 0
+    },
+    "fire_premises": {
+      "label": "Showroom fire & premises safety",
+      "required": true,
+      "trigger": "always",
+      "dueWeek": 12,
+      "cost": 650,
+      "processingWeeks": 3,
+      "renewalWeeks": 104,
+      "weight": 1.15,
+      "fine": 4800,
+      "shutdownWeeks": 1
+    },
+    "employment_policy": {
+      "label": "Employment/workplace policy",
+      "required": true,
+      "trigger": "employees",
+      "dueWeek": 4,
+      "cost": 300,
+      "processingWeeks": 1,
+      "renewalWeeks": 52,
+      "weight": 0.8,
+      "fine": 2400,
+      "shutdownWeeks": 0
+    }
+  }
+}

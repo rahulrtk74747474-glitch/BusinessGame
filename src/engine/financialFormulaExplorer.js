@@ -60,8 +60,8 @@ export function buildFormulaExplanation(key, state, industry, catalog, snapshot)
       interpretation = 'About ' + Math.round(s.pnl.grossMargin * 100) + ' cents of each revenue dollar remains after direct costs.';
       break;
     case 'operatingExpenses':
-      set('Fixed costs', money(s.pnl.fixedCosts)); set('Discretionary costs', money(s.pnl.discretionaryCosts)); set('Payroll', money(s.pnl.payrollCosts)); set('One-time expenses', money(s.pnl.oneTimeExpenses));
-      steps = [money(s.pnl.fixedCosts) + ' + ' + money(s.pnl.discretionaryCosts) + ' + ' + money(s.pnl.payrollCosts) + ' + ' + money(s.pnl.oneTimeExpenses), '= ' + money(s.pnl.operatingExpenses)];
+      set('Fixed costs', money(s.pnl.fixedCosts)); set('Discretionary costs', money(s.pnl.discretionaryCosts)); set('Payroll', money(s.pnl.payrollCosts)); set('One-time expenses', money(s.pnl.oneTimeExpenses)); set('Asset maintenance', money(s.pnl.assetMaintenanceCosts));
+      steps = [money(s.pnl.fixedCosts) + ' + ' + money(s.pnl.discretionaryCosts) + ' + ' + money(s.pnl.payrollCosts) + ' + ' + money(s.pnl.oneTimeExpenses) + ' + ' + money(s.pnl.assetMaintenanceCosts), '= ' + money(s.pnl.operatingExpenses)];
       result = money(s.pnl.operatingExpenses);
       interpretation = 'This is the weekly cost base that gross profit must support before interest and tax.';
       break;
@@ -77,11 +77,41 @@ export function buildFormulaExplanation(key, state, industry, catalog, snapshot)
       result = pct(s.pnl.operatingMargin);
       interpretation = 'This is operating profit retained per dollar of revenue before financing and tax.';
       break;
+    case 'depreciationExpense':
+      set('Gross PPE', money(s.balanceSheet.ppeGross)); set('Current weekly depreciation', money(s.pnl.depreciationExpense));
+      steps = ['For each owned asset: (cost − residual value) ÷ useful-life weeks', 'Total current week depreciation = ' + money(s.pnl.depreciationExpense)];
+      result = money(s.pnl.depreciationExpense);
+      interpretation = 'This reduces accounting profit and net PPE, but the asset purchase cash left the company when the asset was bought.';
+      break;
+    case 'ebit':
+      set('EBITDA-like operating profit', money(s.pnl.operatingProfit)); set('Depreciation', money(s.pnl.depreciationExpense));
+      steps = [money(s.pnl.operatingProfit) + ' − ' + money(s.pnl.depreciationExpense), '= ' + money(s.pnl.ebit)];
+      result = money(s.pnl.ebit);
+      interpretation = 'EBIT measures operating performance after recognizing wear/consumption of depreciable assets.';
+      break;
+    case 'investmentIncome':
+      set('Financial investments', money(s.balanceSheet.financialInvestments)); set('Weekly investment income', money(s.pnl.investmentIncome));
+      steps = ['Each holding principal × simulated annual return ÷ 52', '= ' + money(s.pnl.investmentIncome)];
+      result = money(s.pnl.investmentIncome);
+      interpretation = 'This is non-operating income from treasury cash investments, not customer revenue.';
+      break;
+    case 'accumulatedDepreciation':
+      set('Gross PPE', money(s.balanceSheet.ppeGross)); set('Accumulated depreciation', money(s.balanceSheet.accumulatedDepreciation));
+      steps = ['Sum depreciation recorded since each asset was purchased', '= ' + money(s.balanceSheet.accumulatedDepreciation)];
+      result = money(s.balanceSheet.accumulatedDepreciation);
+      interpretation = 'It is a contra-asset balance: it reduces gross PPE to the carrying value shown as net PPE.';
+      break;
+    case 'ppeNet':
+      set('Gross PPE', money(s.balanceSheet.ppeGross)); set('Accumulated depreciation', money(s.balanceSheet.accumulatedDepreciation));
+      steps = [money(s.balanceSheet.ppeGross) + ' − ' + money(s.balanceSheet.accumulatedDepreciation), '= ' + money(s.balanceSheet.ppeNet)];
+      result = money(s.balanceSheet.ppeNet);
+      interpretation = 'This is the accounting carrying value of owned depreciating fixed assets.';
+      break;
     case 'preTaxProfit':
-      set('Operating profit', money(s.pnl.operatingProfit)); set('Interest', money(s.pnl.interestExpense)); set('Legal penalties', money(s.pnl.legalPenaltyExpense));
-      steps = [money(s.pnl.operatingProfit) + ' − ' + money(s.pnl.interestExpense) + ' − ' + money(s.pnl.legalPenaltyExpense), '= ' + money(s.pnl.preTaxProfit)];
+      set('EBIT', money(s.pnl.ebit)); set('Investment income', money(s.pnl.investmentIncome)); set('Asset disposal gain/loss', money(s.pnl.assetDisposalGainLoss)); set('Interest', money(s.pnl.interestExpense)); set('Legal penalties', money(s.pnl.legalPenaltyExpense));
+      steps = [money(s.pnl.ebit) + ' + ' + money(s.pnl.investmentIncome) + ' + ' + money(s.pnl.assetDisposalGainLoss) + ' − ' + money(s.pnl.interestExpense) + ' − ' + money(s.pnl.legalPenaltyExpense), '= ' + money(s.pnl.preTaxProfit)];
       result = money(s.pnl.preTaxProfit);
-      interpretation = 'This shows profitability after financing costs but before income tax.';
+      interpretation = 'This is profit after depreciation, treasury/disposal effects and financing/legal costs, but before income tax.';
       break;
     case 'taxAccrued': {
       const impliedRate = s.pnl.preTaxProfit > 0 ? s.pnl.taxAccrued / s.pnl.preTaxProfit : 0;
@@ -124,8 +154,8 @@ export function buildFormulaExplanation(key, state, industry, catalog, snapshot)
       interpretation = s.balanceSheet.inventoryAsset > 0 ? 'This value is cash tied up in unsold output/inventory.' : 'This business currently has little or no physical inventory asset.';
       break;
     case 'totalAssets':
-      set('Cash', money(s.balanceSheet.cash)); set('Reserve', money(s.balanceSheet.reserveCash)); set('Inventory', money(s.balanceSheet.inventoryAsset)); set('Expansion assets', money(s.balanceSheet.expansionAssets));
-      steps = [money(s.balanceSheet.cash) + ' + ' + money(s.balanceSheet.reserveCash) + ' + ' + money(s.balanceSheet.inventoryAsset) + ' + ' + money(s.balanceSheet.expansionAssets), '= ' + money(s.balanceSheet.totalAssets)];
+      set('Cash', money(s.balanceSheet.cash)); set('Reserve', money(s.balanceSheet.reserveCash)); set('Inventory', money(s.balanceSheet.inventoryAsset)); set('Expansion assets', money(s.balanceSheet.expansionAssets)); set('Net PPE', money(s.balanceSheet.ppeNet)); set('Financial investments', money(s.balanceSheet.financialInvestments));
+      steps = [money(s.balanceSheet.cash) + ' + ' + money(s.balanceSheet.reserveCash) + ' + ' + money(s.balanceSheet.inventoryAsset) + ' + ' + money(s.balanceSheet.expansionAssets) + ' + ' + money(s.balanceSheet.ppeNet) + ' + ' + money(s.balanceSheet.financialInvestments), '= ' + money(s.balanceSheet.totalAssets)];
       result = money(s.balanceSheet.totalAssets);
       interpretation = 'This is the modeled resource base of the company at the end of the week.';
       break;

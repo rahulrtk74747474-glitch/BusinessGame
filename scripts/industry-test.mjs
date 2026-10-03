@@ -2,35 +2,52 @@ import config from '../src/config/gameConfig.json' with { type: 'json' };
 import cafe from '../src/data/industries/cafe.json' with { type: 'json' };
 import software from '../src/data/industries/softwareSaas.json' with { type: 'json' };
 import dairy from '../src/data/industries/dairyFarm.json' with { type: 'json' };
+import carDealership from '../src/data/industries/carDealership.json' with { type: 'json' };
+import autoWorkshop from '../src/data/industries/autoWorkshop.json' with { type: 'json' };
 
 import cafeRoles from '../src/data/hr/cafeRoles.json' with { type: 'json' };
 import softwareRoles from '../src/data/hr/softwareRoles.json' with { type: 'json' };
 import dairyRoles from '../src/data/hr/dairyRoles.json' with { type: 'json' };
+import carDealershipRoles from '../src/data/hr/carDealershipRoles.json' with { type: 'json' };
+import autoWorkshopRoles from '../src/data/hr/autoWorkshopRoles.json' with { type: 'json' };
 
 import cafeMarketing from '../src/data/marketing/cafeMarketing.json' with { type: 'json' };
 import softwareMarketing from '../src/data/marketing/softwareMarketing.json' with { type: 'json' };
 import dairyMarketing from '../src/data/marketing/dairyMarketing.json' with { type: 'json' };
+import carDealershipMarketing from '../src/data/marketing/carDealershipMarketing.json' with { type: 'json' };
+import autoWorkshopMarketing from '../src/data/marketing/autoWorkshopMarketing.json' with { type: 'json' };
 
 import cafeSales from '../src/data/sales/cafeSales.json' with { type: 'json' };
 import softwareSales from '../src/data/sales/softwareSales.json' with { type: 'json' };
 import dairySales from '../src/data/sales/dairySales.json' with { type: 'json' };
+import carDealershipSales from '../src/data/sales/carDealershipSales.json' with { type: 'json' };
+import autoWorkshopSales from '../src/data/sales/autoWorkshopSales.json' with { type: 'json' };
 
 import cafeOperations from '../src/data/operations/cafeOperations.json' with { type: 'json' };
 import softwareOperations from '../src/data/operations/softwareOperations.json' with { type: 'json' };
 import dairyOperations from '../src/data/operations/dairyOperations.json' with { type: 'json' };
+import carDealershipOperations from '../src/data/operations/carDealershipOperations.json' with { type: 'json' };
+import autoWorkshopOperations from '../src/data/operations/autoWorkshopOperations.json' with { type: 'json' };
 
 import cafeCompetitors from '../src/data/competitors/cafeCompetitors.json' with { type: 'json' };
 import softwareCompetitors from '../src/data/competitors/softwareCompetitors.json' with { type: 'json' };
 import dairyCompetitors from '../src/data/competitors/dairyCompetitors.json' with { type: 'json' };
+import carDealershipCompetitors from '../src/data/competitors/carDealershipCompetitors.json' with { type: 'json' };
+import autoWorkshopCompetitors from '../src/data/competitors/autoWorkshopCompetitors.json' with { type: 'json' };
 
 import funding from '../src/data/funding/cafeFunding.json' with { type: 'json' };
 import cafeLegal from '../src/data/legal/cafeLegal.json' with { type: 'json' };
 import softwareLegal from '../src/data/legal/softwareLegal.json' with { type: 'json' };
 import dairyLegal from '../src/data/legal/dairyLegal.json' with { type: 'json' };
+import carDealershipLegal from '../src/data/legal/carDealershipLegal.json' with { type: 'json' };
+import autoWorkshopLegal from '../src/data/legal/autoWorkshopLegal.json' with { type: 'json' };
 import risk from '../src/data/risk/cafeRisk.json' with { type: 'json' };
 import cafeExpansion from '../src/data/expansion/cafeExpansion.json' with { type: 'json' };
 import softwareExpansion from '../src/data/expansion/softwareExpansion.json' with { type: 'json' };
 import dairyExpansion from '../src/data/expansion/dairyExpansion.json' with { type: 'json' };
+import carDealershipExpansion from '../src/data/expansion/carDealershipExpansion.json' with { type: 'json' };
+import autoWorkshopExpansion from '../src/data/expansion/autoWorkshopExpansion.json' with { type: 'json' };
+import assets from '../src/data/assets/indiaAssets.json' with { type: 'json' };
 import exit from '../src/data/exit/cafeExit.json' with { type: 'json' };
 
 import { buildCustomIndustry } from '../src/engine/customIndustry.js';
@@ -63,7 +80,21 @@ const profiles = [
     industry: dairy,
     roles: dairyRoles,
     phase4: { marketing: dairyMarketing, sales: dairySales, operations: dairyOperations, competitors: dairyCompetitors },
-    phase5: { funding, legal: dairyLegal, risk, expansion: dairyExpansion, exit }
+    phase5: { funding, legal: dairyLegal, risk, expansion: dairyExpansion, exit, assets }
+  },
+  {
+    id: 'car_dealership',
+    industry: carDealership,
+    roles: carDealershipRoles,
+    phase4: { marketing: carDealershipMarketing, sales: carDealershipSales, operations: carDealershipOperations, competitors: carDealershipCompetitors },
+    phase5: { funding, legal: carDealershipLegal, risk, expansion: carDealershipExpansion, exit, assets }
+  },
+  {
+    id: 'auto_workshop',
+    industry: autoWorkshop,
+    roles: autoWorkshopRoles,
+    phase4: { marketing: autoWorkshopMarketing, sales: autoWorkshopSales, operations: autoWorkshopOperations, competitors: autoWorkshopCompetitors },
+    phase5: { funding, legal: autoWorkshopLegal, risk, expansion: autoWorkshopExpansion, exit, assets }
   }
 ];
 
@@ -176,4 +207,4 @@ const dairyNegotiation = negotiationForIndustry(negotiationBase, dairy);
 assert(softwareNegotiation.templates.supplier.label === 'Cloud infrastructure provider', 'Software negotiation overrides were not applied.');
 assert(dairyNegotiation.templates.client.label === 'Milk distributor', 'Dairy negotiation overrides were not applied.');
 
-console.log('Industry integration test passed: cafe, SaaS, dairy and custom business models all run with industry-specific operations.');
+console.log('Industry integration test passed: cafe, SaaS, dairy, car dealership, auto workshop and custom business models all run with industry-specific operations.');

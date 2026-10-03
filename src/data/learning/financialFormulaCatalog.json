@@ -39,7 +39,7 @@
     "key": "operatingExpenses",
     "title": "Operating Expenses",
     "category": "Income statement",
-    "formula": "Operating expenses = Fixed costs + Discretionary costs + Payroll + One-time operating expenses",
+    "formula": "Operating expenses = Fixed + Discretionary + Payroll + One-time expenses + Asset maintenance",
     "meaning": "Operating expenses are the costs of running the company beyond direct production or delivery.",
     "higherLower": "Lower is not automatically better; underinvesting in people, product or marketing can reduce future growth.",
     "simpleExample": "$2,000 fixed + $1,000 marketing/other + $1,500 payroll = $4,500 operating expenses."
@@ -66,10 +66,10 @@
     "key": "preTaxProfit",
     "title": "Profit Before Tax (PBT)",
     "category": "Income statement",
-    "formula": "PBT = Operating profit − Interest expense − Legal penalty expense",
-    "meaning": "PBT shows profit after financing costs and modeled penalties, but before income tax.",
+    "formula": "PBT = EBIT + Investment income + Asset disposal gain/loss − Interest − Legal penalties",
+    "meaning": "Profit before tax combines operating profit after depreciation with non-operating investment/disposal results and financing/legal costs before income tax.",
     "higherLower": "Higher PBT usually means stronger pre-tax profitability; leverage can make PBT much lower than operating profit.",
-    "simpleExample": "$1,500 operating profit − $200 interest = $1,300 PBT."
+    "simpleExample": "$1,700 EBIT + $100 investment income − $200 interest = $1,600 profit before tax."
   },
   {
     "key": "taxAccrued",
@@ -129,10 +129,10 @@
     "key": "totalAssets",
     "title": "Total Assets",
     "category": "Balance sheet",
-    "formula": "Total assets = Operating cash + Emergency reserve + Inventory + Expansion assets",
+    "formula": "Total assets = Cash + Reserve + Inventory + Expansion assets + Net PPE + Financial investments",
     "meaning": "Assets are resources the company controls that have economic value in the simulation.",
     "higherLower": "More assets are useful only if they are productive, liquid enough and financed sensibly.",
-    "simpleExample": "$20,000 cash + $5,000 reserve + $2,000 inventory + $8,000 equipment = $35,000 assets."
+    "simpleExample": "$20,000 cash + $5,000 reserve + $2,000 inventory + $8,000 expansion assets + $15,000 net PPE + $10,000 investments = $60,000 assets."
   },
   {
     "key": "totalLiabilities",
@@ -241,5 +241,50 @@
     "meaning": "Valuation estimates what the operating business may be worth. It is not cash, profit or book equity.",
     "higherLower": "A higher valuation is useful only if supported by durable economics; valuation can fall quickly when growth, margins or risk deteriorate.",
     "simpleExample": "A company can have $50,000 cash but a $500,000 valuation because buyers value its future earnings and customers."
+  },
+  {
+    "key": "depreciationExpense",
+    "title": "Depreciation Expense",
+    "category": "Fixed assets",
+    "formula": "Weekly depreciation = (Asset cost − Residual value) ÷ Useful life in weeks",
+    "meaning": "Depreciation allocates the depreciable cost of a fixed asset across the periods that benefit from using it.",
+    "higherLower": "Higher depreciation reduces accounting profit, but it is a non-cash expense in the current week. A larger number can simply mean the company owns more depreciable assets.",
+    "simpleExample": "A $10,000 asset with 5% residual value and 5-year life has $9,500 depreciable amount; $9,500 ÷ 260 weeks ≈ $36.54 weekly depreciation."
+  },
+  {
+    "key": "ebit",
+    "title": "EBIT",
+    "category": "Income statement",
+    "formula": "EBIT = EBITDA-like operating profit − Depreciation",
+    "meaning": "EBIT shows operating profit after recognizing depreciation of fixed assets but before interest and tax.",
+    "higherLower": "Higher EBIT generally indicates stronger operating profitability after accounting for asset usage.",
+    "simpleExample": "$2,000 EBITDA-like operating profit − $300 depreciation = $1,700 EBIT."
+  },
+  {
+    "key": "accumulatedDepreciation",
+    "title": "Accumulated Depreciation",
+    "category": "Fixed assets",
+    "formula": "Accumulated depreciation = Sum of depreciation recognized since purchase",
+    "meaning": "Accumulated depreciation is the total portion of an asset's depreciable cost already expensed.",
+    "higherLower": "It normally rises as assets age. A high balance is not automatically bad; compare it with gross PPE and asset condition.",
+    "simpleExample": "If a machine records $1,000 depreciation each year for 3 years, accumulated depreciation is $3,000."
+  },
+  {
+    "key": "ppeNet",
+    "title": "Net PPE / Fixed Assets",
+    "category": "Fixed assets",
+    "formula": "Net PPE = Gross PPE − Accumulated depreciation",
+    "meaning": "Net PPE is the carrying value of depreciating operating assets on the balance sheet.",
+    "higherLower": "Higher net PPE can mean more productive capacity, but also more capital tied up in assets.",
+    "simpleExample": "$50,000 gross equipment − $12,000 accumulated depreciation = $38,000 net PPE."
+  },
+  {
+    "key": "investmentIncome",
+    "title": "Investment Income",
+    "category": "Cash & liquidity",
+    "formula": "Weekly investment income = Treasury principal × Simulated annual return ÷ 52",
+    "meaning": "Investment income is the return earned by surplus company cash placed in the game's treasury investments.",
+    "higherLower": "Higher income is positive, but locking too much cash in investments can reduce operating flexibility.",
+    "simpleExample": "$10,000 at a simulated 6.5% annual return earns about $12.50 per week before any real-world tax/fees."
   }
 ]

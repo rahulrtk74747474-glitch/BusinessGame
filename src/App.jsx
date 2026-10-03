@@ -5,38 +5,55 @@ import industryCatalog from './data/industryCatalog.json';
 import cafe from './data/industries/cafe.json';
 import softwareSaas from './data/industries/softwareSaas.json';
 import dairyFarm from './data/industries/dairyFarm.json';
+import carDealership from './data/industries/carDealership.json';
+import autoWorkshop from './data/industries/autoWorkshop.json';
 
 import cafeRoles from './data/hr/cafeRoles.json';
 import softwareRoles from './data/hr/softwareRoles.json';
 import dairyRoles from './data/hr/dairyRoles.json';
+import carDealershipRoles from './data/hr/carDealershipRoles.json';
+import autoWorkshopRoles from './data/hr/autoWorkshopRoles.json';
 
 import baseNegotiationConfig from './data/negotiation/negotiationConfig.json';
 
 import cafeMarketing from './data/marketing/cafeMarketing.json';
 import softwareMarketing from './data/marketing/softwareMarketing.json';
 import dairyMarketing from './data/marketing/dairyMarketing.json';
+import carDealershipMarketing from './data/marketing/carDealershipMarketing.json';
+import autoWorkshopMarketing from './data/marketing/autoWorkshopMarketing.json';
 
 import cafeSales from './data/sales/cafeSales.json';
 import softwareSales from './data/sales/softwareSales.json';
 import dairySales from './data/sales/dairySales.json';
+import carDealershipSales from './data/sales/carDealershipSales.json';
+import autoWorkshopSales from './data/sales/autoWorkshopSales.json';
 
 import cafeOperations from './data/operations/cafeOperations.json';
 import softwareOperations from './data/operations/softwareOperations.json';
 import dairyOperations from './data/operations/dairyOperations.json';
+import carDealershipOperations from './data/operations/carDealershipOperations.json';
+import autoWorkshopOperations from './data/operations/autoWorkshopOperations.json';
 
 import cafeCompetitors from './data/competitors/cafeCompetitors.json';
 import softwareCompetitors from './data/competitors/softwareCompetitors.json';
 import dairyCompetitors from './data/competitors/dairyCompetitors.json';
+import carDealershipCompetitors from './data/competitors/carDealershipCompetitors.json';
+import autoWorkshopCompetitors from './data/competitors/autoWorkshopCompetitors.json';
 
 import genericFunding from './data/funding/cafeFunding.json';
 import cafeLegal from './data/legal/cafeLegal.json';
 import softwareLegal from './data/legal/softwareLegal.json';
 import dairyLegal from './data/legal/dairyLegal.json';
+import carDealershipLegal from './data/legal/carDealershipLegal.json';
+import autoWorkshopLegal from './data/legal/autoWorkshopLegal.json';
 import genericRisk from './data/risk/cafeRisk.json';
 import cafeExpansion from './data/expansion/cafeExpansion.json';
 import softwareExpansion from './data/expansion/softwareExpansion.json';
 import dairyExpansion from './data/expansion/dairyExpansion.json';
+import carDealershipExpansion from './data/expansion/carDealershipExpansion.json';
+import autoWorkshopExpansion from './data/expansion/autoWorkshopExpansion.json';
 import genericExit from './data/exit/cafeExit.json';
+import indiaAssets from './data/assets/indiaAssets.json';
 
 import { createGameState } from './models/createGameState.js';
 import { advanceWeek } from './engine/simulator.js';
@@ -50,6 +67,7 @@ import { applyLegalAction } from './engine/legal.js';
 import { applyRiskAction } from './engine/risk.js';
 import { applyExpansionAction } from './engine/expansion.js';
 import { applyExitAction } from './engine/exit.js';
+import { applyAssetAction } from './engine/assets.js';
 import { negotiationForIndustry } from './engine/businessProfile.js';
 import { recordDecision } from './engine/logging.js';
 import SetupFlow from './components/SetupFlow.jsx';
@@ -85,6 +103,26 @@ const profiles = {
     competitors: dairyCompetitors,
     legal: dairyLegal,
     expansion: dairyExpansion
+  },
+  car_dealership: {
+    industry: carDealership,
+    roles: carDealershipRoles,
+    marketing: carDealershipMarketing,
+    sales: carDealershipSales,
+    operations: carDealershipOperations,
+    competitors: carDealershipCompetitors,
+    legal: carDealershipLegal,
+    expansion: carDealershipExpansion
+  },
+  auto_workshop: {
+    industry: autoWorkshop,
+    roles: autoWorkshopRoles,
+    marketing: autoWorkshopMarketing,
+    sales: autoWorkshopSales,
+    operations: autoWorkshopOperations,
+    competitors: autoWorkshopCompetitors,
+    legal: autoWorkshopLegal,
+    expansion: autoWorkshopExpansion
   }
 };
 
@@ -121,7 +159,8 @@ function runtimeFromParts(profile, industry) {
       legal: profile.legal,
       risk: genericRisk,
       expansion: profile.expansion,
-      exit: genericExit
+      exit: genericExit,
+      assets: indiaAssets
     }
   };
 }
@@ -260,6 +299,16 @@ export default function App() {
     (current) => applyExitAction(current, action, genericExit)
   );
 
+  const assetAction = (action) => transition(
+    'assets',
+    action,
+    ['Buy fixed asset', 'Sell fixed asset', 'Invest treasury cash', 'Liquidate treasury investment'],
+    (current) => {
+      const runtime = runtimeFromGame(current);
+      return applyAssetAction(current, action, runtime.phase5Data.assets);
+    }
+  );
+
   if (!game) {
     return <SetupFlow config={gameConfig} industryOptions={industryOptions} catalog={industryCatalog} onStart={start} />;
   }
@@ -286,6 +335,7 @@ export default function App() {
       onRiskAction={riskAction}
       onExpansionAction={expansionAction}
       onExitAction={exitAction}
+      onAssetAction={assetAction}
       onReset={() => setGame(null)}
     />
   );

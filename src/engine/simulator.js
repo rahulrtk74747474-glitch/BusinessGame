@@ -15,6 +15,7 @@ import { stepRisk } from './risk.js';
 import { stepExpansion } from './expansion.js';
 import { stepExit } from './exit.js';
 import { recordEvents } from './logging.js';
+import { stepAssets } from './assets.js';
 
 function reachedGoal(state) {
   switch (state.goal) {
@@ -117,6 +118,8 @@ export function advanceWeek(
     expansion: expansionStep.state
   };
 
+  const assetStep = stepAssets(workingState, phase5Data.assets);
+
   // Existing Phase 4 order remains intact after the Phase 5 pre-step:
   // people -> rivals -> marketing -> operations -> market -> customers
   // -> sales -> finance.
@@ -152,8 +155,15 @@ export function advanceWeek(
     locationConfig,
     hrStep,
     rng,
-    expansionStep
+    {
+      ...expansionStep,
+      capacityAdd: (expansionStep.capacityAdd || 0) + (assetStep.capacityAdd || 0)
+    }
   );
+  operationsPre = {
+    ...operationsPre,
+    serviceAdd: (operationsPre.serviceAdd || 0) + (assetStep.serviceAdd || 0)
+  };
 
   if (legalStep.shutdownActive) {
     operationsPre = {
@@ -210,7 +220,8 @@ export function advanceWeek(
     risk: riskStep,
     legal: legalStep,
     funding: fundingStep,
-    expansion: expansionStep
+    expansion: expansionStep,
+    assets: assetStep
   };
 
   const financeWithoutValuation = stepFinance(
@@ -242,6 +253,11 @@ export function advanceWeek(
     discretionaryCosts: financeWithoutValuation.discretionaryCosts,
     oneTimeExpenses: financeWithoutValuation.oneTimeExpenses,
     operatingProfit: financeWithoutValuation.operatingProfit,
+    depreciationExpense: financeWithoutValuation.depreciationExpense,
+    ebit: financeWithoutValuation.ebit,
+    investmentIncome: financeWithoutValuation.investmentIncome,
+    assetDisposalGainLoss: financeWithoutValuation.assetDisposalGainLoss,
+    assetMaintenanceCosts: financeWithoutValuation.assetMaintenanceCosts,
     legalPenaltyExpense: financeWithoutValuation.legalPenaltyExpense,
     preTaxProfit: financeWithoutValuation.preTaxProfit,
     taxAccrued: financeWithoutValuation.taxAccrued,
@@ -255,6 +271,11 @@ export function advanceWeek(
     inventoryPurchases: financeWithoutValuation.inventoryPurchases,
     inventoryAsset: financeWithoutValuation.inventoryAsset,
     expansionAssets: financeWithoutValuation.expansionAssets,
+    ppeGross: financeWithoutValuation.ppeGross,
+    accumulatedDepreciation: financeWithoutValuation.accumulatedDepreciation,
+    ppeNet: financeWithoutValuation.ppeNet,
+    financialInvestments: financeWithoutValuation.financialInvestments,
+    taxWdvReference: financeWithoutValuation.taxWdvReference,
     totalAssets: financeWithoutValuation.totalAssets,
     totalLiabilities: financeWithoutValuation.totalLiabilities,
     bookEquity: financeWithoutValuation.bookEquity,
@@ -330,7 +351,9 @@ export function advanceWeek(
     {
       debt: debtBalance,
       reserveCash: state.risk.reserveCash,
-      expansionAssets: expansionStep.state.capitalizedAssets
+      expansionAssets: expansionStep.state.capitalizedAssets,
+      assetNetPpe: assetStep.netPpe,
+      financialInvestments: assetStep.financialInvestments
     }
   );
   const finance = {
@@ -388,6 +411,7 @@ export function advanceWeek(
     legal: { ...legalStep.state, pendingExpenseRecognition: 0 },
     risk: { ...riskStep.state, pendingExpenseRecognition: 0 },
     expansion: expansionStep.state,
+    assets: assetStep.state,
     history
   };
 
